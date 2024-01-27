@@ -1,0 +1,1 @@
+# basic_dotnet_template
