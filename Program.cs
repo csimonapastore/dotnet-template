@@ -51,8 +51,6 @@ internal class Program
             });
         });
 
-        // Register IConfiguration in the service container
-
 
         var app = builder.Build();
 
@@ -67,11 +65,13 @@ internal class Program
 
         if (app.Environment.IsDevelopment())
         {
+            app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
+                options.InjectStylesheet("/swagger-ui/custom.css");
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                options.RoutePrefix = string.Empty;
+                // options.RoutePrefix = string.Empty;
             });
         }
 

@@ -1,0 +1,20 @@
+.topbar-wrapper img[alt="Swagger UI"], .topbar-wrapper span {
+    src
+}
+
+.topbar-wrapper .link:after {
+    content: 'Unoffical McLaren F1 API'; 
+    /* color: #fff; */
+    visibility: visible;
+    display: block;
+    position: absolute;
+    padding: 15px;
+}
+
+.swagger-ui .topbar .download-url-wrapper .select-label select {
+    border-color: #1cd6ef;
+}
+
+.swagger-ui .info .title small:last-child {
+    background-color: #1cd6ef !important;
+}
