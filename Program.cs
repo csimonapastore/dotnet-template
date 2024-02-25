@@ -1,8 +1,9 @@
 ﻿using Microsoft.OpenApi.Models;
+using BasicDotnetTemplate.Controllers;
 using BasicDotnetTemplate.Models.Settings;
 
 namespace BasicDotnetTemplate;
-internal class Program
+internal static class Program
 {
     public static void Main(string[] args)
     {
@@ -63,10 +64,15 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapGet("/", () =>
-        {
-            return "Hello World!";
-        });
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}"
+        );
 
         if (app.Environment.IsDevelopment())
         {
@@ -76,7 +82,6 @@ internal class Program
             {
                 options.InjectStylesheet("/swagger-ui/custom.css");
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                // options.RoutePrefix = string.Empty;
             });
         }
 
