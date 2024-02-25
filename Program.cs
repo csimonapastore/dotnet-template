@@ -1,5 +1,4 @@
 ﻿using Microsoft.OpenApi.Models;
-using BasicDotnetTemplate.Controllers;
 using BasicDotnetTemplate.Models.Settings;
 
 namespace BasicDotnetTemplate;
