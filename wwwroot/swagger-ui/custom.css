@@ -3,7 +3,7 @@
 }
 
 .topbar-wrapper .link:after {
-    content: 'Unoffical McLaren F1 API'; 
+    /* content: 'Unoffical McLaren F1 API';  */
     /* color: #fff; */
     visibility: visible;
     display: block;

@@ -18,7 +18,11 @@ internal class Program
         // REGISTER SERVICES HERE
         builder.Services.AddSingleton<IConfiguration>(_configuration);
 
-        builder.Services.Configure<Settings>(_configuration.GetSection("Settings"));
+        PrivateSettings privateSettings = new PrivateSettings();
+        _configuration.GetSection("PrivateSettings").Bind(privateSettings);
+
+        builder.Services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
+        builder.Services.Configure<PrivateSettings>(_configuration.GetSection("PrivateSettings"));
 
         builder.Services.AddAuthentication();
         builder.Services.AddAuthorization();
@@ -27,16 +31,17 @@ internal class Program
 
         builder.Services.AddEndpointsApiExplorer();
 
-        Settings settings = new Settings();
-        _configuration.GetSection("Settings").Bind(settings);
+        AppSettings appSettings = new AppSettings();
+        appSettings.PrivateSettings = privateSettings;
+        _configuration.GetSection("AppSettings").Bind(appSettings);
 
         builder.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Version = settings.Version,
-                Title = settings.Name,
-                Description = settings.Description,
+                Version = appSettings?.Settings?.Version,
+                Title = appSettings?.Settings?.Name,
+                Description = appSettings?.Settings?.Description,
                 TermsOfService = new Uri("https://example.com/terms"),
                 Contact = new OpenApiContact
                 {
