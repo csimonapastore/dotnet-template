@@ -1,7 +1,9 @@
-﻿using Microsoft.OpenApi.Models;
-using BasicDotnetTemplate.Models.Settings;
+﻿using System;
+using Microsoft.OpenApi.Models;
+using BasicDotnetTemplate.MainProject.Models.Settings;
+using BasicDotnetTemplate.MainProject.Utils;
 
-namespace BasicDotnetTemplate;
+namespace BasicDotnetTemplate.MainProject;
 internal static class Program
 {
     public static void Main(string[] args)
@@ -9,7 +11,7 @@ internal static class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var _configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(System.AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
             .AddEnvironmentVariables()
@@ -55,7 +57,6 @@ internal static class Program
                 }
             });
         });
-
 
         var app = builder.Build();
 

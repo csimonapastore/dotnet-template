@@ -1,4 +1,4 @@
-namespace BasicDotnetTemplate.Models.Settings;
+namespace BasicDotnetTemplate.MainProject.Models.Settings;
 
 public class OpenApiSettingsDetails
 {
