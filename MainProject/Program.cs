@@ -89,18 +89,14 @@ internal static class Program
         var app = builder.Build();
 
         // REGISTER MIDDLEWARE HERE
+        app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        app.UseRouting();
-
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}"
-        );
+        app.MapControllers(); // This maps all controllers
 
         if (app.Environment.IsDevelopment())
         {
