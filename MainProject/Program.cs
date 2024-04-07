@@ -1,14 +1,21 @@
 ﻿using System;
 using Microsoft.OpenApi.Models;
+using NLog;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using BasicDotnetTemplate.MainProject.Utils;
 
 namespace BasicDotnetTemplate.MainProject;
 internal static class Program
 {
+    private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+
     public static void Main(string[] args)
     {
+        Logger.Info("[Program][Main] Start building");
         var builder = WebApplication.CreateBuilder(args);
+
+        Logger.Info("[Program][Main] Creating configuration");
 
         var _configuration = new ConfigurationBuilder()
             .SetBasePath(System.AppDomain.CurrentDomain.BaseDirectory)
@@ -23,8 +30,13 @@ internal static class Program
         PrivateSettings privateSettings = new PrivateSettings();
         _configuration.GetSection("PrivateSettings").Bind(privateSettings);
 
+
+        Logger.Info("[Program][Main] Building settings");
+
         builder.Services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
         builder.Services.Configure<PrivateSettings>(_configuration.GetSection("PrivateSettings"));
+
+        Logger.Info("[Program][Main] Adding services");
 
         builder.Services.AddAuthentication();
         builder.Services.AddAuthorization();
@@ -36,6 +48,8 @@ internal static class Program
         AppSettings appSettings = new AppSettings();
         appSettings.PrivateSettings = privateSettings;
         _configuration.GetSection("AppSettings").Bind(appSettings);
+
+        Logger.Info("[Program][Main] Initializing swagger doc");
 
         OpenApiInfo openApiInfo = new()
         {
@@ -99,7 +113,13 @@ internal static class Program
             });
         }
 
+        Logger.Info("[Program][Main] Launching app");
+
         app.Run();
+
+        Logger.Info("[Program][Main] Shutting down logger");
+
+        NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
     }
 
 }
