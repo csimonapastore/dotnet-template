@@ -39,17 +39,17 @@ internal static class Program
 
         OpenApiInfo openApiInfo = new()
         {
-            Version = appSettings?.Settings?.Version,
-            Title = appSettings?.Settings?.Name,
-            Description = appSettings?.Settings?.Description
+            Version = appSettings.Settings?.Version,
+            Title = appSettings.Settings?.Name,
+            Description = appSettings.Settings?.Description
         };
 
-        if (!String.IsNullOrEmpty(appSettings?.OpenApiSettings?.TermsOfServiceUrl))
+        if (!String.IsNullOrEmpty(appSettings.OpenApiSettings?.TermsOfServiceUrl))
         {
             openApiInfo.TermsOfService = new Uri(appSettings.OpenApiSettings.TermsOfServiceUrl);
         }
 
-        if (!String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiContact?.Name) && !String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiContact?.Url))
+        if (!String.IsNullOrEmpty(appSettings.OpenApiSettings?.OpenApiContact?.Name) && !String.IsNullOrEmpty(appSettings.OpenApiSettings?.OpenApiContact?.Url))
         {
             openApiInfo.Contact = new OpenApiContact
             {
@@ -58,7 +58,7 @@ internal static class Program
             };
         }
 
-        if (!String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiLicense?.Name) && !String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiLicense?.Url))
+        if (!String.IsNullOrEmpty(appSettings.OpenApiSettings?.OpenApiLicense?.Name) && !String.IsNullOrEmpty(appSettings.OpenApiSettings?.OpenApiLicense?.Url))
         {
             openApiInfo.License = new OpenApiLicense
             {
