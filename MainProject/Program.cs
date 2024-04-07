@@ -37,25 +37,39 @@ internal static class Program
         appSettings.PrivateSettings = privateSettings;
         _configuration.GetSection("AppSettings").Bind(appSettings);
 
+        OpenApiInfo openApiInfo = new()
+        {
+            Version = appSettings?.Settings?.Version,
+            Title = appSettings?.Settings?.Name,
+            Description = appSettings?.Settings?.Description
+        };
+
+        if (!String.IsNullOrEmpty(appSettings?.OpenApiSettings?.TermsOfServiceUrl))
+        {
+            openApiInfo.TermsOfService = new Uri(appSettings.OpenApiSettings.TermsOfServiceUrl);
+        }
+
+        if (!String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiContact?.Name) && !String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiContact?.Url))
+        {
+            openApiInfo.Contact = new OpenApiContact
+            {
+                Name = appSettings.OpenApiSettings.OpenApiContact.Name,
+                Url = new Uri(appSettings.OpenApiSettings.OpenApiContact.Url)
+            };
+        }
+
+        if (!String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiLicense?.Name) && !String.IsNullOrEmpty(appSettings?.OpenApiSettings?.OpenApiLicense?.Url))
+        {
+            openApiInfo.License = new OpenApiLicense
+            {
+                Name = appSettings.OpenApiSettings.OpenApiLicense.Name,
+                Url = new Uri(appSettings.OpenApiSettings.OpenApiLicense.Url)
+            };
+        }
+
         builder.Services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Version = appSettings?.Settings?.Version,
-                Title = appSettings?.Settings?.Name,
-                Description = appSettings?.Settings?.Description,
-                TermsOfService = new Uri("https://example.com/terms"),
-                Contact = new OpenApiContact
-                {
-                    Name = "Example Contact",
-                    Url = new Uri("https://example.com/contact")
-                },
-                License = new OpenApiLicense
-                {
-                    Name = "Example License",
-                    Url = new Uri("https://example.com/license")
-                }
-            });
+            options.SwaggerDoc("v1", openApiInfo);
         });
 
         var app = builder.Build();
