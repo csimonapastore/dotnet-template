@@ -46,5 +46,5 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet restore
           dotnet build --no-incremental
-          dotnet test ./MainProject.Tests/MainProject.Tests.csproj --collect "XPlat Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unit_test_sonar.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover 
+          dotnet test ./MainProject.Tests/MainProject.Tests.csproj --collect "Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unit_test_sonar.trx"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
