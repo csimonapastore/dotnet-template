@@ -1,16 +1,43 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Microsoft.OpenApi.Models;
 using NLog;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using BasicDotnetTemplate.MainProject.Utils;
+using System.Reflection;
 
 namespace BasicDotnetTemplate.MainProject;
+
+public class ReflectionProgram
+{
+    public static MethodInfo LaunchConfiguration()
+    {
+        var a = typeof(Program);
+
+        MethodInfo[] methods = a.GetMethods(); //Using BindingFlags.NonPublic does not show any results
+        MethodInfo? initialize = null;
+
+        foreach (MethodInfo m in methods)
+        {
+            if (m.Name == "Initialize")
+            {
+
+                initialize = m;
+            }
+        }
+        return initialize;
+    }
+}
+
+
+
 internal static class Program
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+    internal static WebApplication app;
 
-    public static void Main(string[] args)
+    public static void Initialize(string[] args)
     {
         Logger.Info("[Program][Main] Start building");
         var builder = WebApplication.CreateBuilder(args);
@@ -86,7 +113,7 @@ internal static class Program
             options.SwaggerDoc("v1", openApiInfo);
         });
 
-        var app = builder.Build();
+        app = builder.Build();
 
         // REGISTER MIDDLEWARE HERE
         app.UseRouting();
@@ -110,6 +137,13 @@ internal static class Program
         }
 
         Logger.Info("[Program][Main] Launching app");
+    }
+
+
+    public static void Main(string[] args)
+    {
+        ReflectionProgram.LaunchConfiguration();
+        Initialize(args);
 
         app.Run();
 
