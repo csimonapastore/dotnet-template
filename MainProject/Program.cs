@@ -35,14 +35,10 @@ internal static class Program
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    internal static WebApplication app;
-
-    public static void Initialize(string[] args)
+    public static WebApplication Initialize(string[] args)
     {
         Logger.Info("[Program][Main] Start building");
         var builder = WebApplication.CreateBuilder(args);
-
-        Logger.Info("[Program][Main] Creating configuration");
 
         var _configuration = new ConfigurationBuilder()
             .SetBasePath(System.AppDomain.CurrentDomain.BaseDirectory)
@@ -113,7 +109,7 @@ internal static class Program
             options.SwaggerDoc("v1", openApiInfo);
         });
 
-        app = builder.Build();
+        WebApplication app = builder.Build();
 
         // REGISTER MIDDLEWARE HERE
         app.UseRouting();
@@ -136,19 +132,15 @@ internal static class Program
             });
         }
 
-        Logger.Info("[Program][Main] Launching app");
+        return app;
     }
 
 
     public static void Main(string[] args)
     {
         ReflectionProgram.LaunchConfiguration();
-        Initialize(args);
-
+        WebApplication app = Initialize(args);
         app.Run();
-
-        Logger.Info("[Program][Main] Shutting down logger");
-
         NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
     }
 

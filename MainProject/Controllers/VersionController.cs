@@ -3,6 +3,7 @@ using BasicDotnetTemplate.MainProject.Models.Settings;
 
 namespace BasicDotnetTemplate.MainProject.Controllers
 {
+    [Route("[controller]")]
     public class VersionController : BaseController
     {
         public VersionController(
@@ -12,8 +13,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
         }
 
-        [HttpGet]
-        [Route("version")]
+        [HttpGet("get")]
         public IActionResult GetVersion()
         {
             return Success(String.Empty, _appSettings?.Settings?.Version);

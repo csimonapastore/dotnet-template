@@ -12,7 +12,7 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 public class Program_Tests
 {
     [TestMethod]
-    public async Task Program_Configuration_IsValid()
+    public void Program_Configuration_IsValid()
     {
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
@@ -36,12 +36,21 @@ public class Program_Tests
 
                 if (execute != null)
                 {
-                    object initializeObj = execute.Invoke(null, new object[] { });
-                    MethodInfo initialize = (MethodInfo)initializeObj;
+                    object? initializeObj = execute != null ? execute.Invoke(null, Array.Empty<object>()) : throw new ArgumentNullException("LaunchConfiguration not found");
+                    MethodInfo? initialize = initializeObj != null ? (MethodInfo)initializeObj : throw new ArgumentNullException("Unable to convert object because execute.Invoke is null");
                     if (initialize != null)
                     {
-                        initialize.Invoke(null, new object[] { new string[] { } });
-                        Assert.IsTrue(true);
+                        var success = false;
+                        try
+                        {
+                            initialize.Invoke(null, new object[] { Array.Empty<string>() });
+                            success = true;
+                        }
+                        catch (Exception innerException)
+                        {
+                            Assert.Fail($"An exception was thrown during initialize.Invoke: {innerException.Message}");
+                        }
+                        Assert.IsTrue(success);
                     }
                     else
                     {
