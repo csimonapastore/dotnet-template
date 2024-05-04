@@ -10,7 +10,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         protected readonly IConfiguration _configuration;
         protected readonly AppSettings _appSettings;
 
-        public BaseController(
+        protected BaseController(
             IConfiguration configuration
         )
         {
@@ -20,7 +20,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         }
 
 #nullable enable
-        private BaseResponse CreateResponse(HttpStatusCode status, string message, object? data = null)
+        private static BaseResponse CreateResponse(HttpStatusCode status, string message, object? data = null)
         {
             return new BaseResponse()
             {

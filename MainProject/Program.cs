@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace BasicDotnetTemplate.MainProject;
 
-public class ReflectionProgram
+public static class ReflectionProgram
 {
     public static MethodInfo LaunchConfiguration()
     {
@@ -25,7 +25,7 @@ public class ReflectionProgram
                 initialize = m;
             }
         }
-        return initialize;
+        return initialize!;
     }
 }
 
