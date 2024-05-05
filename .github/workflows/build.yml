@@ -43,7 +43,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.coverage.opencover.reportsPaths="./TestResults"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.coverage.opencover.reportsPaths=**/*.trx /d:sonar.cs.mstest.reportsPaths=**/*.trx
           dotnet restore
           dotnet build --no-incremental --no-restore --configuration Release
           dotnet test ./MainProject.Tests/MainProject.Tests.csproj --no-restore --configuration Release --collect:"XPlat Code Coverage;Format=opencover" --logger "trx;LogFileName=test-results.trx" --results-directory "./TestResults"
