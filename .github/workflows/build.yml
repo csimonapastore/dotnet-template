@@ -43,8 +43,21 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet restore
-          dotnet build --no-incremental --no-restore --configuration Release
           dotnet test ./MainProject.Tests/MainProject.Tests.csproj --no-restore --configuration Release --collect:"XPlat Code Coverage;Format=opencover" --logger "trx;LogFileName=test-results.trx" --results-directory "./TestResults"
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+          coverage_file=$(find ./TestResults -name "coverage.opencover.xml" -type f)
+
+          if [ -f "$coverage_file" ]; then
+              .sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.opencover.reportsPaths="$coverage_file"
+              dotnet restore
+              dotnet build --no-incremental --no-restore --configuration Release
+              .sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          else
+              echo "File di copertura non trovato."
+              exit 1
+          fi
+        # .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.opencover.reportsPaths="./TestResults"
+        #  dotnet restore
+        #  dotnet build --no-incremental --no-restore --configuration Release
+        #  dotnet test ./MainProject.Tests/MainProject.Tests.csproj --no-restore --configuration Release --collect:"Code Coverage" --logger "trx;LogFileName=test-results.trx" --results-directory "./TestResults"
+        #  .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
