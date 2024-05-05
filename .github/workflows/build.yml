@@ -37,14 +37,19 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+
+      - name: Install dotnet-coverage tool
+        run: dotnet tool install --global dotnet-coverage
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.coverage.opencover.reportsPaths=**/*.trx /d:sonar.cs.mstest.reportsPaths=**/*.trx
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet restore
-          dotnet build --no-incremental --no-restore --configuration Release
-          dotnet test ./MainProject.Tests/MainProject.Tests.csproj --no-restore --configuration Release --collect:"XPlat Code Coverage;Format=opencover" --logger "trx;LogFileName=test-results.trx" --results-directory "./TestResults"
+          dotnet build --no-incremental
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"           
+          dotnet test ./MainProject.Tests/MainProject.Tests.csproj --collect "Code Coverage" --results-directory "./TestResults"
+          Get-Content -Path "coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
