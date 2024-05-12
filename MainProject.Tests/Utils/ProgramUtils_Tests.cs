@@ -57,6 +57,59 @@ public class ProgramUtils_Tests
     }
 
     [TestMethod]
+    public void CreateOpenApiInfo_EmptyAppSettings()
+    {
+        try
+        {
+            OpenApiInfo expectedOpenApiInfo = new OpenApiInfo()
+            {
+                Title = "",
+                Description = "",
+                Version = "",
+                Contact = null,
+                TermsOfService = null,
+                License = null,
+                Extensions = new Dictionary<string, IOpenApiExtension>()
+            };
+
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData", "emptyAppsettings.json");
+            OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(realAppSettings);
+
+            var areEquals = expectedOpenApiInfo.Title == realOpenApiInfo.Title &&
+                expectedOpenApiInfo.Description == realOpenApiInfo.Description &&
+                expectedOpenApiInfo.Version == realOpenApiInfo.Version &&
+                expectedOpenApiInfo.Contact == realOpenApiInfo.Contact &&
+                expectedOpenApiInfo.TermsOfService == realOpenApiInfo.TermsOfService &&
+                expectedOpenApiInfo.License == realOpenApiInfo.License;
+
+            Assert.IsTrue(areEquals);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void CreateOpenApiInfo_NullSettings()
+    {
+        try
+        {
+
+            AppSettings appSettings = new AppSettings();
+            OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
+            Assert.IsTrue(realOpenApiInfo != null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
     public void OpenApiConfig_NotNull()
     {
         try

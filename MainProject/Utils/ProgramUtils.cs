@@ -42,7 +42,7 @@ public static class ProgramUtils
 
     public static OpenApiInfo CreateOpenApiInfo(AppSettings appSettings)
     {
-        OpenApiInfo openApiInfo = new()
+        OpenApiInfo openApiInfo = new OpenApiInfo
         {
             Version = appSettings.Settings?.Version,
             Title = appSettings.Settings?.Name,
