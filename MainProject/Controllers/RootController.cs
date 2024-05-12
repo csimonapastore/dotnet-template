@@ -1,22 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using BasicDotnetTemplate.MainProject.Models.Settings;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BasicDotnetTemplate.MainProject.Controllers
 {
     [Route("")]
-    public class RootController : BaseController
+    public class RootController: ControllerBase
     {
-        public RootController(
-            IConfiguration configuration
-        ) : base(configuration)
-        {
-
-        }
+        public RootController() { }
 
         [HttpGet("")]
         public IActionResult GetVersion()
         {
-            return Success(String.Empty, "Success");
+            return Ok();
         }
     }
 }
