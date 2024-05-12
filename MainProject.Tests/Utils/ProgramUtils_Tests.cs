@@ -63,9 +63,9 @@ public class ProgramUtils_Tests
         {
             OpenApiInfo expectedOpenApiInfo = new OpenApiInfo()
             {
-                Title = "",
-                Description = "",
-                Version = "",
+                Title = null,
+                Description = null,
+                Version = null,
                 Contact = null,
                 TermsOfService = null,
                 License = null,
@@ -101,6 +101,35 @@ public class ProgramUtils_Tests
             AppSettings appSettings = new AppSettings();
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
             Assert.IsTrue(realOpenApiInfo != null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void CreateOpenApiInfo_NullOpenApiSettings()
+    {
+        try
+        {
+
+            AppSettings appSettings = new AppSettings()
+            {
+                Settings = new Settings
+                {
+                    Name = "Test",
+                    Description = "This is a test description",
+                    Version = "v1"
+                },
+                OpenApiSettings = null
+            };
+            OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
+            Assert.IsTrue(realOpenApiInfo != null);
+            Assert.IsTrue(realOpenApiInfo.Title == appSettings.Settings.Name);
+            Assert.IsTrue(realOpenApiInfo.Description == appSettings.Settings.Description);
+            Assert.IsTrue(realOpenApiInfo.Version == appSettings.Settings.Version);
         }
         catch (Exception ex)
         {
