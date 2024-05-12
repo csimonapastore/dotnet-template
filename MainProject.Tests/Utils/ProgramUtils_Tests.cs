@@ -21,7 +21,7 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 public class ProgramUtils_Tests
 {
     [TestMethod]
-    public void IstantiateAppSettingsOpenApi_NoOpenApiConfig_Valid()
+    public void NoOpenApiConfig_Valid()
     {
         try
         {
@@ -57,7 +57,7 @@ public class ProgramUtils_Tests
     }
 
     [TestMethod]
-    public void IstantiateAppSettingsOpenApi_OpenApiConfig_NotNull()
+    public void OpenApiConfig_NotNull()
     {
         try
         {
@@ -73,8 +73,8 @@ public class ProgramUtils_Tests
             };
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData", "completeAppSettings.json");
-            OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(realAppSettings);
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData", "completeAppSettings.json");
+            OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
 
             var areEquals = expectedOpenApiInfo.Title == realOpenApiInfo.Title &&
                 expectedOpenApiInfo.Description == realOpenApiInfo.Description &&
@@ -84,6 +84,30 @@ public class ProgramUtils_Tests
                 expectedOpenApiInfo.License == realOpenApiInfo.License;
 
             Assert.IsFalse(areEquals);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void AddOpenApi_Valid()
+    {
+        try
+        {
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData");
+            ProgramUtils.AddOpenApi(ref builder, appSettings);
+            AppSettings _appSettings = new AppSettings();
+            builder.Configuration.GetSection("AppSettings").Bind(_appSettings);
+            var areEquals = appSettings.OpenApiSettings?.OpenApiContact?.Name == _appSettings.OpenApiSettings?.OpenApiContact?.Name &&
+                appSettings.OpenApiSettings?.OpenApiContact?.Url == _appSettings.OpenApiSettings?.OpenApiContact?.Url &&
+                appSettings.OpenApiSettings?.OpenApiLicense?.Name == _appSettings.OpenApiSettings?.OpenApiLicense?.Name &&
+                appSettings.OpenApiSettings?.OpenApiLicense?.Url == _appSettings.OpenApiSettings?.OpenApiLicense?.Url &&
+                appSettings.OpenApiSettings?.TermsOfServiceUrl == _appSettings.OpenApiSettings?.TermsOfServiceUrl;
+            Assert.IsTrue(areEquals);
         }
         catch (Exception ex)
         {

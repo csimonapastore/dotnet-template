@@ -28,12 +28,12 @@ public static class ProgramUtils
         PrivateSettings privateSettings = new PrivateSettings();
         _configuration.GetSection("PrivateSettings").Bind(privateSettings);
 
-        builder.Services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
-        builder.Services.Configure<PrivateSettings>(_configuration.GetSection("PrivateSettings"));
-
         AppSettings appSettings = new AppSettings();
         appSettings.PrivateSettings = privateSettings;
         _configuration.GetSection("AppSettings").Bind(appSettings);
+
+        builder.Services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
+        builder.Services.Configure<PrivateSettings>(_configuration.GetSection("PrivateSettings"));
 
         Logger.Info("[ProgramUtils][AddConfiguration] Ended configuration");
 
