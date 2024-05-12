@@ -21,7 +21,6 @@ public static class ReflectionProgram
         {
             if (m.Name == "Initialize")
             {
-
                 initialize = m;
             }
         }
@@ -35,10 +34,9 @@ internal static class Program
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public static WebApplication Initialize(string[] args)
+    private static AppSettings AddConfiguration(ref WebApplicationBuilder builder)
     {
-        Logger.Info("[Program][Main] Start building");
-        var builder = WebApplication.CreateBuilder(args);
+        Logger.Info("[Program][AddConfiguration] Adding configuration");
 
         var _configuration = new ConfigurationBuilder()
             .SetBasePath(System.AppDomain.CurrentDomain.BaseDirectory)
@@ -47,32 +45,26 @@ internal static class Program
             .AddEnvironmentVariables()
             .Build();
 
-        // REGISTER SERVICES HERE
         builder.Services.AddSingleton<IConfiguration>(_configuration);
 
         PrivateSettings privateSettings = new PrivateSettings();
         _configuration.GetSection("PrivateSettings").Bind(privateSettings);
 
-
-        Logger.Info("[Program][Main] Building settings");
-
         builder.Services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
         builder.Services.Configure<PrivateSettings>(_configuration.GetSection("PrivateSettings"));
-
-        Logger.Info("[Program][Main] Adding services");
-
-        builder.Services.AddAuthentication();
-        builder.Services.AddAuthorization();
-
-        builder.Services.AddControllers();
-
-        builder.Services.AddEndpointsApiExplorer();
 
         AppSettings appSettings = new AppSettings();
         appSettings.PrivateSettings = privateSettings;
         _configuration.GetSection("AppSettings").Bind(appSettings);
 
-        Logger.Info("[Program][Main] Initializing swagger doc");
+        Logger.Info("[Program][AddConfiguration] Ended configuration");
+
+        return appSettings;
+    }
+
+    private static void AddOpenApi(ref WebApplicationBuilder builder, AppSettings appSettings)
+    {
+        Logger.Info("[Program][AddOpenApi] Adding configuration");
 
         OpenApiInfo openApiInfo = new()
         {
@@ -109,9 +101,27 @@ internal static class Program
             options.SwaggerDoc("v1", openApiInfo);
         });
 
-        WebApplication app = builder.Build();
+        Logger.Info("[Program][AddOpenApi] Ended configuration");
 
-        // REGISTER MIDDLEWARE HERE
+        return;
+    }
+
+    private static void AddServices(ref WebApplicationBuilder builder)
+    {
+        Logger.Info("[Program][AddServices] Adding services");
+
+        builder.Services.AddAuthentication();
+        builder.Services.AddAuthorization();
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+
+        Logger.Info("[Program][AddServices] Done services");
+    }
+
+    private static void AddMiddlewares(ref WebApplication app)
+    {
+        Logger.Info("[Program][AddMiddlewares] Adding middlewares");
+
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
@@ -132,14 +142,28 @@ internal static class Program
             });
         }
 
+        Logger.Info("[Program][AddMiddlewares] Done middlewares");
+    }
+
+    public static WebApplication Initialize(string[] args)
+    {
+        Logger.Info("[Program][Initialize] Start building");
+        var builder = WebApplication.CreateBuilder(args);
+
+        AppSettings appSettings = Program.AddConfiguration(ref builder);
+        Program.AddServices(ref builder);
+        Program.AddOpenApi(ref builder, appSettings);
+        WebApplication app = builder.Build();
+        Program.AddMiddlewares(ref app);
+        Logger.Info("[Program][Initialize] End building");
         return app;
     }
 
 
     public static void Main(string[] args)
     {
-        ReflectionProgram.LaunchConfiguration();
         WebApplication app = Initialize(args);
+        Logger.Info("[Program][Main] Launching app");
         app.Run();
         NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
     }
