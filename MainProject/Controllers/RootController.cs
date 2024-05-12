@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace BasicDotnetTemplate.MainProject.Controllers
 {
     [Route("")]
-    public class RootController : ControllerBase
+    public class RootController: ControllerBase
     {
         public RootController() { }
 
         [HttpGet("")]
-        public IActionResult GetRoot()
+        public IActionResult GetVersion()
         {
             return Ok();
         }
