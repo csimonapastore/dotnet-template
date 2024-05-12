@@ -19,27 +19,15 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 
 public static class TestUtils
 {
-    public static IConfiguration? CreateConfiguration()
+    public static IConfiguration CreateConfiguration()
     {
-        try
-        {
-            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData");
-            ProgramUtils.AddOpenApi(ref builder, appSettings);
-            AppSettings _appSettings = new AppSettings();
-            builder.Configuration.GetSection("AppSettings").Bind(_appSettings);
-            return builder.Configuration;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.InnerException);
-            return null;
-        }
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+        AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData");
+        ProgramUtils.AddOpenApi(ref builder, appSettings);
+        AppSettings _appSettings = new AppSettings();
+        builder.Configuration.GetSection("AppSettings").Bind(_appSettings);
+        return builder.Configuration;
     }
-
-
-
-
 }
 
 

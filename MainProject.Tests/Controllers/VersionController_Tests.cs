@@ -8,6 +8,8 @@ using BasicDotnetTemplate.MainProject.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using BasicDotnetTemplate.MainProject.Models.Api.Response;
+using BasicDotnetTemplate.MainProject.Models.Settings;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -25,7 +27,26 @@ public class BaseController_Tests
             IConfiguration configuration = TestUtils.CreateConfiguration();
             VersionController versionController = new VersionController(configuration);
             var result = versionController.GetVersion();
-            Assert.IsTrue(((IStatusCodeActionResult)result).StatusCode == 200);
+            var objectResult = ((ObjectResult)result).Value;
+            if (objectResult != null)
+            {
+                var data = (BaseResponse)objectResult;
+                if (data.Data != null)
+                {
+                    AppSettings appSettings = new AppSettings();
+                    configuration.GetSection("AppSettings").Bind(appSettings);
+                    string version = data.Data != null ? (string)data.Data : "";
+                    Assert.IsTrue((((IStatusCodeActionResult)result).StatusCode == 200) && (version == appSettings.Settings?.Version));
+                }
+                else
+                {
+                    Assert.Fail($"Unable to convert response value to BaseResponse because Data is null");
+                }
+            }
+            else
+            {
+                Assert.Fail($"Data is null");
+            }
         }
         catch (Exception ex)
         {

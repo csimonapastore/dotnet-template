@@ -37,7 +37,7 @@ public class ProgramUtils_Tests
             };
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData");
+            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData", "noApiConfigurationAppSettings.json");
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(realAppSettings);
 
             var areEquals = expectedOpenApiInfo.Title == realOpenApiInfo.Title &&
@@ -115,8 +115,6 @@ public class ProgramUtils_Tests
             Assert.Fail($"An exception was thrown: {ex.Message}");
         }
     }
-
-
 }
 
 
