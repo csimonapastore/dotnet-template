@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using Microsoft.OpenApi.Models;
 using NLog;
 using BasicDotnetTemplate.MainProject.Models.Settings;
-using BasicDotnetTemplate.MainProject.Utils;
 using System.Reflection;
 
 namespace BasicDotnetTemplate.MainProject;

@@ -22,12 +22,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 #nullable enable
         private static BaseResponse CreateResponse(HttpStatusCode status, string message, object? data = null)
         {
-            return new BaseResponse()
-            {
-                Status = (int)status,
-                Message = message,
-                Data = data
-            };
+            return new BaseResponse((int)status, message, data);
         }
 
         protected new IActionResult Created(string message, object? data = null)
