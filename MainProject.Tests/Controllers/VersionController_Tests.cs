@@ -18,7 +18,25 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 public class BaseController_Tests
 {
     [TestMethod]
-    public void BaseControllerInit_Valid()
+    public void BaseController_NullConfiguration()
+    {
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+        var exception = true;
+        try
+        {
+            _ = new VersionController(null);
+            exception = false;
+            Assert.Fail($"This test should not pass as configuration is null");
+        }
+        catch (Exception)
+        {
+            Assert.IsTrue(exception);
+        }
+    }
+
+
+    [TestMethod]
+    public void VersionController_GetVersion_Valid()
     {
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
