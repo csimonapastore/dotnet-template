@@ -27,7 +27,8 @@ This project is scanned on [SonarCloud](https://www.sonarsource.com/lp/products/
 You can find the integration in [build.yml](.github/workflows/build.yml).
 
 #### Quality gate
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=csimonapastore_BasicDotnetTemplate&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=csimonapastore_BasicDotnetTemplate) 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=csimonapastore_BasicDotnetTemplate&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=csimonapastore_BasicDotnetTemplate)  
+
 A Quality Gate is a set of measure-based, Boolean conditions. It helps you know immediately whether your projects are production-ready.
 This project uses **Sonar way** quality gate:
 

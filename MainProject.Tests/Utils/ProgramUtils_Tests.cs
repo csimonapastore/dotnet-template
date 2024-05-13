@@ -139,6 +139,40 @@ public class ProgramUtils_Tests
     }
 
     [TestMethod]
+    public void CreateOpenApiInfo_NullTermsOfServiceUrl()
+    {
+        try
+        {
+            AppSettings appSettings = new AppSettings()
+            {
+                Settings = new Settings
+                {
+                    Name = "Test",
+                    Description = "This is a test description",
+                    Version = "v1"
+                },
+                OpenApiSettings = new OpenApiSettings
+                {
+                    TermsOfServiceUrl = null,
+                    OpenApiContact = null,
+                    OpenApiLicense = null
+                }
+            };
+            OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
+            Assert.IsTrue(realOpenApiInfo != null);
+            Assert.IsTrue(realOpenApiInfo.Title == appSettings.Settings.Name);
+            Assert.IsTrue(realOpenApiInfo.Description == appSettings.Settings.Description);
+            Assert.IsTrue(realOpenApiInfo.Version == appSettings.Settings.Version);
+            Assert.IsTrue(realOpenApiInfo.TermsOfService == null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
     public void OpenApiConfig_NotNull()
     {
         try
