@@ -37,7 +37,7 @@ public class ProgramUtils_Tests
             };
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData", "noApiConfigurationAppSettings.json");
+            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData", "noApiConfigurationAppSettings.json");
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(realAppSettings);
 
             var areEquals = expectedOpenApiInfo.Title == realOpenApiInfo.Title &&
@@ -73,7 +73,7 @@ public class ProgramUtils_Tests
             };
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData", "emptyAppsettings.json");
+            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData", "emptyAppsettings.json");
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(realAppSettings);
 
             var areEquals = expectedOpenApiInfo.Title == realOpenApiInfo.Title &&
@@ -189,7 +189,7 @@ public class ProgramUtils_Tests
             };
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData", "completeAppSettings.json");
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData", "completeAppSettings.json");
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
 
             var areEquals = expectedOpenApiInfo.Title == realOpenApiInfo.Title &&
@@ -214,7 +214,7 @@ public class ProgramUtils_Tests
         try
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData");
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
             ProgramUtils.AddOpenApi(ref builder, appSettings);
             AppSettings _appSettings = new AppSettings();
             builder.Configuration.GetSection("AppSettings").Bind(_appSettings);

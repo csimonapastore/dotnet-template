@@ -22,11 +22,21 @@ public static class TestUtils
     public static IConfiguration CreateConfiguration()
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-        AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, "D:\\Users\\Simona\\Documents\\Projects\\BasicDotnetTemplate\\MainProject.Tests\\JsonData");
+        AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
         ProgramUtils.AddOpenApi(ref builder, appSettings);
         AppSettings _appSettings = new AppSettings();
         builder.Configuration.GetSection("AppSettings").Bind(_appSettings);
         return builder.Configuration;
+    }
+
+    public static IConfiguration CreateEmptyConfiguration(string? path = "", string? filename = "")
+    {
+        string appSettingsPath = String.IsNullOrEmpty(path) ? System.AppDomain.CurrentDomain.BaseDirectory : path;
+        return new ConfigurationBuilder()
+            .SetBasePath(appSettingsPath)
+            .AddJsonFile(String.IsNullOrEmpty(filename) ? "appsettings.json" : filename, optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
     }
 }
 

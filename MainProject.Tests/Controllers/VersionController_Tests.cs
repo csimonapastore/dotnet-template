@@ -72,4 +72,33 @@ public class BaseController_Tests
             Assert.Fail($"An exception was thrown: {ex.Message}");
         }
     }
+
+    [TestMethod]
+    public void VersionController_GetVersion_NoVersion()
+    {
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+
+        try
+        {
+            Console.WriteLine(System.AppDomain.CurrentDomain.BaseDirectory);
+            var configuration = TestUtils.CreateEmptyConfiguration(System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData", "emptyAppsettings.json");
+            VersionController versionController = new VersionController(configuration);
+            var result = versionController.GetVersion();
+            var objectResult = ((ObjectResult)result).Value;
+            if (objectResult != null)
+            {
+                var data = (BaseResponse)objectResult;
+                Assert.IsTrue((((IStatusCodeActionResult)result).StatusCode == 200) && String.IsNullOrEmpty(data.Data));
+            }
+            else
+            {
+                Assert.Fail($"Response value is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
 }

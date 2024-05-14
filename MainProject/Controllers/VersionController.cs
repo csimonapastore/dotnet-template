@@ -8,10 +8,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
     {
         public VersionController(
             IConfiguration configuration
-        ) : base(configuration)
-        {
-
-        }
+        ) : base(configuration) { }
 
         [HttpGet("get")]
         public IActionResult GetVersion()

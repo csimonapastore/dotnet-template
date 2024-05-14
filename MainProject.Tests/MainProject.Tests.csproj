@@ -24,4 +24,8 @@
     <ProjectReference Include="..\MainProject\MainProject.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="JsonData/**" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
+</ItemGroup>
+
 </Project>
