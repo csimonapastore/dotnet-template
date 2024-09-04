@@ -1,18 +1,47 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "DotNetAutoAttach",
+            "name": ".NET Rest Api - Watch",
+            "type": "coreclr",
             "request": "launch",
-            "name": ".NET Core Watch: MainProject",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/MainProject/bin/Debug/net8.0/MainProject.dll",
             "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false,
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:5000;https://localhost:5001",
+                "ASPNETCORE_DETAILEDERRORS": "1",
+                "ASPNETCORE_SHUTDOWNTIMEOUTSECONDS": "3"
             },
-            "project": "MainProject"
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "postDebugTask": "watch"
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
         }
-    ]
+    ],
+    "tasks": {
+        "label": "watch",
+        "type": "shell",
+        "command": "dotnet",
+        "args": [
+            "watch",
+            "run"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        }
+    }
 }
