@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/MainProject/MainProject.csproj",
+                "${workspaceFolder}/BasicDotnetTemplate.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/MainProject/MainProject.csproj",
+                "${workspaceFolder}/BasicDotnetTemplate.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/MainProject.csproj"
+                "${workspaceFolder}/BasicDotnetTemplate.sln"
             ],
             "problemMatcher": "$msCompile"
         }
