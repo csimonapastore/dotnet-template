@@ -137,9 +137,6 @@ public static class ProgramUtils
         if (!String.IsNullOrEmpty(connectionString))
         {
             connectionString = connectionString.Replace("SQLSERVER_DB_SERVER", Environment.GetEnvironmentVariable("SQLSERVER_DB_SERVER"));
-            connectionString = connectionString.Replace("SQLSERVER_DB_DATABASE", Environment.GetEnvironmentVariable("SQLSERVER_DB_DATABASE"));
-            connectionString = connectionString.Replace("SQLSERVER_DB_USER", Environment.GetEnvironmentVariable("SQLSERVER_DB_USER"));
-            connectionString = connectionString.Replace("SQLSERVER_DB_PASSWORD", Environment.GetEnvironmentVariable("SQLSERVER_DB_PASSWORD"));
 
             builder.Services.AddDbContext<SqlServerContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -147,20 +144,15 @@ public static class ProgramUtils
             databaseAdded += "SqlServer";
         }
 
-
-
-        connectionString = appSettings?.DatabaseSettings?.MongoDbSettings?.MongoDbConnectionString ?? String.Empty;
+        connectionString = appSettings?.DatabaseSettings?.MongoDbConnectionString ?? String.Empty;
 
         if (!String.IsNullOrEmpty(connectionString))
         {
-            connectionString = connectionString.Replace("MONGODB_DB_SERVER", Environment.GetEnvironmentVariable("MONGODB_DB_SERVER"));
-            connectionString = connectionString.Replace("MONGODB_DB_DATABASE", Environment.GetEnvironmentVariable("MONGODB_DB_DATABASE"));
-            connectionString = connectionString.Replace("MONGODB_DB_USER", Environment.GetEnvironmentVariable("MONGODB_DB_USER"));
-            connectionString = connectionString.Replace("MONGODB_DB_PASSWORD", Environment.GetEnvironmentVariable("MONGODB_DB_PASSWORD"));
+            connectionString = connectionString.Replace("MONGO_DB_SERVER", Environment.GetEnvironmentVariable("MONGODB_DB_SERVER"));
 
             var mongoClient = new MongoClient(connectionString);
 
-            var databaseName = appSettings?.DatabaseSettings?.MongoDbSettings?.DatabaseName ?? Environment.GetEnvironmentVariable("MONGODB_DB_DATABASE") ?? String.Empty;
+            var databaseName = connectionString.Split("/").LastOrDefault();
 
             if (!String.IsNullOrEmpty(databaseName))
             {
