@@ -39,6 +39,7 @@ internal static class Program
 
         AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder);
         ProgramUtils.AddServices(ref builder);
+        ProgramUtils.AddScopes(ref builder);
         ProgramUtils.AddOpenApi(ref builder, appSettings);
         ProgramUtils.AddDbContext(ref builder, appSettings);
         WebApplication app = builder.Build();

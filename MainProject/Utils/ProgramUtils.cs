@@ -130,42 +130,39 @@ public static class ProgramUtils
     public static void AddDbContext(ref WebApplicationBuilder builder, AppSettings appSettings)
     {
         Logger.Info("[ProgramUtils][AddDbContext] Adding DbContext");
-        var databaseAdded = "";
-
-        var connectionString = appSettings?.DatabaseSettings?.SqlServerConnectionString ?? String.Empty;
-
-        if (!String.IsNullOrEmpty(connectionString))
+        var messages = String.Empty;
+        if (!String.IsNullOrEmpty(appSettings.DatabaseSettings?.SqlServerConnectionString))
         {
+            var connectionString = appSettings.DatabaseSettings?.SqlServerConnectionString ?? String.Empty;
             connectionString = connectionString.Replace("SQLSERVER_DB_SERVER", Environment.GetEnvironmentVariable("SQLSERVER_DB_SERVER"));
-
             builder.Services.AddDbContext<SqlServerContext>(options =>
-                options.UseSqlServer(connectionString));
-
-            databaseAdded += "SqlServer";
+                options.UseSqlServer(connectionString)
+            );
+            messages = "SqlServerContext";
         }
 
-        connectionString = appSettings?.DatabaseSettings?.MongoDbConnectionString ?? String.Empty;
-
-        if (!String.IsNullOrEmpty(connectionString))
+        if (!String.IsNullOrEmpty(appSettings.DatabaseSettings?.MongoDbConnectionString))
         {
+            var connectionString = appSettings.DatabaseSettings?.MongoDbConnectionString ?? String.Empty;
             connectionString = connectionString.Replace("MONGO_DB_SERVER", Environment.GetEnvironmentVariable("MONGODB_DB_SERVER"));
-
-            var mongoClient = new MongoClient(connectionString);
-
             var databaseName = connectionString.Split("/").LastOrDefault();
-
             if (!String.IsNullOrEmpty(databaseName))
             {
-                var dbContextOptions = new DbContextOptionsBuilder<MongoDbContext>()
-                    .UseMongoDB(mongoClient, databaseName);
+                var client = new MongoClient(connectionString);
+                builder.Services.AddDbContext<MongoDbContext>(options =>
+                    options.UseMongoDB(client, databaseName)
+                );
+                messages = messages + (String.IsNullOrEmpty(messages) ? "" : ", ") + "MongoDbContext";
             }
-
-            databaseAdded += (String.IsNullOrEmpty(databaseAdded) ? "" : ", ") + "MongoDB";
         }
+        messages = String.IsNullOrEmpty(messages) ? "No context" : messages;
+        Logger.Info($"[ProgramUtils][AddDbContext] {messages} added");
+    }
 
-        var message = String.IsNullOrEmpty(databaseAdded) ? "No DbContext added" : $"{databaseAdded} added";
-
-        Logger.Info($"[ProgramUtils][AddDbContext] {message}");
+    public static void AddScopes(ref WebApplicationBuilder builder)
+    {
+        Logger.Info("[ProgramUtils][AddScopes] Adding scopes");
+        Logger.Info("[ProgramUtils][AddScopes] Done scopes");
     }
 
 }
