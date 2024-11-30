@@ -8,6 +8,7 @@
     - [Sonarcloud](#sonarcloud)
       - [Quality gate](#quality-gate)
         - [Code smells](#code-smells)
+    - [Entity Framework](#entity-framework)
 
 ## What is BasicDotnetTemplate?
 BasicDotnetTemplate is a basic project written in .NET 8. It contains MainProject, a WebApi project, and MainProject.Tests written in .NET 8 that contains tests for MainProject.
@@ -48,4 +49,9 @@ This project uses **Sonar way** quality gate:
 > Code smells are usually not bugs; they are not technically incorrect and do not prevent the program from functioning. Instead, they indicate weaknesses in design that may slow down development or increase the risk of bugs or failures in the future. Bad code smells can be an indicator of factors that contribute to technical debt.[Tufano, Michele; Palomba, Fabio; Bavota, Gabriele; Oliveto, Rocco; Di Penta, Massimiliano; De Lucia, Andrea; Poshyvanyk, Denys (2015).] Robert C. Martin calls a list of code smells a "value system" for software craftsmanship.[Martin, Robert C. (2009). "17: Smells and Heuristics". Clean Code: A Handbook of Agile Software Craftsmanship. Prentice Hall.]
 >
 
+### Entity Framework
+This project uses Entity Framework Core, you can find the official documentation [here](https://www.entityframeworktutorial.net/efcore/entity-framework-core.aspx).
+> Entity Framework is an Object/Relational Mapping (O/RM) framework. It is an enhancement to ADO.NET that gives developers an automated mechanism for accessing & storing the data in the database.
+> EF Core supports two development approaches 1) Code-First 2) Database-First.
+> In the code-first approach, EF Core API creates the database and tables using migration based on the conventions and configuration provided in your domain classes. This approach is useful in Domain Driven Design (DDD).
 
