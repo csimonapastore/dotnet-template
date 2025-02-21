@@ -155,6 +155,16 @@ public static class ProgramUtils
                 messages = messages + (String.IsNullOrEmpty(messages) ? "" : ", ") + "MongoDbContext";
             }
         }
+
+        if (!String.IsNullOrEmpty(appSettings.DatabaseSettings?.PostgreSQLConnectionString))
+        {
+            var connectionString = appSettings.DatabaseSettings?.PostgreSQLConnectionString ?? String.Empty;
+            connectionString = connectionString.Replace("POSTGRESQL_DB_SERVER", Environment.GetEnvironmentVariable("POSTGRESQL_DB_SERVER"));
+            builder.Services.AddDbContext<PostgreSqlDbContext>(options =>
+                options.UseNpgsql(connectionString)
+            );
+            messages = messages + (String.IsNullOrEmpty(messages) ? "" : ", ") + "PostgreSqlDbContext";
+        }
         messages = String.IsNullOrEmpty(messages) ? "No context" : messages;
         Logger.Info($"[ProgramUtils][AddDbContext] {messages} added");
     }
