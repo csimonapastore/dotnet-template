@@ -1,10 +1,9 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Microsoft.OpenApi.Models;
-using NLog;
+﻿using NLog;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using System.Reflection;
 using BasicDotnetTemplate.MainProject.Utils;
+
+
 
 namespace BasicDotnetTemplate.MainProject;
 
@@ -40,9 +39,12 @@ internal static class Program
 
         AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder);
         ProgramUtils.AddServices(ref builder);
+        ProgramUtils.AddScopes(ref builder);
         ProgramUtils.AddOpenApi(ref builder, appSettings);
+        ProgramUtils.AddDbContext(ref builder, appSettings);
         WebApplication app = builder.Build();
         ProgramUtils.AddMiddlewares(ref app);
+
         Logger.Info("[Program][Initialize] End building");
         return app;
     }

@@ -5,6 +5,9 @@
   - [What is BasicDotnetTemplate?](#what-is-basicdotnettemplate)
   - [Technologies](#technologies)
     - [Dotnet](#dotnet)
+      - [Commands](#commands)
+        - [Debug](#debug)
+    - [Entity Framework](#entity-framework)
     - [Sonarcloud](#sonarcloud)
       - [Quality gate](#quality-gate)
         - [Code smells](#code-smells)
@@ -19,6 +22,20 @@ BasicDotnetTemplate is a basic project written in .NET 8. It contains MainProjec
 Every component is developed using **dotnet-core 8.0.201** and was generated with [dotnet](https://dotnet.microsoft.com/).
 
 > .NET is the free, open-source, cross-platform framework for building modern apps and powerful cloud services. Supported on Windows, Linux, and macOS.
+
+#### Commands
+##### Debug
+You can use the following comands in the MainProject folder.
+```bash
+dotnet watch run
+```
+Restarts or hot reloads the specified application, or runs a specified dotnet command, when changes in source code are detected.
+
+### Entity Framework
+This project uses Entity Framework Core, you can find the official documentation [here](https://www.entityframeworktutorial.net/efcore/entity-framework-core.aspx).
+> Entity Framework is an Object/Relational Mapping (O/RM) framework. It is an enhancement to ADO.NET that gives developers an automated mechanism for accessing & storing the data in the database.
+> EF Core supports two development approaches 1) Code-First 2) Database-First.
+> In the code-first approach, EF Core API creates the database and tables using migration based on the conventions and configuration provided in your domain classes. This approach is useful in Domain Driven Design (DDD).
 
 ### Sonarcloud
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=csimonapastore_BasicDotnetTemplate)
@@ -47,5 +64,6 @@ This project uses **Sonar way** quality gate:
 > One way to look at smells is with respect to principles and quality: "Smells are certain structures in the code that indicate violation of fundamental design principles and negatively impact design quality".[Suryanarayana, Girish (November 2014). Refactoring for Software Design Smells. Morgan Kaufmann.] 
 > Code smells are usually not bugs; they are not technically incorrect and do not prevent the program from functioning. Instead, they indicate weaknesses in design that may slow down development or increase the risk of bugs or failures in the future. Bad code smells can be an indicator of factors that contribute to technical debt.[Tufano, Michele; Palomba, Fabio; Bavota, Gabriele; Oliveto, Rocco; Di Penta, Massimiliano; De Lucia, Andrea; Poshyvanyk, Denys (2015).] Robert C. Martin calls a list of code smells a "value system" for software craftsmanship.[Martin, Robert C. (2009). "17: Smells and Heuristics". Clean Code: A Handbook of Agile Software Craftsmanship. Prentice Hall.]
 >
+
 
 

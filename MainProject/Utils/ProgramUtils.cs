@@ -1,9 +1,11 @@
-using System;
-using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using NLog;
+using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Models.Settings;
-using System.Reflection;
+
+
 
 namespace BasicDotnetTemplate.MainProject.Utils;
 
@@ -123,6 +125,54 @@ public static class ProgramUtils
         }
 
         Logger.Info("[ProgramUtils][AddMiddlewares] Done middlewares");
+    }
+
+    public static void AddDbContext(ref WebApplicationBuilder builder, AppSettings appSettings)
+    {
+        Logger.Info("[ProgramUtils][AddDbContext] Adding DbContext");
+        var messages = String.Empty;
+        if (!String.IsNullOrEmpty(appSettings.DatabaseSettings?.SqlServerConnectionString))
+        {
+            var connectionString = appSettings.DatabaseSettings?.SqlServerConnectionString ?? String.Empty;
+            connectionString = connectionString.Replace("SQLSERVER_DB_SERVER", Environment.GetEnvironmentVariable("SQLSERVER_DB_SERVER"));
+            builder.Services.AddDbContext<SqlServerContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
+            messages = "SqlServerContext";
+        }
+
+        if (!String.IsNullOrEmpty(appSettings.DatabaseSettings?.MongoDbConnectionString))
+        {
+            var connectionString = appSettings.DatabaseSettings?.MongoDbConnectionString ?? String.Empty;
+            connectionString = connectionString.Replace("MONGO_DB_SERVER", Environment.GetEnvironmentVariable("MONGODB_DB_SERVER"));
+            var databaseName = connectionString.Split("/").LastOrDefault();
+            if (!String.IsNullOrEmpty(databaseName))
+            {
+                var client = new MongoClient(connectionString);
+                builder.Services.AddDbContext<MongoDbContext>(options =>
+                    options.UseMongoDB(client, databaseName)
+                );
+                messages = messages + (String.IsNullOrEmpty(messages) ? "" : ", ") + "MongoDbContext";
+            }
+        }
+
+        if (!String.IsNullOrEmpty(appSettings.DatabaseSettings?.PostgreSQLConnectionString))
+        {
+            var connectionString = appSettings.DatabaseSettings?.PostgreSQLConnectionString ?? String.Empty;
+            connectionString = connectionString.Replace("POSTGRESQL_DB_SERVER", Environment.GetEnvironmentVariable("POSTGRESQL_DB_SERVER"));
+            builder.Services.AddDbContext<PostgreSqlDbContext>(options =>
+                options.UseNpgsql(connectionString)
+            );
+            messages = messages + (String.IsNullOrEmpty(messages) ? "" : ", ") + "PostgreSqlDbContext";
+        }
+        messages = String.IsNullOrEmpty(messages) ? "No context" : messages;
+        Logger.Info($"[ProgramUtils][AddDbContext] {messages} added");
+    }
+
+    public static void AddScopes(ref WebApplicationBuilder builder)
+    {
+        Logger.Info("[ProgramUtils][AddScopes] Adding scopes");
+        Logger.Info("[ProgramUtils][AddScopes] Done scopes");
     }
 
 }

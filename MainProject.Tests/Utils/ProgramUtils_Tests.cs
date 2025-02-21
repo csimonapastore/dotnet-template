@@ -231,6 +231,93 @@ public class ProgramUtils_Tests
             Assert.Fail($"An exception was thrown: {ex.Message}");
         }
     }
+
+    [TestMethod]
+    public void AddSqlServerContext_Valid()
+    {
+        try
+        {
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
+            ProgramUtils.AddDbContext(ref builder, appSettings);
+            AppSettings _appSettings = new AppSettings();
+            builder.Configuration.GetSection("AppSettings").Bind(_appSettings);
+            var areEquals = appSettings.DatabaseSettings?.SqlServerConnectionString == _appSettings.DatabaseSettings?.SqlServerConnectionString;
+            Assert.IsTrue(areEquals);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void AddMongoDbContext_Valid()
+    {
+        try
+        {
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
+            ProgramUtils.AddDbContext(ref builder, appSettings);
+            AppSettings _appSettings = new AppSettings();
+            builder.Configuration.GetSection("AppSettings").Bind(_appSettings);
+            var areEquals = appSettings.DatabaseSettings?.MongoDbConnectionString == _appSettings.DatabaseSettings?.MongoDbConnectionString;
+            Assert.IsTrue(areEquals);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void AddPostgreSqlDbContext_Valid()
+    {
+        try
+        {
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
+            ProgramUtils.AddDbContext(ref builder, appSettings);
+            AppSettings _appSettings = new AppSettings();
+            builder.Configuration.GetSection("AppSettings").Bind(_appSettings);
+            var areEquals = appSettings.DatabaseSettings?.PostgreSQLConnectionString == _appSettings.DatabaseSettings?.PostgreSQLConnectionString;
+            Assert.IsTrue(areEquals);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void NoSqlServerContext_Empty()
+    {
+        try
+        {
+            DatabaseSettings expectedDbSettings = new DatabaseSettings()
+            {
+                SqlServerConnectionString = ""
+            };
+
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings realAppSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData", "noApiConfigurationAppSettings.json");
+            ProgramUtils.AddDbContext(ref builder, realAppSettings);
+
+            var areEquals = expectedDbSettings.SqlServerConnectionString == realAppSettings.DatabaseSettings?.SqlServerConnectionString;
+            Console.WriteLine(realAppSettings.DatabaseSettings?.SqlServerConnectionString);
+            Assert.IsTrue(areEquals);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+
 }
 
 

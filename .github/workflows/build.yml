@@ -44,12 +44,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SQLSERVER_DB_SERVER: ${{ secrets.SQLSERVER_DB_SERVER }}
+          MONGO_DB_SERVER: ${{ secrets.MONGO_DB_SERVER }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"csimonapastore_BasicDotnetTemplate" /o:"csimonapastore-github" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.exclusions="**/Migrations/**.cs, **/Models/Database/**.cs, **/Core/Database/**.cs" 
           dotnet restore
           dotnet build --no-incremental
-          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"           
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"          
           dotnet test ./MainProject.Tests/MainProject.Tests.csproj --collect "Code Coverage" --results-directory "./TestResults"
           Get-Content -Path "coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
