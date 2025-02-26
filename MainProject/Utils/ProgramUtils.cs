@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using NLog;
 using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Models.Settings;
+using BasicDotnetTemplate.MainProject.Services;
 
 
 
@@ -41,7 +42,6 @@ public static class ProgramUtils
 
         return appSettings;
     }
-
     public static OpenApiInfo CreateOpenApiInfo(AppSettings appSettings)
     {
         OpenApiInfo openApiInfo = new OpenApiInfo
@@ -83,11 +83,53 @@ public static class ProgramUtils
         builder.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", CreateOpenApiInfo(appSettings));
+
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "Inserisci il Bearer Token nel formato **'Bearer {token}'**",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+
+            options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                Description = "Inserisci la tua API Key nel campo appropriato.",
+                Name = "ApiKey",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] {}
+                },
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "ApiKey"
+                        }
+                    },
+                    new string[] {}
+                }
+            });
         });
 
         Logger.Info("[ProgramUtils][AddOpenApi] Ended swagger doc");
     }
-
     public static void AddServices(ref WebApplicationBuilder builder)
     {
         Logger.Info("[ProgramUtils][AddServices] Adding services");
@@ -99,7 +141,6 @@ public static class ProgramUtils
 
         Logger.Info("[ProgramUtils][AddServices] Done services");
     }
-
     public static void AddMiddlewares(ref WebApplication app)
     {
         Logger.Info("[ProgramUtils][AddMiddlewares] Adding middlewares");
@@ -126,7 +167,6 @@ public static class ProgramUtils
 
         Logger.Info("[ProgramUtils][AddMiddlewares] Done middlewares");
     }
-
     public static void AddDbContext(ref WebApplicationBuilder builder, AppSettings appSettings)
     {
         Logger.Info("[ProgramUtils][AddDbContext] Adding DbContext");
@@ -168,10 +208,11 @@ public static class ProgramUtils
         messages = String.IsNullOrEmpty(messages) ? "No context" : messages;
         Logger.Info($"[ProgramUtils][AddDbContext] {messages} added");
     }
-
     public static void AddScopes(ref WebApplicationBuilder builder)
     {
         Logger.Info("[ProgramUtils][AddScopes] Adding scopes");
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IJwtService, JwtService>();
         Logger.Info("[ProgramUtils][AddScopes] Done scopes");
     }
 

@@ -37,6 +37,12 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             return StatusCode((int)HttpStatusCode.OK, CreateResponse(HttpStatusCode.OK, message, data));
         }
 
+        protected IActionResult NotModified(string message, object? data = null)
+        {
+            message = String.IsNullOrEmpty(message) ? "Not modified" : message;
+            return StatusCode((int)HttpStatusCode.NotModified, CreateResponse(HttpStatusCode.NotModified, message, data));
+        }
+
         protected IActionResult NotFound(string message, object? data = null)
         {
             message = String.IsNullOrEmpty(message) ? "Not found" : message;

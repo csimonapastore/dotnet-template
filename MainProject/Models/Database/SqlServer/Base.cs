@@ -3,6 +3,7 @@ namespace BasicDotnetTemplate.MainProject.Models.Database.SqlServer
     public class Base
     {
         public int Id { get; set; }
+        public string Guid { get; set; }
         public DateTime CreationTime { get; set; }
         public int CreationUserId { get; set; }
         public DateTime UpdateTime { get; set; }

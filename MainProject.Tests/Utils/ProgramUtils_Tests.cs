@@ -1,11 +1,3 @@
-using System;
-using System.Reflection;
-using System.Net;
-using System.Net.Http;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BasicDotnetTemplate.MainProject;
-using BasicDotnetTemplate.MainProject.Models.Api.Response;
-using Microsoft.Extensions.DependencyModel.Resolution;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using Microsoft.AspNetCore.Builder;
 using BasicDotnetTemplate.MainProject.Utils;
