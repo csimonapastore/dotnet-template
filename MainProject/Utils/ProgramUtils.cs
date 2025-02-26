@@ -12,6 +12,7 @@ namespace BasicDotnetTemplate.MainProject.Utils;
 
 public static class ProgramUtils
 {
+    private static readonly string[] _newStringArray = Array.Empty<string>();
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
     public static AppSettings AddConfiguration(ref WebApplicationBuilder builder, string? path = "", string? filename = "")
@@ -112,7 +113,7 @@ public static class ProgramUtils
                             Id = "Bearer"
                         }
                     },
-                    new string[] {}
+                    _newStringArray
                 },
                 {
                     new OpenApiSecurityScheme
@@ -123,7 +124,7 @@ public static class ProgramUtils
                             Id = "ApiKey"
                         }
                     },
-                    new string[] {}
+                    _newStringArray
                 }
             });
         });

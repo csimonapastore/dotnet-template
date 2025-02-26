@@ -11,7 +11,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
     [Route("[controller]")]
     public class AuthController : BaseController
     {
-        private IAuthService _authService;
+        private readonly IAuthService _authService;
         public AuthController(
             IConfiguration configuration,
             IAuthService authService
@@ -29,6 +29,11 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Request is not well formed");
+                }
+
                 if (
                     request == null ||
                     request.Data == null ||
@@ -50,9 +55,9 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             catch (Exception exception)
             {
                 var message = "Something went wrong";
-                if (!String.IsNullOrEmpty(exception?.Message))
+                if (!String.IsNullOrEmpty(exception.Message))
                 {
-                    message += $". {exception?.Message}";
+                    message += $". {exception.Message}";
                 }
                 return InternalServerError(message);
             }
