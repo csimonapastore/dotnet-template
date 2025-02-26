@@ -214,6 +214,7 @@ public static class ProgramUtils
         Logger.Info("[ProgramUtils][AddScopes] Adding scopes");
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
+        builder.Services.AddScoped<IUserService, UserService>();
         Logger.Info("[ProgramUtils][AddScopes] Done scopes");
     }
 

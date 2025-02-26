@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using BasicDotnetTemplate.MainProject.Models.Settings;
 
 namespace BasicDotnetTemplate.MainProject.Core.Attributes
 {
@@ -24,9 +25,66 @@ namespace BasicDotnetTemplate.MainProject.Core.Attributes
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            return;
+            // If [AllowAnonymous], skip
+            if (context.ActionDescriptor.EndpointMetadata.Any(em => em is AllowAnonymousAttribute))
+            {
+                return;
+            }
 
+            var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var appSettings = new AppSettings();
+            configuration.GetSection("AppSettings").Bind(appSettings);
+            var jwtKey = appSettings?.JwtSettings?.Secret ?? String.Empty;
+            var jwtIssuer = appSettings?.JwtSettings?.ValidIssuer ?? String.Empty;
+            var jwtAudience = appSettings?.JwtSettings?.ValidAudience ?? String.Empty;
 
+            if (string.IsNullOrEmpty(jwtKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
+            {
+                context.Result = new UnauthorizedResult();
+                return;
+            }
+
+            var token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+            if (token == null)
+            {
+                context.Result = new UnauthorizedResult();
+                return;
+            }
+
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(jwtKey);
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtIssuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtAudience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+
+                if (_policyName != null)
+                {
+                    var claim = jwtToken.Claims.FirstOrDefault(c => c.Type == _policyName);
+                    if (claim == null)
+                    {
+                        context.Result = new ForbidResult();
+                        return;
+                    }
+                }
+
+            }
+            catch
+            {
+                context.Result = new UnauthorizedResult();
+            }
         }
     }
 }

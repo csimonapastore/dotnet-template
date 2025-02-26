@@ -1,6 +1,6 @@
 namespace BasicDotnetTemplate.MainProject.Models.Settings;
 
-public class JWTSettings
+public class JwtSettings
 {
 #nullable enable
     public string? ValidAudience { get; set; }
