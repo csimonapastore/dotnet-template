@@ -34,9 +34,10 @@ namespace BasicDotnetTemplate.MainProject.Core.Attributes
             var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
             var appSettings = new AppSettings();
             configuration.GetSection("AppSettings").Bind(appSettings);
-            var jwtKey = appSettings?.JwtSettings?.Secret ?? String.Empty;
-            var jwtIssuer = appSettings?.JwtSettings?.ValidIssuer ?? String.Empty;
-            var jwtAudience = appSettings?.JwtSettings?.ValidAudience ?? String.Empty;
+            var jwtKey = appSettings.JwtSettings?.Secret ?? String.Empty;
+            var jwtIssuer = appSettings.JwtSettings?.ValidIssuer ?? String.Empty;
+            var jwtAudience = appSettings.JwtSettings?.ValidAudience ?? String.Empty;
+            string token = null;
 
             if (string.IsNullOrEmpty(jwtKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
             {
@@ -44,7 +45,11 @@ namespace BasicDotnetTemplate.MainProject.Core.Attributes
                 return;
             }
 
-            var token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            string[] authorizations = context.HttpContext.Request.Headers.Authorization.FirstOrDefault()?.Split(" ");
+            if(authorizations.Length == 2)
+            {
+                token = authorizations[1];
+            }
 
             if (token == null)
             {
