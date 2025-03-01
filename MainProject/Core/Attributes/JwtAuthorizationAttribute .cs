@@ -37,7 +37,7 @@ namespace BasicDotnetTemplate.MainProject.Core.Attributes
             var jwtKey = appSettings.JwtSettings?.Secret ?? String.Empty;
             var jwtIssuer = appSettings.JwtSettings?.ValidIssuer ?? String.Empty;
             var jwtAudience = appSettings.JwtSettings?.ValidAudience ?? String.Empty;
-            string token = null;
+            string? token = null;
 
             if (string.IsNullOrEmpty(jwtKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
             {
@@ -45,8 +45,8 @@ namespace BasicDotnetTemplate.MainProject.Core.Attributes
                 return;
             }
 
-            string[] authorizations = context.HttpContext.Request.Headers.Authorization.FirstOrDefault()?.Split(" ");
-            if(authorizations.Length == 2)
+            string[]? authorizations = context.HttpContext.Request.Headers.Authorization.FirstOrDefault()?.Split(" ");
+            if (authorizations != null && authorizations.Length == 2)
             {
                 token = authorizations[1];
             }
