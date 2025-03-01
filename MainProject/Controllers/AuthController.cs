@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BasicDotnetTemplate.MainProject.Core.Attributes;
 using BasicDotnetTemplate.MainProject.Models.Api.Request.Auth;
 using BasicDotnetTemplate.MainProject.Models.Api.Response;
+using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
 using BasicDotnetTemplate.MainProject.Services;
 
 namespace BasicDotnetTemplate.MainProject.Controllers
@@ -21,7 +22,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         }
 
         [HttpPost("authenticate")]
-        [ProducesResponseType<string>(StatusCodes.Status200OK)]
+        [ProducesResponseType<AuthenticateResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse>(StatusCodes.Status404NotFound)]
         [ProducesResponseType<BaseResponse>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse>(StatusCodes.Status500InternalServerError)]

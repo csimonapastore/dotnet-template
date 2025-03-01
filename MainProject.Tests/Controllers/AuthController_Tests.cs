@@ -1,0 +1,80 @@
+using System;
+using System.Reflection;
+using System.Net;
+using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Configuration;
+using Moq;
+using Newtonsoft.Json;
+using BasicDotnetTemplate.MainProject;
+using BasicDotnetTemplate.MainProject.Controllers;
+using BasicDotnetTemplate.MainProject.Services;
+using BasicDotnetTemplate.MainProject.Models.Api.Response;
+using BasicDotnetTemplate.MainProject.Models.Settings;
+using BasicDotnetTemplate.MainProject.Models.Api.Request.Auth;
+using BasicDotnetTemplate.MainProject.Models.Api.Data.Auth;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.Role;
+using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
+using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
+
+
+namespace BasicDotnetTemplate.MainProject.Tests;
+
+[TestClass]
+public class AuthController_Tests
+{
+    [TestMethod]
+    public void AuthController_NullConfiguration()
+    {
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+        var exception = true;
+        try
+        {
+            var authServiceMock = new Mock<IAuthService>();
+            _ = new AuthController(null, authServiceMock.Object);
+            exception = false;
+            Assert.Fail($"This test should not pass as configuration is null");
+        }
+        catch (Exception)
+        {
+            Assert.IsTrue(exception);
+        }
+    }
+
+
+    [TestMethod]
+    public async Task AuthenticateAsync_Should_Return_200_When_Successful()
+    {
+        IConfiguration configuration = TestUtils.CreateConfiguration();
+        var authServiceMock = new Mock<IAuthService>();
+        var controller = new AuthController(configuration, authServiceMock.Object);
+        DatabaseSqlServer.User user = new DatabaseSqlServer.User()
+            {
+                Username = "test",
+                FirstName = "test",
+                LastName = "test",
+                Email = "test",
+                PasswordHash = "test",
+                Role = new DatabaseSqlServer.Role()
+                {
+                    Name = "test"
+                }
+            };
+        AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
+
+        var request = new AuthenticateRequest { Data = new AuthenticateRequestData { Username = "user", Password = "pass" } };
+        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);        
+        ObjectResult result = (ObjectResult)(await controller.AuthenticateAsync(request));
+
+        var response = (BaseResponse)result.Value;
+
+        Assert.IsTrue(result.StatusCode == 200);
+        Assert.IsTrue(response.Status == 200);
+        Assert.IsInstanceOfType(response.Data, typeof(AuthenticatedUser));
+    }
+
+}

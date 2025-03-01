@@ -15,10 +15,10 @@ using BasicDotnetTemplate.MainProject.Models.Settings;
 namespace BasicDotnetTemplate.MainProject.Tests;
 
 [TestClass]
-public class BaseController_Tests
+public class VersionController_Tests
 {
     [TestMethod]
-    public void BaseController_NullConfiguration()
+    public void VersionController_NullConfiguration()
     {
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
         var exception = true;
@@ -33,7 +33,6 @@ public class BaseController_Tests
             Assert.IsTrue(exception);
         }
     }
-
 
     [TestMethod]
     public void VersionController_GetVersion_Valid()
