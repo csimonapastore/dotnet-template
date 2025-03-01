@@ -291,7 +291,7 @@ public class ProgramUtils_Tests
         {
             DatabaseSettings expectedDbSettings = new DatabaseSettings()
             {
-                SqlServerConnectionString = ""
+                SqlServerConnectionString = null
             };
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
