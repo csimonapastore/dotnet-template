@@ -68,13 +68,27 @@ public class AuthController_Tests
 
         var request = new AuthenticateRequest { Data = new AuthenticateRequestData { Username = "user", Password = "pass" } };
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);        
-        ObjectResult result = (ObjectResult)(await controller.AuthenticateAsync(request));
+        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+        if(response != null)
+        {
+            Assert.IsTrue(response.StatusCode == 200);
 
-        var response = (BaseResponse)result.Value;
-
-        Assert.IsTrue(result.StatusCode == 200);
-        Assert.IsTrue(response.Status == 200);
-        Assert.IsInstanceOfType(response.Data, typeof(AuthenticatedUser));
+            var result = (BaseResponse)response.Value;
+            if(result != null)
+            {
+                Assert.IsTrue(result.Status == 200);
+                Assert.IsInstanceOfType(result.Data, typeof(AuthenticatedUser));
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+            
+        }
+        else
+        {
+            Assert.Fail($"Response value is null");
+        }
     }
 
 }
