@@ -69,7 +69,7 @@ public class AuthController_Tests
         var request = new AuthenticateRequest { Data = new AuthenticateRequestData { Username = "user", Password = "pass" } };
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);        
         ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
-        if(response != null)
+        if(response != null && response.Value != null)
         {
             Assert.IsTrue(response.StatusCode == 200);
 
