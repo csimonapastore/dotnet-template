@@ -102,7 +102,8 @@ public class AuthController_Tests
         {
             Data = null
         };
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync((AuthenticatedUser)null);        
+        AuthenticatedUser authenticatedUser = null;
+        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);        
         ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
 
         if(response != null && response.Value != null)
