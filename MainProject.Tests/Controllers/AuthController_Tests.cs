@@ -173,8 +173,6 @@ public class AuthController_Tests
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser); 
         controller.ModelState.AddModelError("Data", "Invalid data");       
         ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
-        Console.WriteLine(JsonConvert.SerializeObject(response));
-        Console.WriteLine(response.GetType());
 
         Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
@@ -187,6 +185,45 @@ public class AuthController_Tests
             {
                 Assert.IsTrue(result.Status == 400);
                 Assert.IsTrue(result.Message == "Request is not well formed");
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }            
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task AuthenticateAsync_Exception()
+    {
+        IConfiguration configuration = TestUtils.CreateConfiguration();
+        var authServiceMock = new Mock<IAuthService>();
+        var controller = new AuthController(configuration, authServiceMock.Object);
+
+        var request = new AuthenticateRequest
+        {
+            Data = new AuthenticateRequestData { Username = "user", Password = "pass" } 
+        };
+
+        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ThrowsAsync(new Exception("Unexpected error")); 
+    
+        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+
+        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+        
+        if(response != null && response.Value != null)
+        {
+            Assert.IsTrue(response.StatusCode == 500);
+
+            var result = (BaseResponse)response.Value;
+            if(result != null)
+            {
+                Assert.IsTrue(result.Status == 500);
+                Assert.IsTrue(result.Message == "Something went wrong. Unexpected error");
             }
             else
             {
