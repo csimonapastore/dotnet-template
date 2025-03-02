@@ -127,4 +127,37 @@ public class AuthController_Tests
         }
     }
 
+    [TestMethod]
+    public async Task AuthenticateAsync_NotFound()
+    {
+        IConfiguration configuration = TestUtils.CreateConfiguration();
+        var authServiceMock = new Mock<IAuthService>();
+        var controller = new AuthController(configuration, authServiceMock.Object);
+
+        var request = new AuthenticateRequest
+        {
+            Data = new AuthenticateRequestData() 
+            {
+                Username = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7",
+                Password = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7"
+            }
+        };
+        AuthenticatedUser authenticatedUser = null;
+        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);        
+        NotFoundResult response = (NotFoundResult)(await controller.AuthenticateAsync(request));
+        Console.WriteLine(JsonConvert.SerializeObject(response));
+        Console.WriteLine(response.GetType());
+
+        Assert.IsInstanceOfType(response, typeof(NotFoundResult));
+
+        if(response != null)
+        {
+            Assert.IsTrue(response.StatusCode == 404);       
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
 }
