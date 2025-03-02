@@ -30,11 +30,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Request is not well formed");
-                }
-
                 if (
                     request == null ||
                     request.Data == null ||
