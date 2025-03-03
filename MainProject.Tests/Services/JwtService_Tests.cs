@@ -44,7 +44,7 @@ public class JwtService_Tests
     }
 
     [TestMethod]
-    public async Task GenerateToken()
+    public void GenerateToken()
     {
         try
         {
@@ -52,9 +52,34 @@ public class JwtService_Tests
             var testString = "test";
             if(jwtService != null)
             {
-                var jwt = jwtService.GenerateToken(testString, testString);
+                var jwt = jwtService.GenerateToken(testString);
                 Assert.IsTrue(jwt != null);
                 Assert.IsInstanceOfType(jwt, typeof(string));
+            }
+            else
+            {
+                Assert.Fail($"JwtService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void ValidateToken_Null()
+    {
+        try
+        {
+            var jwtService = TestUtils.CreateJwtService();
+            var testString = "test";
+            if(jwtService != null)
+            {
+                var jwt = jwtService.GenerateToken(testString);
+                var user = jwtService.ValidateToken($"Bearer {jwt}");
+                Assert.IsTrue(user == null);
             }
             else
             {

@@ -8,6 +8,8 @@ namespace BasicDotnetTemplate.MainProject.Services;
 
 public interface IUserService
 {
+    User? GetUserById(int id);
+    User? GetUserByGuid(string guid);
     Task<User?> GetUserByUsernameAndPassword(string username, string password);
 }
 
@@ -28,10 +30,19 @@ public class UserService : BaseService, IUserService
     private IQueryable<User> GetUserByUsername(string username)
     {
         return this.GetUsers().Where(x =>
-                String.Equals(x.Username, username, StringComparison.CurrentCultureIgnoreCase)
-            );
+            x.Username.ToString() == username.ToString()
+        );
     }
 
+    public User? GetUserById(int id)
+    {
+        return this.GetUsers().Where(x => x.Id == id).FirstOrDefault();
+    }
+
+    public User? GetUserByGuid(string guid)
+    {
+        return this.GetUsers().Where(x => x.Guid == guid).FirstOrDefault();
+    }
 
     public async Task<User?> GetUserByUsernameAndPassword(string username, string password)
     {
