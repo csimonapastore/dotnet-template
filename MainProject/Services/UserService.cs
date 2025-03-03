@@ -27,9 +27,7 @@ public class UserService : BaseService, IUserService
 
     private IQueryable<User> GetUserByUsername(string username)
     {
-        return this._sqlServerContext.Users
-            .Where(x =>
-                !x.IsDeleted &&
+        return this.GetUsers().Where(x =>
                 String.Equals(x.Username, username, StringComparison.CurrentCultureIgnoreCase)
             );
     }

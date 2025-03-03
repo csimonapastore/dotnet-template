@@ -52,6 +52,15 @@ public static class TestUtils
         var userServiceMock = new Mock<IUserService>();
         return new AuthService(configuration, sqlServerContext, userServiceMock.Object);
     }
+
+    public static UserService CreateUserService()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
+        optionsBuilder.UseSqlServer("test");
+        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        return new UserService(configuration, sqlServerContext);
+    }
 }
 
 
