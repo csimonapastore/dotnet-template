@@ -9,7 +9,7 @@ public class CryptUtils
     private readonly string secretKey;
     private const int M = 16;
     private const int N = 32;
-    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
     public CryptUtils(AppSettings appSettings)
     {
         secretKey = appSettings.EncryptionSettings?.Salt ?? String.Empty;

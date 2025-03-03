@@ -62,8 +62,8 @@ public class JwtTokenUtils
             return guid;
         }
 
-        string[]? authorizations = headerAuthorization.Split(" ");
-        if (authorizations != null && authorizations.Length == 2)
+        string[] authorizations = headerAuthorization.Split(" ");
+        if (authorizations.Length == 2)
         {
             token = authorizations[1];
         }
@@ -97,8 +97,9 @@ public class JwtTokenUtils
                     }
                 }
             }
-            catch
+            catch(Exception exception)
             {
+                Logger.Error($"[JwtTokenUtils][ValidateToken] | {exception.Message}");
                 return guid;
             }
         }
