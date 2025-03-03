@@ -13,6 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using BasicDotnetTemplate.MainProject.Core.Database;
+using BasicDotnetTemplate.MainProject.Services;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -37,6 +41,16 @@ public static class TestUtils
             .AddJsonFile(String.IsNullOrEmpty(filename) ? "appsettings.json" : filename, optional: false, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
+    }
+
+    public static AuthService CreateAuthService()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
+        optionsBuilder.UseSqlServer("test");
+        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        var userServiceMock = new Mock<IUserService>();
+        return new AuthService(configuration, sqlServerContext, userServiceMock.Object);
     }
 }
 
