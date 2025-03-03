@@ -61,6 +61,15 @@ public static class TestUtils
         SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
         return new UserService(configuration, sqlServerContext);
     }
+
+    public static JwtService CreateJwtService()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
+        optionsBuilder.UseSqlServer("test");
+        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        return new JwtService(configuration, sqlServerContext);
+    }
 }
 
 

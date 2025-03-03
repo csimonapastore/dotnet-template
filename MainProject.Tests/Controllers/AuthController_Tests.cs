@@ -102,7 +102,7 @@ public class AuthController_Tests
         {
             Data = null
         };
-        AuthenticatedUser authenticatedUser = null;
+        AuthenticatedUser? authenticatedUser = null;
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);        
         ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
 
@@ -142,7 +142,7 @@ public class AuthController_Tests
                 Password = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7"
             }
         };
-        AuthenticatedUser authenticatedUser = null;
+        AuthenticatedUser? authenticatedUser = null;
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);        
         NotFoundResult response = (NotFoundResult)(await controller.AuthenticateAsync(request));
 
@@ -169,7 +169,7 @@ public class AuthController_Tests
         {
             Data = null
         };
-        AuthenticatedUser authenticatedUser = null;
+        AuthenticatedUser? authenticatedUser = null;
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser); 
         controller.ModelState.AddModelError("Data", "Invalid data");       
         ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
