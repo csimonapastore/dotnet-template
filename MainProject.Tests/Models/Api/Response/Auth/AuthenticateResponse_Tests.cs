@@ -74,10 +74,13 @@ public class AuthenticateResponse_Tests
                 LastName = "test",
                 Email = "test",
                 PasswordHash = "test",
+                PasswordSalt = "test",
+                Password = "test",
                 Role = new DatabaseSqlServer.Role()
                 {
                     Name = "test"
-                }
+                },
+                IsTestUser = true
             };
             AuthenticatedUser data = new AuthenticatedUser(user);
             var authenticateResponse = new AuthenticateResponse(200, "This is a test message", data);

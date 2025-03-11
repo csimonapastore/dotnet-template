@@ -99,7 +99,7 @@ public class JwtTokenUtils
             }
             catch(Exception exception)
             {
-                Logger.Error($"[JwtTokenUtils][ValidateToken] | {exception.Message}");
+                Logger.Error($"[JwtTokenUtils][ValidateToken] | {exception}");
                 return guid;
             }
         }

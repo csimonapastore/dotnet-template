@@ -35,7 +35,8 @@
             "ExpiredAfterMinsOfInactivity": 15
         },
         "EncryptionSettings": {
-            "Salt": "AAAAA"
+            "Salt": "AAAAA",
+            "Pepper": ""
         }
     }
 

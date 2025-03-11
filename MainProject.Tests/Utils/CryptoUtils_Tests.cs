@@ -101,6 +101,67 @@ public class CryptoUtils_Tests
         }
     }
 
+    [TestMethod]
+    public void GenerateSalt()
+    {
+        try
+        {
+            var salt = CryptUtils.GenerateSalt();
+            Assert.IsTrue(!String.IsNullOrEmpty(salt));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void ComputeHash_Hashed()
+    {
+        try
+        {
+            var password = "P4ssw0rd@1!";
+            var salt = CryptUtils.GenerateSalt();
+            Assert.IsTrue(!String.IsNullOrEmpty(salt));
+
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
+            CryptUtils cryptoUtils = new CryptUtils(appSettings);
+            var encryptedPassword = cryptoUtils.GeneratePassword(password, salt, 0);
+            Assert.IsTrue(password != encryptedPassword); 
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
+    [TestMethod]
+    public void VerifyPassword_True()
+    {
+        try
+        {
+            var password = "P4ssw0rd@1!";
+            var salt = "Afi7PQYgEL2sPbNyVzduvg==";
+            var hashedPassword = "2lMeySZ9ciH1KtSg1Z7oSJRmJEjHMeDvdaNRcJcGutM=";
+
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
+            CryptUtils cryptoUtils = new CryptUtils(appSettings);
+            var verified = cryptoUtils.VerifyPassword(password, salt, 0, hashedPassword);
+            Console.WriteLine(cryptoUtils.GeneratePassword(password, salt, 0));
+
+            Assert.IsTrue(verified);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex.Message}");
+        }
+    }
+
 }
 
 

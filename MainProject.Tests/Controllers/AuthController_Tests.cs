@@ -59,10 +59,13 @@ public class AuthController_Tests
                 LastName = "test",
                 Email = "test",
                 PasswordHash = "test",
+                PasswordSalt = "test",
+                Password = "test",
                 Role = new DatabaseSqlServer.Role()
                 {
                     Name = "test"
-                }
+                },
+                IsTestUser = true
             };
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
 
