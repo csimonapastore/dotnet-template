@@ -20,22 +20,37 @@ using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
 using BasicDotnetTemplate.MainProject.Models.Api.Common.Role;
 using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
+using AutoMapper;
+using BasicDotnetTemplate.MainProject.Core.Middlewares;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
 
 [TestClass]
-public class AuthController_Tests
+public class UserControllerTests
 {
+    private IMapper _mapper;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<AutoMapperConfiguration>();
+        });
+
+        _mapper = config.CreateMapper();
+    }
+
     [TestMethod]
-    public void AuthController_NullConfiguration()
+    public void UserController_NullConfiguration()
     {
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
         var exception = true;
         try
         {
-            var authServiceMock = new Mock<IAuthService>();
-            _ = new AuthController(null, authServiceMock.Object);
+            var userServiceMock = new Mock<IUserService>();
+            _ = new UserController(null, userServiceMock.Object);
             exception = false;
             Assert.Fail($"This test should not pass as configuration is null");
         }
@@ -47,31 +62,31 @@ public class AuthController_Tests
 
 
     [TestMethod]
-    public async Task AuthenticateAsync_Should_Return_200_When_Successful()
+    public async Task GetUserByGuidAsync_Should_Return_200_When_Successful()
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
+        var userServiceMock = new Mock<IUserService>();
+        var controller = new UserController(configuration, userServiceMock.Object);
+        var guid = Guid.NewGuid().ToString();
         DatabaseSqlServer.User user = new DatabaseSqlServer.User()
         {
-            Username = "test",
-            FirstName = "test",
-            LastName = "test",
-            Email = "test",
-            PasswordHash = "test",
-            PasswordSalt = "test",
-            Password = "test",
+            Guid = guid,
+            Username = "Username",
+            FirstName = "FirstName",
+            LastName = "LastName",
+            Email = "Email",
+            PasswordHash = "PasswordHash",
+            PasswordSalt = "PasswordSalt",
+            Password = "Password",
             Role = new DatabaseSqlServer.Role()
             {
-                Name = "test"
+                Name = "Role.Name"
             },
             IsTestUser = true
         };
-        AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
 
-        var request = new AuthenticateRequest { Data = new AuthenticateRequestData { Username = "user", Password = "pass" } };
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+        userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        ObjectResult response = (ObjectResult)(await controller.GetUserByGuidAsync(guid));
         if (response != null && response.Value != null)
         {
             Assert.IsTrue(response.StatusCode == 200);
@@ -80,13 +95,12 @@ public class AuthController_Tests
             if (result != null)
             {
                 Assert.IsTrue(result.Status == 200);
-                Assert.IsInstanceOfType(result.Data, typeof(AuthenticatedUser));
+                Assert.IsInstanceOfType(result.Data, typeof(DatabaseSqlServer.User));
             }
             else
             {
                 Assert.Fail($"Result value is null");
             }
-
         }
         else
         {
@@ -95,19 +109,17 @@ public class AuthController_Tests
     }
 
     [TestMethod]
-    public async Task AuthenticateAsync_AuthenticateRequestDataNull()
+    public async Task GetUserByGuidAsync_AuthenticateRequestDataNull()
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
+        var userServiceMock = new Mock<IUserService>();
+        var controller = new UserController(configuration, userServiceMock.Object);
 
-        var request = new AuthenticateRequest
-        {
-            Data = null
-        };
-        AuthenticatedUser? authenticatedUser = null;
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+        var guid = String.Empty;
+        DatabaseSqlServer.User? user = null;
+
+        userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        ObjectResult response = (ObjectResult)(await controller.GetUserByGuidAsync(guid));
 
         if (response != null && response.Value != null)
         {
@@ -131,23 +143,16 @@ public class AuthController_Tests
     }
 
     [TestMethod]
-    public async Task AuthenticateAsync_NotFound()
+    public async Task GetUserByGuidAsync_NotFound()
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
+        var userServiceMock = new Mock<IUserService>();
+        var controller = new UserController(configuration, userServiceMock.Object);
 
-        var request = new AuthenticateRequest
-        {
-            Data = new AuthenticateRequestData()
-            {
-                Username = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7",
-                Password = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7"
-            }
-        };
-        AuthenticatedUser? authenticatedUser = null;
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
-        NotFoundResult response = (NotFoundResult)(await controller.AuthenticateAsync(request));
+        var guid = Guid.NewGuid().ToString();
+        DatabaseSqlServer.User? user = null;
+        userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        NotFoundResult response = (NotFoundResult)(await controller.GetUserByGuidAsync(guid));
 
         Assert.IsInstanceOfType(response, typeof(NotFoundResult));
 
@@ -162,20 +167,17 @@ public class AuthController_Tests
     }
 
     [TestMethod]
-    public async Task AuthenticateAsync_ModelInvalid()
+    public async Task GetUserByGuidAsync_ModelInvalid()
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
+        var userServiceMock = new Mock<IUserService>();
+        var controller = new UserController(configuration, userServiceMock.Object);
 
-        var request = new AuthenticateRequest
-        {
-            Data = null
-        };
-        AuthenticatedUser? authenticatedUser = null;
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
+        var guid = Guid.NewGuid().ToString();
+        DatabaseSqlServer.User? user = null;
+        userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
         controller.ModelState.AddModelError("Data", "Invalid data");
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+        ObjectResult response = (ObjectResult)(await controller.GetUserByGuidAsync(guid));
 
         Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
@@ -201,20 +203,16 @@ public class AuthController_Tests
     }
 
     [TestMethod]
-    public async Task AuthenticateAsync_Exception()
+    public async Task GetUserByGuidAsync_Exception()
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
+        var userServiceMock = new Mock<IUserService>();
+        var controller = new UserController(configuration, userServiceMock.Object);
 
-        var request = new AuthenticateRequest
-        {
-            Data = new AuthenticateRequestData { Username = "user", Password = "pass" }
-        };
-
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ThrowsAsync(new Exception("Unexpected error"));
-
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+        var guid = Guid.NewGuid().ToString();
+        DatabaseSqlServer.User? user = null;
+        userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ThrowsAsync(new Exception("Unexpected error"));
+        ObjectResult response = (ObjectResult)(await controller.GetUserByGuidAsync(guid));
 
         Assert.IsInstanceOfType(response, typeof(ObjectResult));
 

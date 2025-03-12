@@ -1,32 +1,31 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BasicDotnetTemplate.MainProject.Core.Attributes;
-using BasicDotnetTemplate.MainProject.Models.Api.Request.Auth;
-using BasicDotnetTemplate.MainProject.Models.Api.Response;
-using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
 using BasicDotnetTemplate.MainProject.Services;
+//using BasicDotnetTemplate.MainProject.Models.Api.Request.User;
+using BasicDotnetTemplate.MainProject.Models.Api.Response;
+using BasicDotnetTemplate.MainProject.Models.Api.Response.User;
 
 namespace BasicDotnetTemplate.MainProject.Controllers
 {
     [Route("[controller]")]
-    public class AuthController : BaseController
+    public class UserController : BaseController
     {
-        private readonly IAuthService _authService;
-        public AuthController(
+        private readonly IUserService _userService;
+        public UserController(
             IConfiguration configuration,
-            IAuthService authService
+            IUserService userService
         ) : base(configuration)
         {
-            this._authService = authService;
+            this._userService = userService;
         }
 
-        [HttpPost("authenticate")]
-        [ProducesResponseType<AuthenticateResponse>(StatusCodes.Status200OK)]
+        [HttpGet("get/{guid}")]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status404NotFound)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AuthenticateAsync([FromBody] AuthenticateRequest request)
+        public async Task<IActionResult> GetUserByGuidAsync(string guid)
         {
             try
             {
@@ -35,18 +34,13 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                     return BadRequest("Request is not well formed");
                 }
 
-                if (
-                    request == null ||
-                    request.Data == null ||
-                    String.IsNullOrEmpty(request.Data.Username) ||
-                    String.IsNullOrEmpty(request.Data.Password)
-                )
+                if (String.IsNullOrEmpty(guid))
                 {
                     return BadRequest("Request is not well formed");
                 }
-                var data = await this._authService.AuthenticateAsync(request.Data);
+                var data = await this._userService.GetUserByGuidAsync(guid);
 
-                if (data == null)
+                if (data == null || String.IsNullOrEmpty(data.Guid))
                 {
                     return NotFound();
                 }

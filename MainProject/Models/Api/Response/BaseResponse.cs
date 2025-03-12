@@ -1,9 +1,9 @@
 namespace BasicDotnetTemplate.MainProject.Models.Api.Response;
 
-public class BaseResponse
+public class BaseResponse<T>
 {
 #nullable enable
-    public BaseResponse(int status, string? message, dynamic? data)
+    public BaseResponse(int status, string? message, T? data)
     {
         this.Status = status;
         this.Message = message;

@@ -47,7 +47,7 @@ public class VersionController_Tests
             var objectResult = ((ObjectResult)result).Value;
             if (objectResult != null)
             {
-                var data = (BaseResponse)objectResult;
+                var data = (BaseResponse<object>)objectResult;
                 if (data.Data != null)
                 {
                     AppSettings appSettings = new AppSettings();
@@ -86,7 +86,7 @@ public class VersionController_Tests
             var objectResult = ((ObjectResult)result).Value;
             if (objectResult != null)
             {
-                var data = (BaseResponse)objectResult;
+                var data = (BaseResponse<object>)objectResult;
                 Assert.IsTrue((((IStatusCodeActionResult)result).StatusCode == 200) && String.IsNullOrEmpty(data.Data));
             }
             else

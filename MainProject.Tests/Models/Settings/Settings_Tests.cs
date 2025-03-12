@@ -25,7 +25,8 @@ public class Settings_Tests
 
             var privateSettings = new PrivateSettings()
             {
-                DatabaseConnection = new DatabaseConnection() {
+                DatabaseConnection = new DatabaseConnection()
+                {
                     SqlServer = sqlServer,
                     Mongodb = mongodb,
                     Postgres = postgres,
@@ -33,9 +34,9 @@ public class Settings_Tests
             };
 
             Assert.IsTrue(
-                privateSettings.DatabaseConnection != null && 
-                privateSettings.DatabaseConnection.SqlServer == sqlServer && 
-                privateSettings.DatabaseConnection.Mongodb == mongodb && 
+                privateSettings.DatabaseConnection != null &&
+                privateSettings.DatabaseConnection.SqlServer == sqlServer &&
+                privateSettings.DatabaseConnection.Mongodb == mongodb &&
                 privateSettings.DatabaseConnection.Postgres == postgres
             );
         }
@@ -51,7 +52,7 @@ public class Settings_Tests
     {
         try
         {
-            var baseResponse = new BaseResponse(201, null, null);
+            var baseResponse = new BaseResponse<object>(201, null, null);
             Assert.IsFalse(baseResponse.Status == 200);
         }
         catch (Exception ex)
@@ -66,7 +67,7 @@ public class Settings_Tests
     {
         try
         {
-            var baseResponse = new BaseResponse(200, "This is a test message", null);
+            var baseResponse = new BaseResponse<object>(200, "This is a test message", null);
             Assert.IsTrue(baseResponse.Status == 200 && baseResponse.Message == "This is a test message" && baseResponse.Data == null);
         }
         catch (Exception ex)
@@ -82,7 +83,7 @@ public class Settings_Tests
         try
         {
             string[] data = { "Volvo", "BMW", "Ford", "Mazda" };
-            var baseResponse = new BaseResponse(200, "This is a test message", data);
+            var baseResponse = new BaseResponse<string[]>(200, "This is a test message", data);
             Assert.IsTrue(baseResponse.Status == 200 && baseResponse.Message == "This is a test message" && baseResponse.Data == data);
         }
         catch (Exception ex)

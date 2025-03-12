@@ -8,8 +8,8 @@ namespace BasicDotnetTemplate.MainProject.Services;
 
 public interface IUserService
 {
-    User? GetUserById(int id);
-    User? GetUserByGuid(string guid);
+    Task<User?> GetUserByIdAsync(int id);
+    Task<User?> GetUserByGuidAsync(string guid);
     Task<User?> GetUserByUsernameAndPassword(string username, string password);
 }
 
@@ -34,14 +34,14 @@ public class UserService : BaseService, IUserService
         );
     }
 
-    public User? GetUserById(int id)
+    public async Task<User?> GetUserByIdAsync(int id)
     {
-        return this.GetUsers().Where(x => x.Id == id).FirstOrDefault();
+        return await this.GetUsers().Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 
-    public User? GetUserByGuid(string guid)
+    public async Task<User?> GetUserByGuidAsync(string guid)
     {
-        return this.GetUsers().Where(x => x.Guid == guid).FirstOrDefault();
+        return await this.GetUsers().Where(x => x.Guid == guid).FirstOrDefaultAsync();
     }
 
     public async Task<User?> GetUserByUsernameAndPassword(string username, string password)
@@ -64,5 +64,12 @@ public class UserService : BaseService, IUserService
 
         return user;
     }
+
+    // public async Task<User?> CreateUser(CreateUserRequestData data)
+    // {
+
+    // }
+
+
 }
 

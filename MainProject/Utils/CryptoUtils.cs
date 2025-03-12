@@ -71,10 +71,9 @@ public class CryptUtils
         string hashedPassword = password;
         for(var i = 0; i <= iteration; i++)
         {
-            using var sha256 = SHA256.Create();
             var passwordSaltPepper = $"{hashedPassword}{salt}{this._pepper}";
             var byteValue = Encoding.UTF8.GetBytes(passwordSaltPepper);
-            var byteHash = sha256.ComputeHash(byteValue);
+            var byteHash = SHA256.HashData(byteValue);
             hashedPassword = Convert.ToBase64String(byteHash);
         }
 

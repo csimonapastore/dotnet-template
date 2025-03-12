@@ -44,7 +44,8 @@ public class JwtService : BaseService, IJwtService
         string? guid = _jwtTokenUtils.ValidateToken(headerAuthorization);
         if(!String.IsNullOrEmpty(guid))
         {
-            user = this._userService.GetUserByGuid(guid);
+            var userTask = Task.Run(() => this._userService.GetUserByGuidAsync(guid));
+            user = userTask.Result;
         }
         return user;
     }

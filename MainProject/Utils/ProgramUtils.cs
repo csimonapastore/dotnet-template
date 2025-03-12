@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using NLog;
 using BasicDotnetTemplate.MainProject.Core.Database;
+using BasicDotnetTemplate.MainProject.Core.Middlewares;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using BasicDotnetTemplate.MainProject.Services;
 
@@ -216,6 +217,13 @@ public static class ProgramUtils
         builder.Services.AddScoped<IJwtService, JwtService>();
         builder.Services.AddScoped<IUserService, UserService>();
         Logger.Info("[ProgramUtils][AddScopes] Done scopes");
+    }
+
+    public static void AddAutoMapper(ref WebApplicationBuilder builder)
+    {
+        Logger.Info("[ProgramUtils][AddAutoMapper] Adding AutoMapperConfiguration");
+        builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
+        Logger.Info("[ProgramUtils][AddScopes] Done AutoMapperConfiguration");
     }
 
 }

@@ -20,9 +20,9 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         }
 
 #nullable enable
-        private static BaseResponse CreateResponse(HttpStatusCode status, string message, object? data = null)
+        private static BaseResponse<T> CreateResponse<T>(HttpStatusCode status, string message, T? data)
         {
-            return new BaseResponse((int)status, message, data);
+            return new BaseResponse<T>((int)status, message, data);
         }
 
         protected new IActionResult Created(string message, object? data = null)
@@ -58,7 +58,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         protected IActionResult InternalServerError(string message)
         {
             message = String.IsNullOrEmpty(message) ? "Internal server error" : message;
-            return StatusCode((int)HttpStatusCode.InternalServerError, CreateResponse(HttpStatusCode.InternalServerError, message));
+            return StatusCode((int)HttpStatusCode.InternalServerError, CreateResponse(HttpStatusCode.InternalServerError, message, new object()));
         }
 
 #nullable disable
