@@ -19,7 +19,7 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class AutoMapperConfiguration_Tests
 {
-    private IMapper _mapper;
+    private IMapper? _mapper;
 
     [TestInitialize]
     public void Setup()
@@ -53,13 +53,13 @@ public class AutoMapperConfiguration_Tests
                 },
                 IsTestUser = true
             };
-            UserDto data = _mapper.Map<UserDto>(user);
+            UserDto? data = _mapper?.Map<UserDto>(user);
 
-            Assert.IsTrue(data.Guid == user.Guid);
-            Assert.IsTrue(data.Username == user.Username);
-            Assert.IsTrue(data.FirstName == user.FirstName);
-            Assert.IsTrue(data.LastName == user.LastName);
-            Assert.IsTrue(data.Email == user.Email);
+            Assert.IsTrue(data?.Guid == user.Guid);
+            Assert.IsTrue(data?.Username == user.Username);
+            Assert.IsTrue(data?.FirstName == user.FirstName);
+            Assert.IsTrue(data?.LastName == user.LastName);
+            Assert.IsTrue(data?.Email == user.Email);
         }
         catch (Exception ex)
         {

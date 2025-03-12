@@ -54,8 +54,8 @@ public class JwtTokenUtils
         string? guid = null;
 
         if (
-            String.IsNullOrEmpty(_jwtKey) || 
-            String.IsNullOrEmpty(_jwtIssuer) || 
+            String.IsNullOrEmpty(_jwtKey) ||
+            String.IsNullOrEmpty(_jwtIssuer) ||
             String.IsNullOrEmpty(_jwtAudience)
         )
         {
@@ -68,7 +68,7 @@ public class JwtTokenUtils
             token = authorizations[1];
         }
 
-        if(!String.IsNullOrEmpty(token))
+        if (!String.IsNullOrEmpty(token))
         {
             try
             {
@@ -97,9 +97,9 @@ public class JwtTokenUtils
                     }
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                Logger.Error($"[JwtTokenUtils][ValidateToken] | {exception}");
+                Logger.Error(exception, $"[JwtTokenUtils][ValidateToken]");
                 return guid;
             }
         }

@@ -29,7 +29,7 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class UserControllerTests
 {
-    private IMapper _mapper;
+    private IMapper? _mapper;
 
     [TestInitialize]
     public void Setup()

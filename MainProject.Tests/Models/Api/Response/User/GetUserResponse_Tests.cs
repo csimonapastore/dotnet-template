@@ -19,7 +19,7 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class GetUserResponse_Tests
 {
-    private IMapper _mapper;
+    private IMapper? _mapper;
 
     [TestInitialize]
     public void Setup()
@@ -97,7 +97,7 @@ public class GetUserResponse_Tests
                 },
                 IsTestUser = true
             };
-            UserDto data = _mapper.Map<UserDto>(user);
+            UserDto? data = _mapper?.Map<UserDto>(user);
             var getUserResponse = new GetUserResponse(200, "This is a test message", data);
             Assert.IsTrue(getUserResponse.Status == 200 && getUserResponse.Message == "This is a test message" && getUserResponse.Data == data);
         }
