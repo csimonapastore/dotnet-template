@@ -210,7 +210,6 @@ public class UserControllerTests
         var controller = new UserController(configuration, userServiceMock.Object);
 
         var guid = Guid.NewGuid().ToString();
-        DatabaseSqlServer.User? user = null;
         userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ThrowsAsync(new Exception("Unexpected error"));
         ObjectResult response = (ObjectResult)(await controller.GetUserByGuidAsync(guid));
 

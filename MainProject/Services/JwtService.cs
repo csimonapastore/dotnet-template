@@ -19,7 +19,6 @@ public interface IJwtService
 public class JwtService : BaseService, IJwtService
 {
     private readonly JwtTokenUtils _jwtTokenUtils;
-    private readonly IUserService _userService;
 
     public JwtService(
         IConfiguration configuration,
@@ -28,7 +27,6 @@ public class JwtService : BaseService, IJwtService
     ) : base(configuration, sqlServerContext)
     {
         _jwtTokenUtils = new JwtTokenUtils(_appSettings);
-        _userService = userService;
     }
 
 
@@ -37,7 +35,7 @@ public class JwtService : BaseService, IJwtService
         return _jwtTokenUtils.GenerateToken(guid);
     }
 
-    
+
 
 }
 
