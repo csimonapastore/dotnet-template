@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using BasicDotnetTemplate.MainProject.Services;
 using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
+using BasicDotnetTemplate.MainProject.Utils;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
 
 
 namespace BasicDotnetTemplate.MainProject.Core.Attributes
@@ -18,13 +20,9 @@ namespace BasicDotnetTemplate.MainProject.Core.Attributes
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class JwtAuthorizationAttribute : Attribute, IAuthorizationFilter
     {
-        private readonly IJwtService _jwtService;
-
         public JwtAuthorizationAttribute(
-            IJwtService jwtService
         )
         {
-            _jwtService = jwtService;
         }
 
         public static void Unauthorized(AuthorizationFilterContext context)
@@ -34,30 +32,54 @@ namespace BasicDotnetTemplate.MainProject.Core.Attributes
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            DatabaseSqlServer.User? user = null;
             // If [AllowAnonymous], skip
             if (context.ActionDescriptor.EndpointMetadata.Any(em => em is AllowAnonymousAttribute))
             {
                 return;
             }
 
+            string? userGuidFromToken = null;
+
             var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
             var appSettings = new AppSettings();
             configuration.GetSection("AppSettings").Bind(appSettings);
             string? headerAuthorization = context.HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            
-            if(!String.IsNullOrEmpty(headerAuthorization))
+            AuthenticatedUser? userContext = context.HttpContext.Items["User"] != null ? (AuthenticatedUser?)context.HttpContext.Items["User"] : null;
+
+            if (userContext == null)
             {
-                user = _jwtService.ValidateToken(headerAuthorization!);
-                if(user == null)
+                Unauthorized(context);
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(headerAuthorization))
+                {
+                    userGuidFromToken = JwtAuthorizationAttribute.ValidateToken(headerAuthorization!, appSettings);
+                    if (String.IsNullOrEmpty(userGuidFromToken))
+                    {
+                        Unauthorized(context);
+                    }
+                    else
+                    {
+                        if (userContext!.Guid != userGuidFromToken)
+                        {
+                            Unauthorized(context);
+                        }
+                    }
+                }
+                else
                 {
                     Unauthorized(context);
                 }
             }
-            else
-            {
-                Unauthorized(context);
-            }
+
+
+        }
+
+        private static string? ValidateToken(string headerAuthorization, AppSettings appSettings)
+        {
+            JwtTokenUtils _jwtTokenUtils = new(appSettings);
+            return _jwtTokenUtils.ValidateToken(headerAuthorization);
         }
     }
 }

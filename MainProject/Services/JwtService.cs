@@ -14,7 +14,6 @@ namespace BasicDotnetTemplate.MainProject.Services;
 public interface IJwtService
 {
     string GenerateToken(string guid);
-    DatabaseSqlServer.User? ValidateToken(string headerAuthorization);
 }
 
 public class JwtService : BaseService, IJwtService
@@ -38,17 +37,7 @@ public class JwtService : BaseService, IJwtService
         return _jwtTokenUtils.GenerateToken(guid);
     }
 
-    public DatabaseSqlServer.User? ValidateToken(string headerAuthorization)
-    {
-        DatabaseSqlServer.User? user = null;
-        string? guid = _jwtTokenUtils.ValidateToken(headerAuthorization);
-        if(!String.IsNullOrEmpty(guid))
-        {
-            var userTask = Task.Run(() => this._userService.GetUserByGuidAsync(guid));
-            user = userTask.Result;
-        }
-        return user;
-    }
+    
 
 }
 

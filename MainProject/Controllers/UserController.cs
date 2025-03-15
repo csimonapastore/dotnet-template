@@ -20,6 +20,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             this._userService = userService;
         }
 
+        [JwtAuthorization()]
         [HttpGet("get/{guid}")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status404NotFound)]
