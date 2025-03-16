@@ -9,6 +9,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
     {
         protected readonly IConfiguration _configuration;
         protected readonly AppSettings _appSettings;
+        protected readonly string _requestNotWellFormed = "Request is not well formed";
 
         protected BaseController(
             IConfiguration configuration

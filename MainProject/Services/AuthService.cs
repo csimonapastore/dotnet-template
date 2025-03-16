@@ -17,10 +17,11 @@ public class AuthService : BaseService, IAuthService
     protected readonly IUserService _userService;
 
     public AuthService(
+        IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
         SqlServerContext sqlServerContext,
         IUserService userService
-    ) : base(configuration, sqlServerContext)
+    ) : base(httpContextAccessor, configuration, sqlServerContext)
     {
         _cryptUtils = new CryptUtils(_appSettings);
         _userService = userService;
@@ -29,7 +30,8 @@ public class AuthService : BaseService, IAuthService
     public async Task<AuthenticatedUser?> AuthenticateAsync(AuthenticateRequestData data)
     {
         AuthenticatedUser? authenticatedUser = null;
-        var decryptedUsername = _cryptUtils.Decrypt(data.Username ?? String.Empty);
+
+        var decryptedUsername = _cryptUtils.Decrypt(data.Email ?? String.Empty);
         var decryptedPassword = _cryptUtils.Decrypt(data.Password ?? String.Empty);
 
         if (!String.IsNullOrEmpty(decryptedUsername) && !String.IsNullOrEmpty(decryptedPassword))

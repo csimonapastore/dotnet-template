@@ -29,19 +29,19 @@ public class UserService_Tests
         try
         {
             var userService = TestUtils.CreateUserService();
-            if(userService != null)
+            if (userService != null)
             {
                 Assert.IsInstanceOfType(userService, typeof(UserService));
             }
             else
             {
                 Assert.Fail($"UserService is null");
-            }            
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -52,7 +52,7 @@ public class UserService_Tests
         {
             var userService = TestUtils.CreateUserService();
             var testString = "test";
-            if(userService != null)
+            if (userService != null)
             {
                 var user = await userService.GetUserByUsernameAndPassword(testString, testString);
                 Assert.IsTrue(user == null);
@@ -65,7 +65,7 @@ public class UserService_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -76,13 +76,13 @@ public class UserService_Tests
         try
         {
             var userService = TestUtils.CreateUserService();
-            var testUsername = "test@email.it";
+            var testEmail = "test@email.it";
             var testPassword = "password";
-            if(userService != null)
+            if (userService != null)
             {
-                var user = await userService.GetUserByUsernameAndPassword(testUsername, testPassword);
+                var user = await userService.GetUserByUsernameAndPassword(testEmail, testPassword);
                 Assert.IsTrue(user != null);
-                Assert.IsTrue(user.Username == testUsername);
+                Assert.IsTrue(user.Email == testEmail);
             }
             else
             {
@@ -92,7 +92,7 @@ public class UserService_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 

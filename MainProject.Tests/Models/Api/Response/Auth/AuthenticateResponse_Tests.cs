@@ -10,6 +10,7 @@ using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
 using BasicDotnetTemplate.MainProject.Models.Api.Common.Role;
 using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
+using Microsoft.AspNetCore.Http;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -23,12 +24,12 @@ public class AuthenticateResponse_Tests
         try
         {
             var authenticateResponse = new AuthenticateResponse(200, null, null);
-            Assert.IsTrue(authenticateResponse.Status == 200 && String.IsNullOrEmpty(authenticateResponse.Message) && authenticateResponse.Data == null);
+            Assert.IsTrue(authenticateResponse.Status == StatusCodes.Status200OK && String.IsNullOrEmpty(authenticateResponse.Message) && authenticateResponse.Data == null);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -38,12 +39,12 @@ public class AuthenticateResponse_Tests
         try
         {
             var authenticateResponse = new AuthenticateResponse(201, null, null);
-            Assert.IsFalse(authenticateResponse.Status == 200);
+            Assert.IsFalse(authenticateResponse.Status == StatusCodes.Status200OK);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -53,12 +54,12 @@ public class AuthenticateResponse_Tests
         try
         {
             var authenticateResponse = new AuthenticateResponse(200, "This is a test message", null);
-            Assert.IsTrue(authenticateResponse.Status == 200 && authenticateResponse.Message == "This is a test message" && authenticateResponse.Data == null);
+            Assert.IsTrue(authenticateResponse.Status == StatusCodes.Status200OK && authenticateResponse.Message == "This is a test message" && authenticateResponse.Data == null);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -67,29 +68,15 @@ public class AuthenticateResponse_Tests
     {
         try
         {
-            DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-            {
-                Username = "test",
-                FirstName = "test",
-                LastName = "test",
-                Email = "test",
-                PasswordHash = "test",
-                PasswordSalt = "test",
-                Password = "test",
-                Role = new DatabaseSqlServer.Role()
-                {
-                    Name = "test"
-                },
-                IsTestUser = true
-            };
+            DatabaseSqlServer.User user = ModelsInit.CreateUser();
             AuthenticatedUser data = new AuthenticatedUser(user);
             var authenticateResponse = new AuthenticateResponse(200, "This is a test message", data);
-            Assert.IsTrue(authenticateResponse.Status == 200 && authenticateResponse.Message == "This is a test message" && authenticateResponse.Data == data);
+            Assert.IsTrue(authenticateResponse.Status == StatusCodes.Status200OK && authenticateResponse.Message == "This is a test message" && authenticateResponse.Data == data);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 }

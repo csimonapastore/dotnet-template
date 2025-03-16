@@ -44,6 +44,7 @@ internal static class Program
         ProgramUtils.AddDbContext(ref builder, appSettings);
         WebApplication app = builder.Build();
         ProgramUtils.AddMiddlewares(ref app);
+        ProgramUtils.CreateRoles(ref app);
 
         Logger.Info("[Program][Initialize] End building");
         return app;

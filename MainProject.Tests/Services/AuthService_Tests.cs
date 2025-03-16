@@ -29,19 +29,19 @@ public class AuthService_Tests
         try
         {
             var authService = TestUtils.CreateAuthService();
-            if(authService != null)
+            if (authService != null)
             {
                 Assert.IsInstanceOfType(authService, typeof(AuthService));
             }
             else
             {
                 Assert.Fail($"AuthService is null");
-            }            
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -50,16 +50,16 @@ public class AuthService_Tests
     {
         try
         {
-            var request = new AuthenticateRequest 
-            { 
-                Data = new AuthenticateRequestData 
-                { 
-                    Username = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7iv7zgfQ13qG/0dUUsreG/WGHWRBE5mVWaV43A=", 
-                    Password = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7iv7zgfQ13qG/0dUUsreG/WGHWRBE5mVWaV43A=" 
-                } 
+            var request = new AuthenticateRequest
+            {
+                Data = new AuthenticateRequestData
+                {
+                    Email = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7iv7zgfQ13qG/0dUUsreG/WGHWRBE5mVWaV43A=",
+                    Password = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7iv7zgfQ13qG/0dUUsreG/WGHWRBE5mVWaV43A="
+                }
             };
             var authService = TestUtils.CreateAuthService();
-            if(authService != null)
+            if (authService != null)
             {
                 var authenticatedUser = await authService.AuthenticateAsync(request.Data);
                 Assert.IsTrue(authenticatedUser == null);
@@ -72,36 +72,25 @@ public class AuthService_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
-
-// if(authenticatedUser == null)
-// {
-//     Console.WriteLine(JsonConvert.SerializeObject(authenticatedUser));
-//     Assert.IsTrue(authenticatedUser.Username == expectedAuthenticatedUser.Username);
-// }
-// else
-// {
-//     Console.WriteLine(JsonConvert.SerializeObject(authenticatedUser));
-//     Assert.Fail($"authenticatedUser is null");
-// }
 
     [TestMethod]
     public async Task AuthenticateAsync_UsernamePasswordInvalid()
     {
         try
         {
-            var request = new AuthenticateRequest 
-            { 
-                Data = new AuthenticateRequestData 
-                { 
-                    Username = "WGHWRBE5mVWaV=", 
-                    Password = "WGHWRBE5mVWaV=" 
-                } 
+            var request = new AuthenticateRequest
+            {
+                Data = new AuthenticateRequestData
+                {
+                    Email = "WGHWRBE5mVWaV=",
+                    Password = "WGHWRBE5mVWaV="
+                }
             };
             var authService = TestUtils.CreateAuthService();
-            if(authService != null)
+            if (authService != null)
             {
                 var authenticatedUser = await authService.AuthenticateAsync(request.Data);
                 Assert.IsTrue(authenticatedUser == null);
@@ -114,7 +103,7 @@ public class AuthService_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 

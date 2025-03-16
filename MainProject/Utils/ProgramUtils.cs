@@ -6,6 +6,8 @@ using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Core.Middlewares;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using BasicDotnetTemplate.MainProject.Services;
+using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
+using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 
 
 
@@ -213,8 +215,10 @@ public static class ProgramUtils
     public static void AddScopes(ref WebApplicationBuilder builder)
     {
         Logger.Info("[ProgramUtils][AddScopes] Adding scopes");
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
+        builder.Services.AddScoped<IRoleService, RoleService>();
         builder.Services.AddScoped<IUserService, UserService>();
         Logger.Info("[ProgramUtils][AddScopes] Done scopes");
     }
@@ -224,6 +228,47 @@ public static class ProgramUtils
         Logger.Info("[ProgramUtils][AddAutoMapper] Adding AutoMapperConfiguration");
         builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
         Logger.Info("[ProgramUtils][AddScopes] Done AutoMapperConfiguration");
+    }
+
+    public static void CreateRoles(ref WebApplication app)
+    {
+        Logger.Info("[ProgramUtils][CreateRoles] Adding roles...");
+        using (var scope = app.Services.CreateScope())
+        {
+            var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>;
+            CreateRole(roleService, "Administrator");
+            CreateRole(roleService, "Default");
+        }
+
+        Logger.Info("[ProgramUtils][CreateRoles] Done roles");
+    }
+
+    private static void CreateRole(Func<IRoleService?> roleService, string roleName)
+    {
+        Logger.Info($"[ProgramUtils][CreateRole] Adding role {roleName}...");
+        if (roleService != null)
+        {
+            var isValidThread = Task.Run(() => roleService!.Invoke()?.CheckIfNameIsValid(roleName));
+            if (isValidThread.Result)
+            {
+                CreateRoleRequestData data = new()
+                {
+                    Name = roleName,
+                    IsNotEditable = true
+                };
+                var createThread = Task.Run(() => roleService!.Invoke()?.CreateRole(data));
+                Role? role = createThread.Result;
+                if (role != null)
+                {
+                    Logger.Info($"[ProgramUtils][CreateRole] Role {roleName} created...");
+                }
+            }
+            else
+            {
+                Logger.Info($"[ProgramUtils][CreateRole] Role {roleName} already exists...");
+            }
+        }
+
     }
 
 }

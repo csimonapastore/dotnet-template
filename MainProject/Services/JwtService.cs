@@ -21,10 +21,10 @@ public class JwtService : BaseService, IJwtService
     private readonly JwtTokenUtils _jwtTokenUtils;
 
     public JwtService(
+        IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
-        SqlServerContext sqlServerContext,
-        IUserService userService
-    ) : base(configuration, sqlServerContext)
+        SqlServerContext sqlServerContext
+    ) : base(httpContextAccessor, configuration, sqlServerContext)
     {
         _jwtTokenUtils = new JwtTokenUtils(_appSettings);
     }

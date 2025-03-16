@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using BasicDotnetTemplate.MainProject.Models.Api.Response;
 using BasicDotnetTemplate.MainProject.Models.Settings;
+using Microsoft.AspNetCore.Http;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -53,7 +54,7 @@ public class VersionController_Tests
                     AppSettings appSettings = new AppSettings();
                     configuration.GetSection("AppSettings").Bind(appSettings);
                     string version = data.Data != null ? (string)data.Data : "";
-                    Assert.IsTrue((((IStatusCodeActionResult)result).StatusCode == 200) && (version == appSettings.Settings?.Version));
+                    Assert.IsTrue((((IStatusCodeActionResult)result).StatusCode == StatusCodes.Status200OK) && (version == appSettings.Settings?.Version));
                 }
                 else
                 {
@@ -68,7 +69,7 @@ public class VersionController_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -87,7 +88,7 @@ public class VersionController_Tests
             if (objectResult != null)
             {
                 var data = (BaseResponse<object>)objectResult;
-                Assert.IsTrue((((IStatusCodeActionResult)result).StatusCode == 200) && String.IsNullOrEmpty(data.Data));
+                Assert.IsTrue((((IStatusCodeActionResult)result).StatusCode == StatusCodes.Status200OK) && String.IsNullOrEmpty(data.Data));
             }
             else
             {
@@ -97,7 +98,7 @@ public class VersionController_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using BasicDotnetTemplate.MainProject.Models.Api.Response;
 using BasicDotnetTemplate.MainProject.Models.Settings;
+using Microsoft.AspNetCore.Http;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -29,7 +30,7 @@ public class RootController_Test
             if (result != null)
             {
                 var data = (OkResult)result;
-                Assert.IsTrue(data.StatusCode == 200);
+                Assert.IsTrue(data.StatusCode == StatusCodes.Status200OK);
             }
             else
             {
@@ -39,7 +40,7 @@ public class RootController_Test
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 }

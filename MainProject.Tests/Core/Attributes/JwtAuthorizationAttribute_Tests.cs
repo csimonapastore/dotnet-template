@@ -30,22 +30,7 @@ public class JwtAuthorizationAttribute_Tests
     {
         _attribute = new JwtAuthorizationAttribute();
 
-        DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-        {
-            Guid = Guid.NewGuid().ToString(),
-            Username = "Username",
-            FirstName = "FirstName",
-            LastName = "LastName",
-            Email = "Email",
-            PasswordHash = "PasswordHash",
-            PasswordSalt = "PasswordSalt",
-            Password = "Password",
-            Role = new DatabaseSqlServer.Role()
-            {
-                Name = "Role.Name"
-            },
-            IsTestUser = true
-        };
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
         _authenticatedUser = new AuthenticatedUser(user);
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
@@ -89,7 +74,7 @@ public class JwtAuthorizationAttribute_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 

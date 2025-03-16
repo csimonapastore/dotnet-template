@@ -22,18 +22,15 @@ public class UserRole_Tests
     {
         try
         {
-            DatabaseSqlServer.Role role = new DatabaseSqlServer.Role()
-            {
-                Name = "test"
-            };
+            DatabaseSqlServer.Role role = ModelsInit.CreateRole();
             UserRole userRole = new UserRole(role);
-            
+
             Assert.IsTrue(userRole.Name == role.Name);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 }

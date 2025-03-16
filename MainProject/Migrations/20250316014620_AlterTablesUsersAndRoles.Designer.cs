@@ -4,6 +4,7 @@ using BasicDotnetTemplate.MainProject.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainProject.Migrations
 {
     [DbContext(typeof(SqlServerContext))]
-    partial class SqlServerContextModelSnapshot : ModelSnapshot
+    [Migration("20250316014620_AlterTablesUsersAndRoles")]
+    partial class AlterTablesUsersAndRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace MainProject.Migrations
                     b.Property<int?>("CreationUserId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletionTime")
+                    b.Property<DateTime>("DeletionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DeletionUserId")
@@ -50,15 +53,12 @@ namespace MainProject.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsNotEditable")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("UpdateTime")
+                    b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("UpdateUserId")
@@ -86,7 +86,7 @@ namespace MainProject.Migrations
                     b.Property<int?>("CreationUserId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletionTime")
+                    b.Property<DateTime>("DeletionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DeletionUserId")
@@ -133,7 +133,7 @@ namespace MainProject.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdateTime")
+                    b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("UpdateUserId")

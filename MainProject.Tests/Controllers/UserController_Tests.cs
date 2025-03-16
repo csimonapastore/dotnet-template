@@ -22,6 +22,7 @@ using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlSer
 using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
 using AutoMapper;
 using BasicDotnetTemplate.MainProject.Core.Middlewares;
+using Microsoft.AspNetCore.Http;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -50,7 +51,8 @@ public class UserControllerTests
         try
         {
             var userServiceMock = new Mock<IUserService>();
-            _ = new UserController(null, userServiceMock.Object);
+            var roleServiceMock = new Mock<IRoleService>();
+            _ = new UserController(null, userServiceMock.Object, roleServiceMock.Object);
             exception = false;
             Assert.Fail($"This test should not pass as configuration is null");
         }
@@ -66,35 +68,21 @@ public class UserControllerTests
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
         var userServiceMock = new Mock<IUserService>();
-        var controller = new UserController(configuration, userServiceMock.Object);
+        var roleServiceMock = new Mock<IRoleService>();
+        var controller = new UserController(configuration, userServiceMock.Object, roleServiceMock.Object);
         var guid = Guid.NewGuid().ToString();
-        DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-        {
-            Guid = guid,
-            Username = "Username",
-            FirstName = "FirstName",
-            LastName = "LastName",
-            Email = "Email",
-            PasswordHash = "PasswordHash",
-            PasswordSalt = "PasswordSalt",
-            Password = "Password",
-            Role = new DatabaseSqlServer.Role()
-            {
-                Name = "Role.Name"
-            },
-            IsTestUser = true
-        };
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
 
         userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
         ObjectResult response = (ObjectResult)(await controller.GetUserByGuidAsync(guid));
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 200);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 200);
+                Assert.IsTrue(result.Status == StatusCodes.Status200OK);
                 Assert.IsInstanceOfType(result.Data, typeof(DatabaseSqlServer.User));
             }
             else
@@ -113,7 +101,8 @@ public class UserControllerTests
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
         var userServiceMock = new Mock<IUserService>();
-        var controller = new UserController(configuration, userServiceMock.Object);
+        var roleServiceMock = new Mock<IRoleService>();
+        var controller = new UserController(configuration, userServiceMock.Object, roleServiceMock.Object);
 
         var guid = String.Empty;
         DatabaseSqlServer.User? user = null;
@@ -123,12 +112,12 @@ public class UserControllerTests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 400);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 400);
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
                 Assert.IsTrue(result.Message == "Request is not well formed");
             }
             else
@@ -147,7 +136,8 @@ public class UserControllerTests
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
         var userServiceMock = new Mock<IUserService>();
-        var controller = new UserController(configuration, userServiceMock.Object);
+        var roleServiceMock = new Mock<IRoleService>();
+        var controller = new UserController(configuration, userServiceMock.Object, roleServiceMock.Object);
 
         var guid = Guid.NewGuid().ToString();
         DatabaseSqlServer.User? user = null;
@@ -158,7 +148,7 @@ public class UserControllerTests
 
         if (response != null)
         {
-            Assert.IsTrue(response.StatusCode == 404);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status404NotFound);
         }
         else
         {
@@ -171,7 +161,8 @@ public class UserControllerTests
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
         var userServiceMock = new Mock<IUserService>();
-        var controller = new UserController(configuration, userServiceMock.Object);
+        var roleServiceMock = new Mock<IRoleService>();
+        var controller = new UserController(configuration, userServiceMock.Object, roleServiceMock.Object);
 
         var guid = Guid.NewGuid().ToString();
         DatabaseSqlServer.User? user = null;
@@ -183,12 +174,12 @@ public class UserControllerTests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 400);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 400);
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
                 Assert.IsTrue(result.Message == "Request is not well formed");
             }
             else
@@ -207,7 +198,8 @@ public class UserControllerTests
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
         var userServiceMock = new Mock<IUserService>();
-        var controller = new UserController(configuration, userServiceMock.Object);
+        var roleServiceMock = new Mock<IRoleService>();
+        var controller = new UserController(configuration, userServiceMock.Object, roleServiceMock.Object);
 
         var guid = Guid.NewGuid().ToString();
         userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ThrowsAsync(new Exception("Unexpected error"));
@@ -217,12 +209,12 @@ public class UserControllerTests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 500);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status500InternalServerError);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 500);
+                Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
                 Assert.IsTrue(result.Message == "Something went wrong. Unexpected error");
             }
             else

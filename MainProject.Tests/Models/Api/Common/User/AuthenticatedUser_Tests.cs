@@ -22,24 +22,9 @@ public class AuthenticatedUser_Tests
     {
         try
         {
-            DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-            {
-                Username = "test",
-                FirstName = "test",
-                LastName = "test",
-                Email = "test",
-                PasswordHash = "test",
-                PasswordSalt = "test",
-                Password = "test",
-                Role = new DatabaseSqlServer.Role()
-                {
-                    Name = "test"
-                },
-                IsTestUser = true
-            };
+            DatabaseSqlServer.User user = ModelsInit.CreateUser();
             AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
-            
-            Assert.IsTrue(authenticatedUser.Username == user.Username);
+
             Assert.IsTrue(authenticatedUser.FirstName == user.FirstName);
             Assert.IsTrue(authenticatedUser.LastName == user.LastName);
             Assert.IsTrue(authenticatedUser.Email == user.Email);
@@ -48,7 +33,7 @@ public class AuthenticatedUser_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 }
