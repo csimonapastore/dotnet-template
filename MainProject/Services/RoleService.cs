@@ -13,6 +13,7 @@ public interface IRoleService
     Task<Role?> GetRoleByGuidAsync(string guid);
     Task<bool> CheckIfNameIsValid(string name, string? guid = "");
     Task<Role?> CreateRole(CreateRoleRequestData data);
+    Task<Role?> GetRoleForUser(string? guid);
 }
 
 public class RoleService : BaseService, IRoleService
@@ -36,6 +37,8 @@ public class RoleService : BaseService, IRoleService
         );
     }
 
+
+
     private Role CreateRoleData(CreateRoleRequestData data)
     {
         Role role = new()
@@ -50,6 +53,9 @@ public class RoleService : BaseService, IRoleService
 
         return role;
     }
+
+
+
 
 
     public async Task<Role?> GetRoleByIdAsync(int id)
@@ -98,6 +104,20 @@ public class RoleService : BaseService, IRoleService
         return role;
     }
 
+    public async Task<Role?> GetRoleForUser(string? guid)
+    {
+        Role? role = null;
 
+        if (String.IsNullOrEmpty(guid))
+        {
+            role = await this.GetRoleByNameQueryable("Default").FirstOrDefaultAsync();
+        }
+        else
+        {
+            role = await this.GetRoleByGuidAsync(guid);
+        }
+
+        return role;
+    }
 }
 

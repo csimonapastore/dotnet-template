@@ -6,13 +6,13 @@ using BasicDotnetTemplate.MainProject.Models.Api.Request.User;
 using BasicDotnetTemplate.MainProject.Models.Api.Response;
 using BasicDotnetTemplate.MainProject.Models.Api.Response.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
 
 namespace BasicDotnetTemplate.MainProject.Controllers
 {
     [Route("[controller]")]
     public class UserController : BaseController
     {
-        private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IUserService _userService;
         private readonly IRoleService _roleService;
         public UserController(
@@ -44,14 +44,16 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 {
                     return BadRequest(_requestNotWellFormed);
                 }
-                var data = await this._userService.GetUserByGuidAsync(guid);
+                var user = await this._userService.GetUserByGuidAsync(guid);
 
-                if (data == null || String.IsNullOrEmpty(data.Guid))
+                if (user == null || String.IsNullOrEmpty(user.Guid))
                 {
                     return NotFound();
                 }
 
-                return Success(String.Empty, data);
+                var userDto = _mapper?.Map<UserDto>(user);
+
+                return Success(String.Empty, userDto);
             }
             catch (Exception exception)
             {
@@ -95,15 +97,22 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 }
                 else
                 {
-                    Role? role = null; // TODO
-                    var data = await this._userService.CreateUser(request.Data, role);
+                    var role = await this._roleService.GetRoleForUser(request.Data.RoleGuid);
+                    if (role == null)
+                    {
+                        return BadRequest("Role not found");
+                    }
 
-                    if (data == null || String.IsNullOrEmpty(data.Guid))
+                    var user = await this._userService.CreateUserAsync(request.Data, role);
+
+                    if (user == null || String.IsNullOrEmpty(user.Guid))
                     {
                         return BadRequest();
                     }
 
-                    return Success(String.Empty, data);
+                    var userDto = _mapper?.Map<UserDto>(user);
+
+                    return Success(String.Empty, userDto);
                 }
 
             }

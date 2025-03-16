@@ -13,7 +13,7 @@ public interface IUserService
     Task<User?> GetUserByGuidAsync(string guid);
     Task<User?> GetUserByUsernameAndPassword(string email, string password);
     Task<bool> CheckIfEmailIsValid(string email, string? guid = "");
-    Task<User?> CreateUser(CreateUserRequestData data, Role role);
+    Task<User?> CreateUserAsync(CreateUserRequestData data, Role role);
 }
 
 public class UserService : BaseService, IUserService
@@ -102,15 +102,18 @@ public class UserService : BaseService, IUserService
         return valid;
     }
 
-    public async Task<User?> CreateUser(CreateUserRequestData data, Role role)
+    public async Task<User?> CreateUserAsync(CreateUserRequestData data, Role role)
     {
         User? user = null;
 
         using (var transaction = _sqlServerContext.Database.BeginTransactionAsync())
         {
             var tempUser = this.CreateUserData(data, role);
+            await _sqlServerContext.Users.AddAsync(tempUser);
+            await _sqlServerContext.SaveChangesAsync();
+            await (await transaction).CommitAsync();
+            user = tempUser;
         }
-
 
         return user;
     }
