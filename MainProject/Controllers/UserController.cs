@@ -93,7 +93,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
                 if (await this._userService.CheckIfEmailIsValid(request.Data.Email))
                 {
-                    return BadRequest();
+                    return BadRequest("Invalid email");
                 }
                 else
                 {
@@ -107,7 +107,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
                     if (user == null || String.IsNullOrEmpty(user.Guid))
                     {
-                        return BadRequest();
+                        return BadRequest("Not created");
                     }
 
                     var userDto = _mapper?.Map<UserDto>(user);
