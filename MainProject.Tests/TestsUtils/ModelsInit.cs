@@ -12,7 +12,7 @@ public static class ModelsInit
             Guid = Guid.NewGuid().ToString(),
             FirstName = "FirstName",
             LastName = "LastName",
-            Email = "Email",
+            Email = "test-new@email.it",
             PasswordHash = "PasswordHash",
             PasswordSalt = "PasswordSalt",
             Password = "Password",

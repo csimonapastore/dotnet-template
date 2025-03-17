@@ -98,7 +98,6 @@ public class UserService : BaseService, IUserService
         {
             valid = true;
         }
-
         return valid;
     }
 

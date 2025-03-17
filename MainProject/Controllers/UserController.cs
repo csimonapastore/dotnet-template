@@ -93,10 +93,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
                 if (await this._userService.CheckIfEmailIsValid(request.Data.Email))
                 {
-                    return BadRequest("Invalid email");
-                }
-                else
-                {
                     var role = await this._roleService.GetRoleForUser(request.Data.RoleGuid);
                     if (role == null)
                     {
@@ -113,6 +109,10 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                     var userDto = _mapper?.Map<UserDto>(user);
 
                     return Success(String.Empty, userDto);
+                }
+                else
+                {
+                    return BadRequest("Invalid email");
                 }
 
             }
