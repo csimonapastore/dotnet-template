@@ -1,23 +1,7 @@
-using BasicDotnetTemplate.MainProject.Models.Settings;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using BasicDotnetTemplate.MainProject.Utils;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Moq;
-using Newtonsoft.Json;
-using BasicDotnetTemplate.MainProject.Core.Database;
+
 using BasicDotnetTemplate.MainProject.Services;
-using BasicDotnetTemplate.MainProject.Models.Api.Response;
-using BasicDotnetTemplate.MainProject.Models.Api.Request.Auth;
-using BasicDotnetTemplate.MainProject.Models.Api.Data.Auth;
-using BasicDotnetTemplate.MainProject.Models.Api.Common.Role;
-using BasicDotnetTemplate.MainProject.Models.Api.Common.Role;
-using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
-using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
-using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
 
 
 
@@ -26,9 +10,9 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class RoleService_Tests
 {
-    protected static Role? _expectedRole;
-    protected static Role? _role;
-    protected static RoleService? _roleService;
+    private static Role? _expectedRole;
+    private static Role? _role;
+    private static RoleService? _roleService;
 
     [TestInitialize]
     public void Setup()

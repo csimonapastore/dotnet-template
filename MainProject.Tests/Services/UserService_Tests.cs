@@ -1,20 +1,4 @@
-using BasicDotnetTemplate.MainProject.Models.Settings;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using BasicDotnetTemplate.MainProject.Utils;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Moq;
-using Newtonsoft.Json;
-using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Services;
-using BasicDotnetTemplate.MainProject.Models.Api.Response;
-using BasicDotnetTemplate.MainProject.Models.Api.Request.Auth;
-using BasicDotnetTemplate.MainProject.Models.Api.Data.Auth;
-using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
-using BasicDotnetTemplate.MainProject.Models.Api.Common.Role;
-using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
-using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 
@@ -25,11 +9,11 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class UserService_Tests
 {
-    protected static User? _expectedUser;
-    protected static User? _user;
-    protected static Role? _role;
-    protected static UserService? _userService;
-    protected static RoleService? _roleService;
+    private static User? _expectedUser;
+    private static User? _user;
+    private static Role? _role;
+    private static UserService? _userService;
+    private static RoleService? _roleService;
 
     [TestInitialize]
     public void Setup()

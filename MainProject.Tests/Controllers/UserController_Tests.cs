@@ -43,7 +43,7 @@ public class UserControllerTests
         IConfiguration configuration = TestUtils.CreateConfiguration();
         _userServiceMock = new Mock<IUserService>();
         _roleServiceMock = new Mock<IRoleService>();
-        _userController = new UserController(configuration, _userServiceMock.Object, _roleServiceMock.Object);
+        _userController = new UserController(configuration, _userServiceMock?.Object, _roleServiceMock.Object);
     }
 
     [TestMethod]
@@ -69,10 +69,14 @@ public class UserControllerTests
     [TestMethod]
     public async Task GetUserByGuidAsync_Should_Return_200_When_Successful()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
         var guid = Guid.NewGuid().ToString();
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
 
-        _userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
         ObjectResult response = (ObjectResult)(await _userController.GetUserByGuidAsync(guid));
         if (response != null && response.Value != null)
         {
@@ -98,10 +102,15 @@ public class UserControllerTests
     [TestMethod]
     public async Task GetUserByGuidAsync_AuthenticateRequestDataNull()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         var guid = String.Empty;
         DatabaseSqlServer.User? user = null;
 
-        _userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
         ObjectResult response = (ObjectResult)(await _userController.GetUserByGuidAsync(guid));
 
         if (response != null && response.Value != null)
@@ -128,9 +137,14 @@ public class UserControllerTests
     [TestMethod]
     public async Task GetUserByGuidAsync_NotFound()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         var guid = Guid.NewGuid().ToString();
         DatabaseSqlServer.User? user = null;
-        _userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
         NotFoundResult response = (NotFoundResult)(await _userController.GetUserByGuidAsync(guid));
 
         Assert.IsInstanceOfType(response, typeof(NotFoundResult));
@@ -148,9 +162,14 @@ public class UserControllerTests
     [TestMethod]
     public async Task GetUserByGuidAsync_ModelInvalid()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         var guid = Guid.NewGuid().ToString();
         DatabaseSqlServer.User? user = null;
-        _userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
         _userController.ModelState.AddModelError("Data", "Invalid data");
         ObjectResult response = (ObjectResult)(await _userController.GetUserByGuidAsync(guid));
 
@@ -180,8 +199,13 @@ public class UserControllerTests
     [TestMethod]
     public async Task GetUserByGuidAsync_Exception()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         var guid = Guid.NewGuid().ToString();
-        _userServiceMock.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ThrowsAsync(new Exception("Unexpected error"));
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ThrowsAsync(new Exception("Unexpected error"));
         ObjectResult response = (ObjectResult)(await _userController.GetUserByGuidAsync(guid));
 
         Assert.IsInstanceOfType(response, typeof(ObjectResult));
@@ -210,6 +234,16 @@ public class UserControllerTests
     [TestMethod]
     public async Task CreateUserAsync_Should_Return_200_When_Successful()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        if (_roleServiceMock == null)
+        {
+            Assert.Fail($"_roleServiceMock is null");
+        }
+
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
         DatabaseSqlServer.Role role = ModelsInit.CreateRole();
 
@@ -224,9 +258,9 @@ public class UserControllerTests
             }
         };
 
-        _userServiceMock.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
         _roleServiceMock.Setup(s => s.GetRoleForUser(null)).ReturnsAsync(role);
-        _userServiceMock.Setup(s => s.CreateUserAsync(request.Data, role)).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.CreateUserAsync(request.Data, role)).ReturnsAsync(user);
 
         ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
         if (response != null && response.Value != null)
@@ -253,6 +287,11 @@ public class UserControllerTests
     [TestMethod]
     public async Task CreateUserAsync_InvalidEmail()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
 
         CreateUserRequest request = new CreateUserRequest()
@@ -266,7 +305,7 @@ public class UserControllerTests
             }
         };
 
-        _userServiceMock.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
+        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
 
         ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
 
@@ -294,6 +333,11 @@ public class UserControllerTests
     [TestMethod]
     public async Task CreateUserAsync_RoleNull()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
 
         CreateUserRequest request = new CreateUserRequest()
@@ -307,9 +351,9 @@ public class UserControllerTests
             }
         };
 
-        _userServiceMock.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
-        _userServiceMock.Setup(s => s.CreateUserAsync(
+        _userServiceMock?.Setup(s => s.CreateUserAsync(
             It.IsAny<CreateUserRequestData>(),
             It.IsAny<Role>()
         )).ReturnsAsync(user);
@@ -340,6 +384,11 @@ public class UserControllerTests
     [TestMethod]
     public async Task CreateUserAsync_CreateUserRequestDataNull()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
 
         CreateUserRequest request = new CreateUserRequest()
@@ -347,9 +396,9 @@ public class UserControllerTests
             Data = null
         };
 
-        _userServiceMock.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
-        _userServiceMock.Setup(s => s.CreateUserAsync(
+        _userServiceMock?.Setup(s => s.CreateUserAsync(
             It.IsAny<CreateUserRequestData>(),
             It.IsAny<Role>()
         )).ReturnsAsync(user);
@@ -380,6 +429,16 @@ public class UserControllerTests
     [TestMethod]
     public async Task CreateUserAsync_NotCreated()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        if (_roleServiceMock == null)
+        {
+            Assert.Fail($"_roleServiceMock is null");
+        }
+
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
         DatabaseSqlServer.Role role = ModelsInit.CreateRole();
         DatabaseSqlServer.User? expectedUser = null;
@@ -395,10 +454,10 @@ public class UserControllerTests
             }
         };
 
-        _userServiceMock.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
         _roleServiceMock.Setup(s => s.GetRoleForUser(null)).ReturnsAsync(role);
-        _userServiceMock.Setup(s => s.CreateUserAsync(request.Data, role)).ReturnsAsync(expectedUser);
+        _userServiceMock?.Setup(s => s.CreateUserAsync(request.Data, role)).ReturnsAsync(expectedUser);
 
         ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
         if (response != null && response.Value != null)
@@ -425,6 +484,11 @@ public class UserControllerTests
     [TestMethod]
     public async Task CreateUserAsync_ModelInvalid()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
 
         CreateUserRequest request = new CreateUserRequest()
@@ -438,9 +502,9 @@ public class UserControllerTests
             }
         };
 
-        _userServiceMock.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
-        _userServiceMock.Setup(s => s.CreateUserAsync(
+        _userServiceMock?.Setup(s => s.CreateUserAsync(
             It.IsAny<CreateUserRequestData>(),
             It.IsAny<Role>()
         )).ReturnsAsync(user);
@@ -473,6 +537,16 @@ public class UserControllerTests
     [TestMethod]
     public async Task CreateUserAsync_Exception()
     {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        if (_roleServiceMock == null)
+        {
+            Assert.Fail($"_roleServiceMock is null");
+        }
+
         DatabaseSqlServer.User user = ModelsInit.CreateUser();
         DatabaseSqlServer.Role role = ModelsInit.CreateRole();
 
@@ -487,12 +561,12 @@ public class UserControllerTests
             }
         };
 
-        _userServiceMock.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
         _roleServiceMock.Setup(s => s.GetRoleForUser(null)).ReturnsAsync(role);
-        _userServiceMock.Setup(s => s.CreateUserAsync(request.Data, role)).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.CreateUserAsync(request.Data, role)).ReturnsAsync(user);
 
-        _userServiceMock.Setup(s => s.CreateUserAsync(
+        _userServiceMock?.Setup(s => s.CreateUserAsync(
             It.IsAny<CreateUserRequestData>(),
             It.IsAny<Role>()
         )).ThrowsAsync(new Exception("Unexpected error"));
