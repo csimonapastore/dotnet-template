@@ -187,7 +187,7 @@ public class RoleService_Tests
     }
 
     [TestMethod]
-    public async Task DeleteRole()
+    public async Task DeleteRoleAsync()
     {
         try
         {
