@@ -14,6 +14,7 @@ public interface IUserService
     Task<User?> GetUserByUsernameAndPassword(string email, string password);
     Task<bool> CheckIfEmailIsValid(string email, string? guid = "");
     Task<User?> CreateUserAsync(CreateUserRequestData data, Role role);
+    Task<bool?> DeleteUserAsync(User user);
 }
 
 public class UserService : BaseService, IUserService
@@ -115,6 +116,23 @@ public class UserService : BaseService, IUserService
         }
 
         return user;
+    }
+
+    public async Task<bool?> DeleteUserAsync(User user)
+    {
+        bool? deleted = false;
+
+        using (var transaction = _sqlServerContext.Database.BeginTransactionAsync())
+        {
+            user.IsDeleted = true;
+            user.DeletionTime = DateTime.UtcNow;
+            _sqlServerContext.Update(user);
+            await _sqlServerContext.SaveChangesAsync();
+            await (await transaction).CommitAsync();
+            deleted = true;
+        }
+
+        return deleted;
     }
 
 

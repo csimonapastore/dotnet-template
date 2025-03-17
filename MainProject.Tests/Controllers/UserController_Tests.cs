@@ -33,20 +33,13 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class UserControllerTests
 {
-    private IMapper? _mapper;
-    private Mock<IUserService> _userServiceMock;
-    private Mock<IRoleService> _roleServiceMock;
-    private UserController _userController;
+    private Mock<IUserService>? _userServiceMock;
+    private Mock<IRoleService>? _roleServiceMock;
+    private UserController? _userController;
 
     [TestInitialize]
     public void Setup()
     {
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<AutoMapperConfiguration>();
-        });
-
-        _mapper = config.CreateMapper();
         IConfiguration configuration = TestUtils.CreateConfiguration();
         _userServiceMock = new Mock<IUserService>();
         _roleServiceMock = new Mock<IRoleService>();
@@ -527,5 +520,4 @@ public class UserControllerTests
             Assert.Fail($"Response is null");
         }
     }
-
 }

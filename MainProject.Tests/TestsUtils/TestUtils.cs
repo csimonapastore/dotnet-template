@@ -81,6 +81,16 @@ public static class TestUtils
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new JwtService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
+
+    public static RoleService CreateRoleService()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
+        optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
+        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new RoleService(httpContextAccessor.Object, configuration, sqlServerContext);
+    }
 }
 
 

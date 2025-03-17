@@ -12,8 +12,9 @@ public interface IRoleService
     Task<Role?> GetRoleByIdAsync(int id);
     Task<Role?> GetRoleByGuidAsync(string guid);
     Task<bool> CheckIfNameIsValid(string name, string? guid = "");
-    Task<Role?> CreateRole(CreateRoleRequestData data);
+    Task<Role?> CreateRoleAsync(CreateRoleRequestData data);
     Task<Role?> GetRoleForUser(string? guid);
+    Task<bool?> DeleteRoleAsync(Role role);
 }
 
 public class RoleService : BaseService, IRoleService
@@ -29,7 +30,6 @@ public class RoleService : BaseService, IRoleService
     {
         return this._sqlServerContext.Roles.Where(x => !x.IsDeleted);
     }
-
     private IQueryable<Role> GetRoleByNameQueryable(string name)
     {
         return this.GetRolesQueryable().Where(x =>
@@ -88,7 +88,7 @@ public class RoleService : BaseService, IRoleService
         return valid;
     }
 
-    public async Task<Role?> CreateRole(CreateRoleRequestData data)
+    public async Task<Role?> CreateRoleAsync(CreateRoleRequestData data)
     {
         Role? role = null;
 
@@ -119,5 +119,24 @@ public class RoleService : BaseService, IRoleService
 
         return role;
     }
+
+    public async Task<bool?> DeleteRoleAsync(Role role)
+    {
+        bool? deleted = false;
+
+        using (var transaction = _sqlServerContext.Database.BeginTransactionAsync())
+        {
+            role.IsDeleted = true;
+            role.DeletionTime = DateTime.UtcNow;
+            _sqlServerContext.Update(role);
+            await _sqlServerContext.SaveChangesAsync();
+            await (await transaction).CommitAsync();
+            deleted = true;
+        }
+
+        return deleted;
+    }
+
+
 }
 

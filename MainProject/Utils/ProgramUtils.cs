@@ -256,7 +256,7 @@ public static class ProgramUtils
                     Name = roleName,
                     IsNotEditable = true
                 };
-                var createThread = Task.Run(() => roleService!.Invoke()?.CreateRole(data));
+                var createThread = Task.Run(() => roleService!.Invoke()?.CreateRoleAsync(data));
                 Role? role = createThread.Result;
                 if (role != null)
                 {
