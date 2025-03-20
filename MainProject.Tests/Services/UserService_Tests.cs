@@ -9,13 +9,8 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class UserService_Tests
 {
-    private static Role? _expectedRole;
     private static User? _user;
     private static Role? _role;
-    private static User? _expectedUser;
-
-    private static RoleService? _roleService;
-    private static UserService? _userService;
 
     [TestMethod]
     public void Inizialize()
@@ -23,14 +18,14 @@ public class UserService_Tests
         try
         {
             var userService = TestUtils.CreateUserService();
-            if(userService != null)
+            if (userService != null)
             {
                 Assert.IsInstanceOfType(userService, typeof(UserService));
             }
             else
             {
                 Assert.Fail($"UserService is null");
-            }            
+            }
         }
         catch (Exception ex)
         {
@@ -74,14 +69,11 @@ public class UserService_Tests
     {
         try
         {
-            _expectedUser = ModelsInit.CreateUser();
-            _userService = TestUtils.CreateUserService();
-            _roleService = TestUtils.CreateRoleService();
-
+            var userService = TestUtils.CreateUserService();
             var testString = "test";
-            if (_userService != null)
+            if (userService != null)
             {
-                var user = await _userService.GetUserByUsernameAndPassword(testString, testString);
+                var user = await userService.GetUserByUsernameAndPassword(testString, testString);
                 Assert.IsTrue(user == null);
             }
             else
