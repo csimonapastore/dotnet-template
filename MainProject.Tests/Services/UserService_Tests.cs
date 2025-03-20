@@ -10,7 +10,7 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 public class UserService_Tests
 {
     private static User _user = ModelsInit.CreateUser();
-    private static Role? _role;
+    private static Role _role = ModelsInit.CreateRole();
 
     [TestMethod]
     public void Inizialize()
@@ -200,108 +200,113 @@ public class UserService_Tests
         }
     }
 
-    // [TestMethod]
-    // public async Task CheckIfEmailIsValid_EmailAlreadyExists()
-    // {
-    //     try
-    //     {
-    //         if (_userService != null)
-    //         {
-    //             var valid = await _userService.CheckIfEmailIsValid(_expectedUser?.Email ?? String.Empty);
-    //             Assert.IsFalse(valid);
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+    [TestMethod]
+    public async Task CheckIfEmailIsValid_EmailAlreadyExists()
+    {
+        try
+        {
+            var userService = TestUtils.CreateUserService();
+            if (userService != null)
+            {
+                var valid = await userService.CheckIfEmailIsValid(_user.Email ?? String.Empty);
+                Assert.IsFalse(valid);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
-    // [TestMethod]
-    // public async Task GetUserByIdAsync()
-    // {
-    //     try
-    //     {
-    //         if (_userService != null)
-    //         {
-    //             var user = await _userService.GetUserByIdAsync(_user?.Id ?? 0);
-    //             Assert.IsNotNull(user);
-    //             Assert.IsTrue(user.Id == _user?.Id);
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+    [TestMethod]
+    public async Task GetUserByIdAsync()
+    {
+        try
+        {
+            var userService = TestUtils.CreateUserService();
+            if (userService != null)
+            {
+                var user = await userService.GetUserByIdAsync(_user.Id);
+                Assert.IsNotNull(user);
+                Assert.IsTrue(user.Id == _user?.Id);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
-    // [TestMethod]
-    // public async Task GetUserByGuidAsync()
-    // {
-    //     try
-    //     {
-    //         if (_userService != null)
-    //         {
-    //             var user = await _userService.GetUserByGuidAsync(_user?.Guid ?? String.Empty);
-    //             Assert.IsNotNull(user);
-    //             Assert.IsTrue(user.Guid == _user?.Guid);
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+    [TestMethod]
+    public async Task GetUserByGuidAsync()
+    {
+        try
+        {
+            var userService = TestUtils.CreateUserService();
+            if (userService != null)
+            {
+                var user = await userService.GetUserByGuidAsync(_user.Guid ?? String.Empty);
+                Assert.IsNotNull(user);
+                Assert.IsTrue(user.Guid == _user?.Guid);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
-    // [TestMethod]
-    // public async Task DeleteUser()
-    // {
-    //     try
-    //     {
-    //         if (_userService != null)
-    //         {
-    //             var user = await _userService.GetUserByGuidAsync(_user?.Guid ?? String.Empty);
-    //             Assert.IsNotNull(user);
-    //             var deleted = await _userService.DeleteUserAsync(user);
-    //             Assert.IsTrue(deleted);
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+    [TestMethod]
+    public async Task DeleteUser()
+    {
+        try
+        {
+            var userService = TestUtils.CreateUserService();
+            if (userService != null)
+            {
+                var user = await userService.GetUserByGuidAsync(_user.Guid ?? String.Empty);
+                Assert.IsNotNull(user);
+                var deleted = await userService.DeleteUserAsync(user);
+                Assert.IsTrue(deleted);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
 
 
-    // [TestCleanup]
-    // public static async Task CleanupAsync()
-    // {
-    //     var role = await _roleService?.GetRoleByGuidAsync(_role?.Guid ?? String.Empty);
-    //     Assert.IsNotNull(role);
-    //     var deleted = await _roleService?.DeleteRoleAsync(role);
-    //     Assert.IsTrue(deleted);
-    // }
+    [TestCleanup]
+    public static async Task CleanupAsync()
+    {
+        var roleService = TestUtils.CreateRoleService();
+        var role = await roleService.GetRoleByGuidAsync(_role.Guid ?? String.Empty);
+        Assert.IsNotNull(role);
+        var deleted = await roleService.DeleteRoleAsync(role);
+        Assert.IsTrue(deleted);
+    }
 
 }
 
