@@ -9,7 +9,7 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class UserService_Tests
 {
-    private static User? _user;
+    private static User _user = ModelsInit.CreateUser();
     private static Role? _role;
 
     [TestMethod]
@@ -114,30 +114,31 @@ public class UserService_Tests
     //     }
     // }
 
-    // [TestMethod]
-    // public async Task CheckIfEmailIsValid_EmailNotExists()
-    // {
-    //     try
-    //     {
-    //         if (_userService != null)
-    //         {
-    //             var valid = await _userService.CheckIfEmailIsValid(_expectedUser?.Email ?? String.Empty);
-    //             Assert.IsTrue(valid);
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+    [TestMethod]
+    public async Task CheckIfEmailIsValid_EmailNotExists()
+    {
+        try
+        {
+            var userService = TestUtils.CreateUserService();
+            if (userService != null)
+            {
+                var valid = await userService.CheckIfEmailIsValid(_user.Email ?? String.Empty);
+                Assert.IsTrue(valid);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
     [TestMethod]
-    public async Task CreateUserData()
+    public async Task CreateUserAsync_Success()
     {
         try
         {
@@ -176,27 +177,28 @@ public class UserService_Tests
         }
     }
 
-    // [TestMethod]
-    // public async Task CheckIfEmailIsValid_EmailCurrentUser()
-    // {
-    //     try
-    //     {
-    //         if (_userService != null)
-    //         {
-    //             var valid = await _userService.CheckIfEmailIsValid(_expectedUser?.Email ?? String.Empty, _user?.Guid ?? String.Empty);
-    //             Assert.IsTrue(valid);
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+    [TestMethod]
+    public async Task CheckIfEmailIsValid_EmailCurrentUser()
+    {
+        try
+        {
+            var userService = TestUtils.CreateUserService();
+            if (userService != null)
+            {
+                var valid = await userService.CheckIfEmailIsValid(_user.Email ?? String.Empty, _user.Guid ?? String.Empty);
+                Assert.IsTrue(valid);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
     // [TestMethod]
     // public async Task CheckIfEmailIsValid_EmailAlreadyExists()
