@@ -136,48 +136,45 @@ public class UserService_Tests
     //     }
     // }
 
-    // [TestMethod]
-    // public async Task CreateUserData()
-    // {
-    //     try
-    //     {
-    //         CreateUserRequestData data = new CreateUserRequestData()
-    //         {
-    //             FirstName = _expectedUser?.FirstName ?? String.Empty,
-    //             LastName = _expectedUser?.LastName ?? String.Empty,
-    //             Email = _expectedUser?.Email ?? String.Empty
-    //         };
+    [TestMethod]
+    public async Task CreateUserData()
+    {
+        try
+        {
+            var userService = TestUtils.CreateUserService();
+            var expectedUser = ModelsInit.CreateUser();
 
-    //         Role role = new Role()
-    //         {
-    //             Name = _expectedUser?.Role?.Name ?? String.Empty,
-    //             IsNotEditable = _expectedUser?.Role?.IsNotEditable ?? false,
-    //             Guid = _expectedUser?.Role?.Guid ?? String.Empty
-    //         };
+            CreateUserRequestData data = new CreateUserRequestData()
+            {
+                FirstName = expectedUser.FirstName ?? String.Empty,
+                LastName = expectedUser.LastName ?? String.Empty,
+                Email = expectedUser.Email ?? String.Empty
+            };
 
-    //         if (_userService != null)
-    //         {
-    //             var user = await _userService.CreateUserAsync(data, role);
-    //             Assert.IsInstanceOfType(user, typeof(User));
-    //             Assert.IsNotNull(user);
-    //             Assert.IsTrue(_expectedUser?.FirstName == user.FirstName);
-    //             Assert.IsTrue(_expectedUser?.LastName == user.LastName);
-    //             Assert.IsTrue(_expectedUser?.Email == user.Email);
-    //             Assert.IsTrue(_expectedUser?.Role?.Name == user.Role?.Name);
-    //             _user = user;
-    //             _role = user.Role;
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+            Role role = new()
+            {
+                Name = expectedUser.Role?.Name ?? String.Empty,
+                IsNotEditable = expectedUser.Role?.IsNotEditable ?? false,
+                Guid = expectedUser.Role?.Guid ?? String.Empty
+            };
+
+            var user = await userService.CreateUserAsync(data, role);
+            Assert.IsInstanceOfType(user, typeof(User));
+            Assert.IsNotNull(user);
+            Assert.IsTrue(expectedUser.FirstName == user.FirstName);
+            Assert.IsTrue(expectedUser.LastName == user.LastName);
+            Assert.IsTrue(expectedUser.Email == user.Email);
+            Assert.IsTrue(expectedUser.Role?.Name == user.Role?.Name);
+            _user = user;
+            _role = user.Role;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
     // [TestMethod]
     // public async Task CheckIfEmailIsValid_EmailCurrentUser()
