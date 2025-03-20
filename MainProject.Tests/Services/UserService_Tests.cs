@@ -69,32 +69,32 @@ public class UserService_Tests
     //     }
     // }
 
-    // [TestMethod]
-    // public async Task GetUserByUsernameAndPassword_Null()
-    // {
-    //     try
-    //     {
-    //         _expectedUser = ModelsInit.CreateUser();
-    //         _userService = TestUtils.CreateUserService();
-    //         _roleService = TestUtils.CreateRoleService();
+    [TestMethod]
+    public async Task GetUserByUsernameAndPassword_Null()
+    {
+        try
+        {
+            _expectedUser = ModelsInit.CreateUser();
+            _userService = TestUtils.CreateUserService();
+            _roleService = TestUtils.CreateRoleService();
 
-    //         var testString = "test";
-    //         if (_userService != null)
-    //         {
-    //             var user = await _userService.GetUserByUsernameAndPassword(testString, testString);
-    //             Assert.IsTrue(user == null);
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"UserService is null");
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine(ex.InnerException);
-    //         Assert.Fail($"An exception was thrown: {ex}");
-    //     }
-    // }
+            var testString = "test";
+            if (_userService != null)
+            {
+                var user = await _userService.GetUserByUsernameAndPassword(testString, testString);
+                Assert.IsTrue(user == null);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
     // // TODO
     // // [TestMethod]
