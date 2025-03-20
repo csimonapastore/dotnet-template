@@ -298,15 +298,15 @@ public class UserService_Tests
 
 
 
-    // [TestCleanup]
-    // public static async Task CleanupAsync()
-    // {
-    //     var roleService = TestUtils.CreateRoleService();
-    //     var role = await roleService.GetRoleByGuidAsync(_role.Guid ?? String.Empty);
-    //     Assert.IsNotNull(role);
-    //     var deleted = await roleService.DeleteRoleAsync(role);
-    //     Assert.IsTrue(deleted);
-    // }
+    [TestMethod]
+    public static async Task CleanupAsync()
+    {
+        var roleService = TestUtils.CreateRoleService();
+        var role = await roleService.GetRoleByGuidAsync(_role.Guid ?? String.Empty);
+        Assert.IsNotNull(role);
+        var deleted = await roleService.DeleteRoleAsync(role);
+        Assert.IsTrue(deleted);
+    }
 
 }
 
