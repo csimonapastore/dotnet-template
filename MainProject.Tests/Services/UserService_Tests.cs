@@ -9,17 +9,28 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class UserService_Tests
 {
+    private static Role? _expectedRole;
     private static User? _user;
     private static Role? _role;
+    private static User? _expectedUser;
 
+    private static RoleService? _roleService;
+    private static UserService? _userService;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _expectedUser = ModelsInit.CreateUser();
+        _expectedRole = ModelsInit.CreateRole();
+        _roleService = TestUtils.CreateRoleService();
+        _userService = TestUtils.CreateUserService();
+    }
 
     [TestMethod]
     public void Inizialize()
     {
         try
         {
-            var _userService = TestUtils.CreateUserService();
-
             if (_userService != null)
             {
                 Assert.IsInstanceOfType(_userService, typeof(UserService));
@@ -41,9 +52,9 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
+            _expectedUser = ModelsInit.CreateUser();
+            _userService = TestUtils.CreateUserService();
+            _roleService = TestUtils.CreateRoleService();
 
             var testString = "test";
             if (_userService != null)
@@ -69,10 +80,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             var testEmail = "test@email.it";
             var testPassword = "password";
             if (_userService != null)
@@ -98,10 +105,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             if (_userService != null)
             {
                 var valid = await _userService.CheckIfEmailIsValid(_expectedUser?.Email ?? String.Empty);
@@ -124,10 +127,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             CreateUserRequestData data = new CreateUserRequestData()
             {
                 FirstName = _expectedUser?.FirstName ?? String.Empty,
@@ -171,10 +170,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             if (_userService != null)
             {
                 var valid = await _userService.CheckIfEmailIsValid(_expectedUser?.Email ?? String.Empty, _user?.Guid ?? String.Empty);
@@ -197,10 +192,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             if (_userService != null)
             {
                 var valid = await _userService.CheckIfEmailIsValid(_expectedUser?.Email ?? String.Empty);
@@ -223,10 +214,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             if (_userService != null)
             {
                 var user = await _userService.GetUserByIdAsync(_user?.Id ?? 0);
@@ -250,10 +237,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             if (_userService != null)
             {
                 var user = await _userService.GetUserByGuidAsync(_user?.Guid ?? String.Empty);
@@ -277,10 +260,6 @@ public class UserService_Tests
     {
         try
         {
-            var _expectedUser = ModelsInit.CreateUser();
-            var _userService = TestUtils.CreateUserService();
-            var _roleService = TestUtils.CreateRoleService();
-
             if (_userService != null)
             {
                 var user = await _userService.GetUserByGuidAsync(_user?.Guid ?? String.Empty);
@@ -305,7 +284,6 @@ public class UserService_Tests
     [TestCleanup]
     public static async Task CleanupAsync()
     {
-        var _roleService = TestUtils.CreateRoleService();
         var role = await _roleService?.GetRoleByGuidAsync(_role?.Guid ?? String.Empty);
         Assert.IsNotNull(role);
         var deleted = await _roleService?.DeleteRoleAsync(role);
