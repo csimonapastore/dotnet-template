@@ -64,6 +64,7 @@ public class RoleService_Tests
     {
         try
         {
+            var _roleService = TestUtils.CreateRoleService();
             CreateRoleRequestData data = new CreateRoleRequestData()
             {
                 Name = _expectedRole?.Name ?? String.Empty,
@@ -144,6 +145,7 @@ public class RoleService_Tests
     {
         try
         {
+            var _roleService = TestUtils.CreateRoleService();
             if (_roleService != null)
             {
                 var role = await _roleService.GetRoleByIdAsync(_role?.Id ?? 0);
@@ -167,6 +169,7 @@ public class RoleService_Tests
     {
         try
         {
+            var _roleService = TestUtils.CreateRoleService();
             if (_roleService != null)
             {
                 var role = await _roleService.GetRoleByGuidAsync(_role?.Guid ?? String.Empty);
@@ -190,6 +193,7 @@ public class RoleService_Tests
     {
         try
         {
+            var _roleService = TestUtils.CreateRoleService();
             if (_roleService != null)
             {
                 var role = await _roleService.GetRoleByGuidAsync(_role?.Guid ?? String.Empty);
