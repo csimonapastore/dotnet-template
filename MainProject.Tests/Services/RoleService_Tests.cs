@@ -10,25 +10,18 @@ namespace BasicDotnetTemplate.MainProject.Tests;
 [TestClass]
 public class RoleService_Tests
 {
-    private static Role? _expectedRole;
+    private static Role? _expectedRole = ModelsInit.CreateRole();
     private static Role? _role;
-    private static RoleService? _roleService;
-
-    [TestInitialize]
-    public void Setup()
-    {
-        _expectedRole = ModelsInit.CreateRole();
-        _roleService = TestUtils.CreateRoleService();
-    }
 
     [TestMethod]
     public void Inizialize()
     {
         try
         {
-            if (_roleService != null)
+            var roleService = TestUtils.CreateRoleService();
+            if (roleService != null)
             {
-                Assert.IsInstanceOfType(_roleService, typeof(RoleService));
+                Assert.IsInstanceOfType(roleService, typeof(RoleService));
             }
             else
             {
@@ -47,9 +40,11 @@ public class RoleService_Tests
     {
         try
         {
-            if (_roleService != null)
+            var expectedRole = ModelsInit.CreateRole();
+            var roleService = TestUtils.CreateRoleService();
+            if (roleService != null)
             {
-                var valid = await _roleService.CheckIfNameIsValid(_expectedRole?.Name ?? String.Empty);
+                var valid = await roleService.CheckIfNameIsValid(expectedRole.Name);
                 Assert.IsTrue(valid);
             }
             else
@@ -101,9 +96,11 @@ public class RoleService_Tests
     {
         try
         {
-            if (_roleService != null)
+            var expectedRole = ModelsInit.CreateRole();
+            var roleService = TestUtils.CreateRoleService();
+            if (roleService != null)
             {
-                var valid = await _roleService.CheckIfNameIsValid(_expectedRole?.Name ?? String.Empty, _role?.Guid ?? String.Empty);
+                var valid = await roleService.CheckIfNameIsValid(expectedRole.Name, _role?.Guid ?? String.Empty);
                 Assert.IsTrue(valid);
             }
             else
@@ -123,9 +120,11 @@ public class RoleService_Tests
     {
         try
         {
-            if (_roleService != null)
+            var expectedRole = ModelsInit.CreateRole();
+            var roleService = TestUtils.CreateRoleService();
+            if (roleService != null)
             {
-                var valid = await _roleService.CheckIfNameIsValid(_expectedRole?.Name ?? String.Empty);
+                var valid = await roleService.CheckIfNameIsValid(expectedRole.Name);
                 Assert.IsFalse(valid);
             }
             else
