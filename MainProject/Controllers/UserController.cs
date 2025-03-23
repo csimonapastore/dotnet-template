@@ -101,11 +101,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
                     var user = await this._userService.CreateUserAsync(request.Data, role);
 
-                    if (user == null || String.IsNullOrEmpty(user.Guid))
-                    {
-                        return BadRequest("Not created");
-                    }
-
                     var userDto = _mapper?.Map<UserDto>(user);
 
                     return Success(String.Empty, userDto);

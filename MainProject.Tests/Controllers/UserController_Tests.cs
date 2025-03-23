@@ -427,61 +427,6 @@ public class UserControllerTests
     }
 
     [TestMethod]
-    public async Task CreateUserAsync_NotCreated()
-    {
-        if (_userController == null)
-        {
-            Assert.Fail($"_userController is null");
-        }
-
-        if (_roleServiceMock == null)
-        {
-            Assert.Fail($"_roleServiceMock is null");
-        }
-
-        DatabaseSqlServer.User user = ModelsInit.CreateUser();
-        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
-        DatabaseSqlServer.User? expectedUser = null;
-
-        CreateUserRequest request = new CreateUserRequest()
-        {
-            Data = new CreateUserRequestData()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Password = user.Password
-            }
-        };
-
-        _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-
-        _roleServiceMock.Setup(s => s.GetRoleForUser(null)).ReturnsAsync(role);
-        _userServiceMock?.Setup(s => s.CreateUserAsync(request.Data, role)).ReturnsAsync(expectedUser);
-
-        ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
-
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Not created");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response value is null");
-        }
-    }
-
-    [TestMethod]
     public async Task CreateUserAsync_ModelInvalid()
     {
         if (_userController == null)
