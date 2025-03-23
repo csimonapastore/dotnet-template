@@ -124,7 +124,9 @@ public class UserService : BaseService, IUserService
         }
         catch (Exception exception)
         {
+            await transaction.RollbackAsync();
             Logger.Error(exception, $"[UserService][CreateUserAsync]");
+            throw;
         }
 
 

@@ -1,6 +1,7 @@
 using BasicDotnetTemplate.MainProject.Services;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasicDotnetTemplate.MainProject.Tests;
 
@@ -37,7 +38,7 @@ public class UserService_Tests
         var userService = TestUtils.CreateUserService();
         var user = ModelsInit.CreateUser();
         var role = ModelsInit.CreateRole();
-        CreateUserRequestData data = new CreateUserRequestData()
+        CreateUserRequestData data = new()
         {
             FirstName = user.FirstName,
             LastName = user.LastName,
@@ -50,12 +51,12 @@ public class UserService_Tests
         Assert.IsNotNull(createdUser);
 
         // Act 
-        var retrievedUser = await userService.GetUserByIdAsync(createdUser.Id);
+        var retrievedUser = await userService.GetUserByIdAsync(createdUser!.Id);
         Assert.IsNotNull(retrievedUser);
 
         // Assert
-        Assert.AreEqual(createdUser.Id, retrievedUser.Id);
-        Assert.AreEqual(createdUser.Guid, retrievedUser.Guid);
+        Assert.AreEqual(createdUser!.Id, retrievedUser!.Id);
+        Assert.AreEqual(createdUser!.Guid, retrievedUser!.Guid);
     }
 }
 
