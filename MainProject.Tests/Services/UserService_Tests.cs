@@ -105,35 +105,39 @@ public class UserService_Tests
 
             var user = await userService.CreateUserAsync(data, role);
             Assert.IsInstanceOfType(user, typeof(User));
+            Assert.IsNotNull(user);
             Assert.IsTrue(expectedUser.FirstName == user.FirstName);
             Assert.IsTrue(expectedUser.LastName == user.LastName);
             Assert.IsTrue(expectedUser.Email == user.Email);
             Assert.IsTrue(expectedUser.Role?.Name == user.Role?.Name);
 
+            User realUser = user!;
+            Role realRole = user!.Role!;
+
             // CheckIfEmailIsValid_CurrentUser
-            var valid = await userService.CheckIfEmailIsValid(user.Email, user.Guid);
+            var valid = await userService.CheckIfEmailIsValid(realUser.Email, realUser.Guid);
             Assert.IsTrue(valid);
 
             // CheckIfEmailIsValid_EmailAlreadyExists
-            valid = await userService.CheckIfEmailIsValid(user.Email);
+            valid = await userService.CheckIfEmailIsValid(realUser.Email);
             Assert.IsFalse(valid);
 
             //GetUserByIdAsync
-            var getUserById = await userService.GetUserByIdAsync(user.Id);
+            var getUserById = await userService.GetUserByIdAsync(realUser.Id);
             Assert.IsNotNull(getUserById);
-            Assert.IsTrue(getUserById.Id == user?.Id);
+            Assert.IsTrue(getUserById.Id == realUser?.Id);
 
             //GetUserByGuidAsync
-            var getUserByGuid = await userService.GetUserByGuidAsync(user.Guid);
+            var getUserByGuid = await userService.GetUserByGuidAsync(realUser.Guid);
             Assert.IsNotNull(getUserByGuid);
-            Assert.IsTrue(getUserByGuid.Guid == user?.Guid);
+            Assert.IsTrue(getUserByGuid.Guid == realUser?.Guid);
 
             //DeleteUserAsync
-            var deleted = await userService.DeleteUserAsync(user);
+            var deleted = await userService.DeleteUserAsync(realUser);
             Assert.IsTrue(deleted);
 
             //DeleteRoleAsync
-            deleted = await roleService.DeleteRoleAsync(user.Role!);
+            deleted = await roleService.DeleteRoleAsync(realRole);
             Assert.IsTrue(deleted);
         }
         catch (Exception ex)
