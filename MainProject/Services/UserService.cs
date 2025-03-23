@@ -11,6 +11,7 @@ public interface IUserService
 {
     Task<User?> GetUserByIdAsync(int id);
     Task<User?> GetUserByGuidAsync(string guid);
+    Task<User?> GetUserByEmailAsync(string email);
     Task<User?> GetUserByUsernameAndPassword(string email, string password);
     Task<bool> CheckIfEmailIsValid(string email, string? guid = "");
     Task<User?> CreateUserAsync(CreateUserRequestData data, Role role);
@@ -70,6 +71,11 @@ public class UserService : BaseService, IUserService
         return await this.GetUsersQueryable().Where(x => x.Guid == guid).FirstOrDefaultAsync();
     }
 
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        return await this.GetUserByEmailQueryable(email).FirstOrDefaultAsync();
+    }
+
     public async Task<User?> GetUserByUsernameAndPassword(string email, string password)
     {
         User? user = await this.GetUserByEmailQueryable(email).FirstOrDefaultAsync();
@@ -78,7 +84,6 @@ public class UserService : BaseService, IUserService
             var encryptedPassword = user.PasswordHash;
             Console.WriteLine(encryptedPassword);
         }
-
 
         return user;
     }
@@ -106,13 +111,21 @@ public class UserService : BaseService, IUserService
     {
         User? user = null;
 
-        using (var transaction = _sqlServerContext.Database.BeginTransactionAsync())
+        await using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
+
+        try
         {
             var tempUser = this.CreateUserData(data, role);
             await _sqlServerContext.Users.AddAsync(tempUser);
             await _sqlServerContext.SaveChangesAsync();
-            await (await transaction).CommitAsync();
+
+            await transaction.CommitAsync();
             user = tempUser;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
         }
 
         return user;
