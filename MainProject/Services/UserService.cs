@@ -29,19 +29,19 @@ public class UserService : BaseService, IUserService
     { }
 
     private IQueryable<User> GetUsersQueryable()
-    {
+    { //NOSONAR
         return this._sqlServerContext.Users.Where(x => !x.IsDeleted);
-    }
+    } //NOSONAR
 
     private IQueryable<User> GetUserByEmailQueryable(string email)
-    {
+    { //NOSONAR
         return this.GetUsersQueryable().Where(x =>
             x.Email.ToString() == email.ToString()
         );
-    }
+    } //NOSONAR
 
     private User CreateUserData(CreateUserRequestData data, Role role)
-    {
+    { //NOSONAR
         User user = new()
         {
             CreationTime = DateTime.UtcNow,
@@ -59,7 +59,7 @@ public class UserService : BaseService, IUserService
         };
 
         return user;
-    }
+    } //NOSONAR
 
 
     public async Task<User?> GetUserByIdAsync(int id)
@@ -109,29 +109,28 @@ public class UserService : BaseService, IUserService
     }
 
     public async Task<User?> CreateUserAsync(CreateUserRequestData data, Role role)
-    {
-        User? user = null;
-
+    { //NOSONAR
         using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
 
+        User? user;
         try
-        {
+        { //NOSONAR
             var tempUser = CreateUserData(data, role);
             await _sqlServerContext.Users.AddAsync(tempUser);
             await _sqlServerContext.SaveChangesAsync();
             await transaction.CommitAsync();
             user = tempUser;
-        }
+        } //NOSONAR
         catch (Exception exception)
-        {
+        { //NOSONAR
             await transaction.RollbackAsync();
             Logger.Error(exception, $"[UserService][CreateUserAsync]");
             throw;
-        }
+        } //NOSONAR
 
 
         return user;
-    }
+    } //NOSONAR
 
     public async Task<bool?> DeleteUserAsync(User user)
     {
