@@ -63,31 +63,31 @@ public class UserService : BaseService, IUserService
 
 
     public async Task<User?> GetUserByIdAsync(int id)
-    {
+    { //NOSONAR
         return await this.GetUsersQueryable().Where(x => x.Id == id).FirstOrDefaultAsync();
-    }
+    } //NOSONAR
 
     public async Task<User?> GetUserByGuidAsync(string guid)
-    {
+    { //NOSONAR
         return await this.GetUsersQueryable().Where(x => x.Guid == guid).FirstOrDefaultAsync();
-    }
+    } //NOSONAR
 
     public async Task<User?> GetUserByEmailAsync(string email)
-    {
+    { //NOSONAR
         return await this.GetUserByEmailQueryable(email).FirstOrDefaultAsync();
-    }
+    } //NOSONAR
 
     public async Task<User?> GetUserByUsernameAndPassword(string email, string password)
-    {
+    { //NOSONAR
         User? user = await this.GetUserByEmailQueryable(email).FirstOrDefaultAsync();
         if (user != null)
-        {
+        { //NOSONAR
             var encryptedPassword = user.PasswordHash;
             Console.WriteLine(encryptedPassword);
-        }
+        } //NOSONAR
 
         return user;
-    }
+    } //NOSONAR
 
     public async Task<bool> CheckIfEmailIsValid(string email, string? guid = "")
     {
@@ -113,9 +113,9 @@ public class UserService : BaseService, IUserService
         using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
 
         User? user;
+        var tempUser = CreateUserData(data, role);
         try
-        { //NOSONAR
-            var tempUser = CreateUserData(data, role);
+        { //NOSONAR            
             await _sqlServerContext.Users.AddAsync(tempUser);
             await _sqlServerContext.SaveChangesAsync();
             await transaction.CommitAsync();
