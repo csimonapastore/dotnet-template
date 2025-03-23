@@ -111,21 +111,13 @@ public class UserService : BaseService, IUserService
     {
         User? user = null;
 
-        await using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
-
-        try
+        using (var transaction = await _sqlServerContext.Database.BeginTransactionAsync())
         {
-            var tempUser = this.CreateUserData(data, role);
+            var tempUser = CreateUserData(data, role);
             await _sqlServerContext.Users.AddAsync(tempUser);
             await _sqlServerContext.SaveChangesAsync();
-
             await transaction.CommitAsync();
             user = tempUser;
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
         }
 
         return user;
