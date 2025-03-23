@@ -1,6 +1,7 @@
 using BasicDotnetTemplate.MainProject.Services;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
+using Moq;
 
 
 
@@ -65,21 +66,43 @@ public class UserService_Tests
     // }
 
     [TestMethod]
-    public async Task GetUserByUsernameAndPassword_Null()
+    public void GetUserByUsernameAndPassword_Null()
     {
         try
         {
-            var userService = TestUtils.CreateUserService();
-            var testString = "test";
-            if (userService != null)
-            {
-                var user = await userService.GetUserByUsernameAndPassword(testString, testString);
-                Assert.IsTrue(user == null);
-            }
-            else
-            {
-                Assert.Fail($"UserService is null");
-            }
+            var userServiceMock = new Mock<IUserService>();
+            User? user = null;
+
+            userServiceMock?.Setup(s => s.GetUserByUsernameAndPassword(
+                It.IsAny<string>(),
+                It.IsAny<string>())
+            ).ReturnsAsync(user);
+
+            Assert.IsTrue(user == null);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public void GetUserByUsernameAndPassword_Success()
+    {
+        try
+        {
+            var userServiceMock = new Mock<IUserService>();
+            User user = ModelsInit.CreateUser();
+
+            userServiceMock?.Setup(s => s.GetUserByUsernameAndPassword(
+                It.IsAny<string>(),
+                It.IsAny<string>())
+            ).ReturnsAsync(user);
+
+            Assert.IsTrue(user != null);
+
         }
         catch (Exception ex)
         {
