@@ -20,6 +20,7 @@ public interface IUserService
 
 public class UserService : BaseService, IUserService
 {
+    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public UserService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
@@ -111,7 +112,9 @@ public class UserService : BaseService, IUserService
     {
         User? user = null;
 
-        using (var transaction = await _sqlServerContext.Database.BeginTransactionAsync())
+        using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
+
+        try
         {
             var tempUser = CreateUserData(data, role);
             await _sqlServerContext.Users.AddAsync(tempUser);
@@ -119,6 +122,11 @@ public class UserService : BaseService, IUserService
             await transaction.CommitAsync();
             user = tempUser;
         }
+        catch (Exception exception)
+        {
+            Logger.Error(exception, $"[UserService][CreateUserAsync]");
+        }
+
 
         return user;
     }
