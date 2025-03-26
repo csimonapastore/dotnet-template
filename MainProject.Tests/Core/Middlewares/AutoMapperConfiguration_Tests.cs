@@ -37,26 +37,10 @@ public class AutoMapperConfiguration_Tests
     {
         try
         {
-            DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-            {
-                Guid = Guid.NewGuid().ToString(),
-                Username = "Username",
-                FirstName = "FirstName",
-                LastName = "LastName",
-                Email = "Email",
-                PasswordHash = "PasswordHash",
-                PasswordSalt = "PasswordSalt",
-                Password = "Password",
-                Role = new DatabaseSqlServer.Role()
-                {
-                    Name = "Role.Name"
-                },
-                IsTestUser = true
-            };
+            DatabaseSqlServer.User user = ModelsInit.CreateUser();
             UserDto? data = _mapper?.Map<UserDto>(user);
 
             Assert.IsTrue(data?.Guid == user.Guid);
-            Assert.IsTrue(data?.Username == user.Username);
             Assert.IsTrue(data?.FirstName == user.FirstName);
             Assert.IsTrue(data?.LastName == user.LastName);
             Assert.IsTrue(data?.Email == user.Email);
@@ -64,7 +48,7 @@ public class AutoMapperConfiguration_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 

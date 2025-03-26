@@ -32,17 +32,17 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest("Request is not well formed");
+                    return BadRequest(_requestNotWellFormed);
                 }
 
                 if (
                     request == null ||
                     request.Data == null ||
-                    String.IsNullOrEmpty(request.Data.Username) ||
+                    String.IsNullOrEmpty(request.Data.Email) ||
                     String.IsNullOrEmpty(request.Data.Password)
                 )
                 {
-                    return BadRequest("Request is not well formed");
+                    return BadRequest(_requestNotWellFormed);
                 }
                 var data = await this._authService.AuthenticateAsync(request.Data);
 

@@ -30,22 +30,7 @@ public class JwtAuthorizationAttribute_Tests
     {
         _attribute = new JwtAuthorizationAttribute();
 
-        DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-        {
-            Guid = Guid.NewGuid().ToString(),
-            Username = "Username",
-            FirstName = "FirstName",
-            LastName = "LastName",
-            Email = "Email",
-            PasswordHash = "PasswordHash",
-            PasswordSalt = "PasswordSalt",
-            Password = "Password",
-            Role = new DatabaseSqlServer.Role()
-            {
-                Name = "Role.Name"
-            },
-            IsTestUser = true
-        };
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
         _authenticatedUser = new AuthenticatedUser(user);
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
@@ -69,13 +54,6 @@ public class JwtAuthorizationAttribute_Tests
         return new AuthorizationFilterContext(actionContext, []);
     }
 
-    private static AuthorizationFilterContext CreateAuthorizationContext()
-    {
-        var httpContext = new DefaultHttpContext();
-        var actionContext = new ActionContext(httpContext, new RouteData(), new ControllerActionDescriptor());
-        return new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
-    }
-
     [TestMethod]
     public void OnAuthorization_AllowAnonymous_SkipsAuthorization()
     {
@@ -89,14 +67,14 @@ public class JwtAuthorizationAttribute_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
     [TestMethod]
     public void OnAuthorization_NoAuthenticatedUser_ReturnsUnauthorized()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()
@@ -111,7 +89,7 @@ public class JwtAuthorizationAttribute_Tests
     [TestMethod]
     public void OnAuthorization_EmptyAuthorizationHeader_ReturnsUnauthorized()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()
@@ -130,7 +108,7 @@ public class JwtAuthorizationAttribute_Tests
     [TestMethod]
     public void OnAuthorization_InvalidToken_ReturnsUnauthorized()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()
@@ -150,7 +128,7 @@ public class JwtAuthorizationAttribute_Tests
     [TestMethod]
     public void OnAuthorization_ValidToken()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()

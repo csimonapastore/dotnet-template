@@ -27,7 +27,7 @@ public class JwtTokenUtils_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -46,7 +46,7 @@ public class JwtTokenUtils_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -55,7 +55,7 @@ public class JwtTokenUtils_Tests
     {
         try
         {
-             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
             AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
             JwtTokenUtils jwtUtils = new JwtTokenUtils(appSettings);
             var jwt = jwtUtils.GenerateToken(_guid);
@@ -65,7 +65,7 @@ public class JwtTokenUtils_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 

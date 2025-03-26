@@ -20,6 +20,7 @@ using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
 using BasicDotnetTemplate.MainProject.Models.Api.Common.Role;
 using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
+using Microsoft.AspNetCore.Http;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -52,34 +53,20 @@ public class AuthController_Tests
         IConfiguration configuration = TestUtils.CreateConfiguration();
         var authServiceMock = new Mock<IAuthService>();
         var controller = new AuthController(configuration, authServiceMock.Object);
-        DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-        {
-            Username = "test",
-            FirstName = "test",
-            LastName = "test",
-            Email = "test",
-            PasswordHash = "test",
-            PasswordSalt = "test",
-            Password = "test",
-            Role = new DatabaseSqlServer.Role()
-            {
-                Name = "test"
-            },
-            IsTestUser = true
-        };
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
 
-        var request = new AuthenticateRequest { Data = new AuthenticateRequestData { Username = "user", Password = "pass" } };
+        var request = new AuthenticateRequest { Data = new AuthenticateRequestData { Email = "user", Password = "pass" } };
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
         ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 200);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 200);
+                Assert.IsTrue(result.Status == StatusCodes.Status200OK);
                 Assert.IsInstanceOfType(result.Data, typeof(AuthenticatedUser));
             }
             else
@@ -111,12 +98,12 @@ public class AuthController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 400);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 400);
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
                 Assert.IsTrue(result.Message == "Request is not well formed");
             }
             else
@@ -141,8 +128,8 @@ public class AuthController_Tests
         {
             Data = new AuthenticateRequestData()
             {
-                Username = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7",
-                Password = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7"
+                Email = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7iv7zgfQ13qG/0dUUsreG/WGHWRBE5mVWaV43A=",
+                Password = "d2ejdI1f4GYpq2kTB1nmeQkZXqR3QSxH8Yqkl7iv7zgfQ13qG/0dUUsreG/WGHWRBE5mVWaV43A="
             }
         };
         AuthenticatedUser? authenticatedUser = null;
@@ -153,7 +140,7 @@ public class AuthController_Tests
 
         if (response != null)
         {
-            Assert.IsTrue(response.StatusCode == 404);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status404NotFound);
         }
         else
         {
@@ -181,12 +168,12 @@ public class AuthController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 400);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 400);
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
                 Assert.IsTrue(result.Message == "Request is not well formed");
             }
             else
@@ -209,7 +196,7 @@ public class AuthController_Tests
 
         var request = new AuthenticateRequest
         {
-            Data = new AuthenticateRequestData { Username = "user", Password = "pass" }
+            Data = new AuthenticateRequestData { Email = "user", Password = "pass" }
         };
 
         authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ThrowsAsync(new Exception("Unexpected error"));
@@ -220,12 +207,12 @@ public class AuthController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == 500);
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status500InternalServerError);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == 500);
+                Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
                 Assert.IsTrue(result.Message == "Something went wrong. Unexpected error");
             }
             else

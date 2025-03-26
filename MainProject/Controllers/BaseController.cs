@@ -2,13 +2,17 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using BasicDotnetTemplate.MainProject.Models.Api.Response;
 using BasicDotnetTemplate.MainProject.Models.Settings;
+using AutoMapper;
+using BasicDotnetTemplate.MainProject.Core.Middlewares;
 
 namespace BasicDotnetTemplate.MainProject.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
+        protected readonly IMapper? _mapper;
         protected readonly IConfiguration _configuration;
         protected readonly AppSettings _appSettings;
+        protected readonly string _requestNotWellFormed = "Request is not well formed";
 
         protected BaseController(
             IConfiguration configuration
@@ -17,6 +21,13 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             _configuration = configuration;
             _appSettings = new AppSettings();
             _configuration.GetSection("AppSettings").Bind(_appSettings);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<AutoMapperConfiguration>();
+            });
+
+            _mapper = config.CreateMapper();
         }
 
 #nullable enable

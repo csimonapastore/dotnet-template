@@ -12,6 +12,7 @@ using DatabaseSqlServer = BasicDotnetTemplate.MainProject.Models.Database.SqlSer
 using BasicDotnetTemplate.MainProject.Models.Api.Response.Auth;
 using BasicDotnetTemplate.MainProject.Core.Middlewares;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -38,12 +39,12 @@ public class GetUserResponse_Tests
         try
         {
             var getUserResponse = new GetUserResponse(200, null, null);
-            Assert.IsTrue(getUserResponse.Status == 200 && String.IsNullOrEmpty(getUserResponse.Message) && getUserResponse.Data == null);
+            Assert.IsTrue(getUserResponse.Status == StatusCodes.Status200OK && String.IsNullOrEmpty(getUserResponse.Message) && getUserResponse.Data == null);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -53,12 +54,12 @@ public class GetUserResponse_Tests
         try
         {
             var getUserResponse = new GetUserResponse(201, null, null);
-            Assert.IsFalse(getUserResponse.Status == 200);
+            Assert.IsFalse(getUserResponse.Status == StatusCodes.Status200OK);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -68,12 +69,12 @@ public class GetUserResponse_Tests
         try
         {
             var getUserResponse = new GetUserResponse(200, "This is a test message", null);
-            Assert.IsTrue(getUserResponse.Status == 200 && getUserResponse.Message == "This is a test message" && getUserResponse.Data == null);
+            Assert.IsTrue(getUserResponse.Status == StatusCodes.Status200OK && getUserResponse.Message == "This is a test message" && getUserResponse.Data == null);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -82,29 +83,15 @@ public class GetUserResponse_Tests
     {
         try
         {
-            DatabaseSqlServer.User user = new DatabaseSqlServer.User()
-            {
-                Username = "test",
-                FirstName = "test",
-                LastName = "test",
-                Email = "test",
-                PasswordHash = "test",
-                PasswordSalt = "test",
-                Password = "test",
-                Role = new DatabaseSqlServer.Role()
-                {
-                    Name = "test"
-                },
-                IsTestUser = true
-            };
+            DatabaseSqlServer.User user = ModelsInit.CreateUser();
             UserDto? data = _mapper?.Map<UserDto>(user);
             var getUserResponse = new GetUserResponse(200, "This is a test message", data);
-            Assert.IsTrue(getUserResponse.Status == 200 && getUserResponse.Message == "This is a test message" && getUserResponse.Data == data);
+            Assert.IsTrue(getUserResponse.Status == StatusCodes.Status200OK && getUserResponse.Message == "This is a test message" && getUserResponse.Data == data);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 

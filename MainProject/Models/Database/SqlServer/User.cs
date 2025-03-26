@@ -7,8 +7,6 @@ namespace BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 public class User : Base
 {
     [MaxLength(200)]
-    public required string Username { get; set; }
-    [MaxLength(200)]
     public required string FirstName { get; set; }
     [MaxLength(200)]
     public required string LastName { get; set; }

@@ -39,7 +39,7 @@ public class JwtService_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 
@@ -64,7 +64,7 @@ public class JwtService_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex.Message}");
+            Assert.Fail($"An exception was thrown: {ex}");
         }
     }
 

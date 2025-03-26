@@ -10,11 +10,13 @@ public class Base
     public string Guid { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime CreationTime { get; set; }
-    public int CreationUserId { get; set; }
-    public DateTime UpdateTime { get; set; }
-    public int UpdateUserId { get; set; }
-    public DateTime DeletionTime { get; set; }
-    public int DeletionUserId { get; set; }
+#nullable enable
+    public int? CreationUserId { get; set; }
+    public DateTime? UpdateTime { get; set; }
+    public int? UpdateUserId { get; set; }
+    public DateTime? DeletionTime { get; set; }
+    public int? DeletionUserId { get; set; }
+#nullable disable
 }
 
 
