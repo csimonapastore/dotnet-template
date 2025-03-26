@@ -110,7 +110,6 @@ public class UserService_Tests
             Assert.IsTrue(expectedUser.Email == user.Email);
             Assert.IsTrue(expectedUser.Role?.Name == user.Role?.Name);
             _user = user;
-            _role = user.Role;
 
         }
         catch (Exception ex)
