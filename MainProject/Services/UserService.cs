@@ -11,7 +11,6 @@ public interface IUserService
 {
     Task<User?> GetUserByIdAsync(int id);
     Task<User?> GetUserByGuidAsync(string guid);
-    Task<User?> GetUserByEmailAsync(string email);
     Task<User?> GetUserByUsernameAndPassword(string email, string password);
     Task<bool> CheckIfEmailIsValid(string email, string? guid = "");
     Task<User?> CreateUserAsync(CreateUserRequestData data, Role role);
@@ -29,19 +28,19 @@ public class UserService : BaseService, IUserService
     { }
 
     private IQueryable<User> GetUsersQueryable()
-    { //NOSONAR
+    {
         return this._sqlServerContext.Users.Where(x => !x.IsDeleted);
-    } //NOSONAR
+    }
 
     private IQueryable<User> GetUserByEmailQueryable(string email)
-    { //NOSONAR
+    {
         return this.GetUsersQueryable().Where(x =>
             x.Email.ToString() == email.ToString()
         );
-    } //NOSONAR
+    }
 
     private User CreateUserData(CreateUserRequestData data, Role role)
-    { //NOSONAR
+    {
         User user = new()
         {
             CreationTime = DateTime.UtcNow,
@@ -59,35 +58,30 @@ public class UserService : BaseService, IUserService
         };
 
         return user;
-    } //NOSONAR
+    }
 
 
     public async Task<User?> GetUserByIdAsync(int id)
-    { //NOSONAR
+    {
         return await this.GetUsersQueryable().Where(x => x.Id == id).FirstOrDefaultAsync();
-    } //NOSONAR
+    }
 
     public async Task<User?> GetUserByGuidAsync(string guid)
-    { //NOSONAR
+    {
         return await this.GetUsersQueryable().Where(x => x.Guid == guid).FirstOrDefaultAsync();
-    } //NOSONAR
-
-    public async Task<User?> GetUserByEmailAsync(string email)
-    { //NOSONAR
-        return await this.GetUserByEmailQueryable(email).FirstOrDefaultAsync();
-    } //NOSONAR
+    }
 
     public async Task<User?> GetUserByUsernameAndPassword(string email, string password)
-    { //NOSONAR
+    {
         User? user = await this.GetUserByEmailQueryable(email).FirstOrDefaultAsync();
         if (user != null)
-        { //NOSONAR
+        {
             var encryptedPassword = user.PasswordHash;
             Console.WriteLine(encryptedPassword);
-        } //NOSONAR
+        }
 
         return user;
-    } //NOSONAR
+    }
 
     public async Task<bool> CheckIfEmailIsValid(string email, string? guid = "")
     {
@@ -109,28 +103,28 @@ public class UserService : BaseService, IUserService
     }
 
     public async Task<User?> CreateUserAsync(CreateUserRequestData data, Role role)
-    { //NOSONAR
+    {
         using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
 
         User? user;
         var tempUser = CreateUserData(data, role);
         try
-        { //NOSONAR            
+        {
             await _sqlServerContext.Users.AddAsync(tempUser);
             await _sqlServerContext.SaveChangesAsync();
             await transaction.CommitAsync();
             user = tempUser;
-        } //NOSONAR
+        }
         catch (Exception exception)
-        { //NOSONAR
+        {
             await transaction.RollbackAsync();
             Logger.Error(exception, $"[UserService][CreateUserAsync]");
             throw;
-        } //NOSONAR
+        }
 
 
         return user;
-    } //NOSONAR
+    }
 
     public async Task<bool?> DeleteUserAsync(User user)
     {

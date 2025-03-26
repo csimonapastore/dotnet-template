@@ -19,6 +19,7 @@ public interface IRoleService
 
 public class RoleService : BaseService, IRoleService
 {
+    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public RoleService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
@@ -92,13 +93,21 @@ public class RoleService : BaseService, IRoleService
     {
         Role? role = null;
 
-        using (var transaction = _sqlServerContext.Database.BeginTransactionAsync())
+        using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
+
+        try
         {
             var tempRole = this.CreateRoleData(data);
             await _sqlServerContext.Roles.AddAsync(tempRole);
             await _sqlServerContext.SaveChangesAsync();
-            await (await transaction).CommitAsync();
+            await transaction.CommitAsync();
             role = tempRole;
+        }
+        catch (Exception exception)
+        {
+            await transaction.RollbackAsync();
+            Logger.Error(exception, $"[RoleService][CreateRoleAsync]");
+            throw;
         }
 
         return role;

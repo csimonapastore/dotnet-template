@@ -54,13 +54,6 @@ public class JwtAuthorizationAttribute_Tests
         return new AuthorizationFilterContext(actionContext, []);
     }
 
-    private static AuthorizationFilterContext CreateAuthorizationContext()
-    {
-        var httpContext = new DefaultHttpContext();
-        var actionContext = new ActionContext(httpContext, new RouteData(), new ControllerActionDescriptor());
-        return new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
-    }
-
     [TestMethod]
     public void OnAuthorization_AllowAnonymous_SkipsAuthorization()
     {
@@ -81,7 +74,7 @@ public class JwtAuthorizationAttribute_Tests
     [TestMethod]
     public void OnAuthorization_NoAuthenticatedUser_ReturnsUnauthorized()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()
@@ -96,7 +89,7 @@ public class JwtAuthorizationAttribute_Tests
     [TestMethod]
     public void OnAuthorization_EmptyAuthorizationHeader_ReturnsUnauthorized()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()
@@ -115,7 +108,7 @@ public class JwtAuthorizationAttribute_Tests
     [TestMethod]
     public void OnAuthorization_InvalidToken_ReturnsUnauthorized()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()
@@ -135,7 +128,7 @@ public class JwtAuthorizationAttribute_Tests
     [TestMethod]
     public void OnAuthorization_ValidToken()
     {
-        var context = CreateAuthorizationContext();
+        var context = TestUtils.CreateAuthorizationContext();
         IConfiguration configuration = TestUtils.CreateConfiguration();
 
         context.HttpContext.RequestServices = new ServiceCollection()

@@ -19,12 +19,24 @@ using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Services;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
 
 public static class TestUtils
 {
+
+    public static AuthorizationFilterContext CreateAuthorizationContext()
+    {
+        var httpContext = new DefaultHttpContext();
+        var actionContext = new ActionContext(httpContext, new RouteData(), new ControllerActionDescriptor());
+        return new AuthorizationFilterContext(actionContext, new List<IFilterMetadata>());
+    }
+
     public static IConfiguration CreateConfiguration()
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
@@ -62,6 +74,16 @@ public static class TestUtils
         context.Database.OpenConnection();
         context.Database.EnsureCreated();
         return context;
+    }
+
+    public static BaseService CreateBaseService()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
+        optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
+        SqlServerContext sqlServerContext = CreateInMemorySqlContext();
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new BaseService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
 
     public static AuthService CreateAuthService()

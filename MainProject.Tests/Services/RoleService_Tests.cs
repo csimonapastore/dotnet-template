@@ -187,6 +187,81 @@ public class RoleService_Tests
     }
 
     [TestMethod]
+    public async Task GetRoleByGuidAsync_CurrentRole()
+    {
+        try
+        {
+            if (_roleService != null)
+            {
+                var role = await _roleService.GetRoleForUser(_role?.Guid);
+                Assert.IsNotNull(role);
+                Assert.IsTrue(role.Guid == _role?.Guid);
+            }
+            else
+            {
+                Assert.Fail($"RoleService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task GetRoleByGuidAsync_Default()
+    {
+        try
+        {
+            if (_roleService != null)
+            {
+                CreateRoleRequestData data = new()
+                {
+                    Name = "Default",
+                    IsNotEditable = true
+                };
+                var roleCreated = await _roleService.CreateRoleAsync(data);
+                var role = await _roleService.GetRoleForUser(String.Empty);
+                Assert.IsNotNull(role);
+                Assert.IsTrue(roleCreated?.Guid == role?.Guid);
+                Assert.IsTrue(role?.Name == "Default");
+            }
+            else
+            {
+                Assert.Fail($"RoleService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task GetRoleByGuidAsync_Null()
+    {
+        try
+        {
+            if (_roleService != null)
+            {
+                var role = await _roleService.GetRoleForUser(Guid.NewGuid().ToString());
+                Assert.IsNull(role);
+            }
+            else
+            {
+                Assert.Fail($"RoleService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
     public async Task DeleteRoleAsync()
     {
         try
