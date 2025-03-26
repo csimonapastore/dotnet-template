@@ -12,6 +12,8 @@ public class RoleService_Tests
 {
     private static Role? _expectedRole = ModelsInit.CreateRole();
     private static Role? _role;
+    private static RoleService _roleService = TestUtils.CreateRoleService();
+
 
     [TestMethod]
     public void Inizialize()
@@ -41,10 +43,10 @@ public class RoleService_Tests
         try
         {
             var expectedRole = ModelsInit.CreateRole();
-            var roleService = TestUtils.CreateRoleService();
-            if (roleService != null)
+
+            if (_roleService != null)
             {
-                var valid = await roleService.CheckIfNameIsValid(expectedRole.Name);
+                var valid = await _roleService.CheckIfNameIsValid(expectedRole.Name);
                 Assert.IsTrue(valid);
             }
             else
@@ -64,7 +66,6 @@ public class RoleService_Tests
     {
         try
         {
-            var _roleService = TestUtils.CreateRoleService();
             CreateRoleRequestData data = new CreateRoleRequestData()
             {
                 Name = _expectedRole?.Name ?? String.Empty,
@@ -98,10 +99,9 @@ public class RoleService_Tests
         try
         {
             var expectedRole = ModelsInit.CreateRole();
-            var roleService = TestUtils.CreateRoleService();
-            if (roleService != null)
+            if (_roleService != null)
             {
-                var valid = await roleService.CheckIfNameIsValid(expectedRole.Name, _role?.Guid ?? String.Empty);
+                var valid = await _roleService.CheckIfNameIsValid(expectedRole.Name, _role?.Guid ?? String.Empty);
                 Assert.IsTrue(valid);
             }
             else
@@ -122,10 +122,10 @@ public class RoleService_Tests
         try
         {
             var expectedRole = ModelsInit.CreateRole();
-            var roleService = TestUtils.CreateRoleService();
-            if (roleService != null)
+
+            if (_roleService != null)
             {
-                var valid = await roleService.CheckIfNameIsValid(expectedRole.Name);
+                var valid = await _roleService.CheckIfNameIsValid(expectedRole.Name);
                 Assert.IsFalse(valid);
             }
             else
@@ -145,7 +145,6 @@ public class RoleService_Tests
     {
         try
         {
-            var _roleService = TestUtils.CreateRoleService();
             if (_roleService != null)
             {
                 var role = await _roleService.GetRoleByIdAsync(_role?.Id ?? 0);
@@ -169,7 +168,6 @@ public class RoleService_Tests
     {
         try
         {
-            var _roleService = TestUtils.CreateRoleService();
             if (_roleService != null)
             {
                 var role = await _roleService.GetRoleByGuidAsync(_role?.Guid ?? String.Empty);
@@ -193,7 +191,6 @@ public class RoleService_Tests
     {
         try
         {
-            var _roleService = TestUtils.CreateRoleService();
             if (_roleService != null)
             {
                 var role = await _roleService.GetRoleByGuidAsync(_role?.Guid ?? String.Empty);

@@ -18,6 +18,7 @@ using Moq;
 using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Services;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -51,12 +52,24 @@ public static class TestUtils
         return _appSettings.DatabaseSettings?.SqlServerConnectionString ?? String.Empty;
     }
 
+    public static SqlServerContext CreateInMemorySqlContext()
+    {
+        var options = new DbContextOptionsBuilder<SqlServerContext>()
+            .UseSqlite("DataSource=:memory:") // Database in-memory
+            .Options;
+
+        var context = new SqlServerContext(options);
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
+        return context;
+    }
+
     public static AuthService CreateAuthService()
     {
         IConfiguration configuration = CreateConfiguration();
         var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
         optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
-        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        SqlServerContext sqlServerContext = CreateInMemorySqlContext();
         var userServiceMock = new Mock<IUserService>();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new AuthService(httpContextAccessor.Object, configuration, sqlServerContext, userServiceMock.Object);
@@ -65,9 +78,7 @@ public static class TestUtils
     public static UserService CreateUserService()
     {
         IConfiguration configuration = CreateConfiguration();
-        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
-        optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
-        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        SqlServerContext sqlServerContext = CreateInMemorySqlContext();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new UserService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
@@ -77,7 +88,7 @@ public static class TestUtils
         IConfiguration configuration = CreateConfiguration();
         var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
         optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
-        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        SqlServerContext sqlServerContext = CreateInMemorySqlContext();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new JwtService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
@@ -87,7 +98,7 @@ public static class TestUtils
         IConfiguration configuration = CreateConfiguration();
         var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
         optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
-        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        SqlServerContext sqlServerContext = CreateInMemorySqlContext();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new RoleService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
