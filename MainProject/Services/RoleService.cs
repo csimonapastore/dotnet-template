@@ -1,6 +1,7 @@
 
 using System.Collections;
 using BasicDotnetTemplate.MainProject.Core.Database;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ public interface IRoleService
 
 public class RoleService : BaseService, IRoleService
 {
+    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public RoleService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
@@ -103,10 +105,11 @@ public class RoleService : BaseService, IRoleService
             await transaction.CommitAsync();
             role = tempRole;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             await transaction.RollbackAsync();
-            throw;
+            Logger.Error(exception, $"[RoleService][CreateRoleAsync]");
+            throw new CreateException($"An error occurred while saving the role for transaction ID {transaction.TransactionId}.", exception);
         }
 
         return role;
@@ -130,10 +133,11 @@ public class RoleService : BaseService, IRoleService
             await _sqlServerContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Logger.Error(exception, $"[RoleService][UpdateRoleAsync] | {transaction.TransactionId}");
             await transaction.RollbackAsync();
-            throw;
+            throw new UpdateException($"An error occurred while updating the role for transaction ID {transaction.TransactionId}.", exception);
         }
 
         return role;

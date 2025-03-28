@@ -1,6 +1,7 @@
 
 using System.Collections;
 using BasicDotnetTemplate.MainProject.Core.Database;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ public interface IUserService
 
 public class UserService : BaseService, IUserService
 {
+    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public UserService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
@@ -115,10 +117,11 @@ public class UserService : BaseService, IUserService
             await transaction.CommitAsync();
             user = tempUser;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             await transaction.RollbackAsync();
-            throw;
+            Logger.Error(exception, $"[UserService][CreateUserAsync]");
+            throw new CreateException($"An error occurred while creating the user for transaction ID {transaction.TransactionId}.", exception);
         }
 
 
