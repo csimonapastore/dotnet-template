@@ -806,6 +806,52 @@ public class RoleController_Tests
     }
 
     [TestMethod]
+    public async Task UpdateRoleAsync_NotEditable()
+    {
+        if (_roleController == null)
+        {
+            Assert.Fail($"_roleController is null");
+        }
+
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+        role.IsNotEditable = true;
+
+        CreateRoleRequest request = new CreateRoleRequest()
+        {
+            Data = new CreateRoleRequestData()
+            {
+                Name = "RoleTest",
+                IsNotEditable = true
+            }
+        };
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
+
+        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+
+        if (response != null && response.Value != null)
+        {
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+                Assert.IsTrue(result.Message == "This role is not editable");
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response value is null");
+        }
+    }
+
+    [TestMethod]
     public async Task UpdateRoleAsync_CreateRoleRequestDataNull()
     {
         if (_roleController == null)

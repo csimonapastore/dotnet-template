@@ -116,6 +116,9 @@ public class RoleService : BaseService, IRoleService
 
     public async Task<Role?> UpdateRoleAsync(CreateRoleRequestData data, Role role)
     {
+        if (role.IsNotEditable)
+            return role;
+
         using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
 
         try

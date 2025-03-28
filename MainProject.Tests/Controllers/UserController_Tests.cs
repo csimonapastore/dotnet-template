@@ -232,7 +232,7 @@ public class UserController_Tests
     }
 
     [TestMethod]
-    public async Task CreateUserAsync_Should_Return_200_When_Successful()
+    public async Task CreateUserAsync_Success()
     {
         if (_userController == null)
         {

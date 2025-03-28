@@ -104,12 +104,13 @@ public class UserService : BaseService, IUserService
 
     public async Task<User?> CreateUserAsync(CreateUserRequestData data, Role role)
     {
+        User? user;
+
         using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
 
-        User? user;
-        var tempUser = CreateUserData(data, role);
         try
         {
+            var tempUser = CreateUserData(data, role);
             await _sqlServerContext.Users.AddAsync(tempUser);
             await _sqlServerContext.SaveChangesAsync();
             await transaction.CommitAsync();

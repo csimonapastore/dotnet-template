@@ -146,6 +146,11 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                     return NotFound();
                 }
 
+                if(role.IsNotEditable)
+                {
+                    return BadRequest("This role is not editable");
+                }
+
                 if (
                     await this._roleService.CheckIfNameIsValid(request.Data.Name) ||
                     await this._roleService.CheckIfNameIsValid(request.Data.Name, guid)
