@@ -19,7 +19,6 @@ public interface IUserService
 
 public class UserService : BaseService, IUserService
 {
-    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public UserService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
@@ -116,10 +115,9 @@ public class UserService : BaseService, IUserService
             await transaction.CommitAsync();
             user = tempUser;
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
-            Logger.Error(exception, $"[UserService][CreateUserAsync]");
             throw;
         }
 

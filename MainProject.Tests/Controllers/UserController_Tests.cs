@@ -43,7 +43,7 @@ public class UserController_Tests
         IConfiguration configuration = TestUtils.CreateConfiguration();
         _userServiceMock = new Mock<IUserService>();
         _roleServiceMock = new Mock<IRoleService>();
-        _userController = new UserController(configuration, _userServiceMock?.Object, _roleServiceMock.Object);
+        _userController = new UserController(configuration, _userServiceMock.Object, _roleServiceMock.Object);
     }
 
     [TestMethod]

@@ -20,7 +20,6 @@ public interface IRoleService
 
 public class RoleService : BaseService, IRoleService
 {
-    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public RoleService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
@@ -104,10 +103,9 @@ public class RoleService : BaseService, IRoleService
             await transaction.CommitAsync();
             role = tempRole;
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
-            Logger.Error(exception, $"[RoleService][CreateRoleAsync]");
             throw;
         }
 
@@ -132,10 +130,10 @@ public class RoleService : BaseService, IRoleService
             await _sqlServerContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
-            Logger.Error(exception, $"[RoleService][UpdateRoleAsync]");
+            throw;
         }
 
         return role;
