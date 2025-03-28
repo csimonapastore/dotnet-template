@@ -13,6 +13,7 @@ public interface IRoleService
     Task<Role?> GetRoleByGuidAsync(string guid);
     Task<bool> CheckIfNameIsValid(string name, string? guid = "");
     Task<Role?> CreateRoleAsync(CreateRoleRequestData data);
+    Task<Role?> UpdateRoleAsync(CreateRoleRequestData data, Role role);
     Task<Role?> GetRoleForUser(string? guid);
     Task<bool?> DeleteRoleAsync(Role role);
 }
@@ -108,6 +109,30 @@ public class RoleService : BaseService, IRoleService
             await transaction.RollbackAsync();
             Logger.Error(exception, $"[RoleService][CreateRoleAsync]");
             throw;
+        }
+
+        return role;
+    }
+
+    public async Task<Role?> UpdateRoleAsync(CreateRoleRequestData data, Role role)
+    {
+        using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            role.Name = data.Name;
+            role.IsNotEditable = data.IsNotEditable;
+            role.UpdateTime = DateTime.UtcNow;
+            role.UpdateUserId = this.GetCurrentUserId();
+
+            _sqlServerContext.Roles.Update(role);
+            await _sqlServerContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch (Exception exception)
+        {
+            await transaction.RollbackAsync();
+            Logger.Error(exception, $"[RoleService][UpdateRoleAsync]");
         }
 
         return role;

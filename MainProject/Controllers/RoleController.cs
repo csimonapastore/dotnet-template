@@ -116,6 +116,66 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         }
 
         [JwtAuthorization()]
+        [HttpPut("update/{guid}")]
+        [ProducesResponseType<GetRoleResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateRoleAsync([FromBody] CreateRoleRequest request, string guid)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+
+                if (
+                    request == null ||
+                    request.Data == null ||
+                    String.IsNullOrEmpty(request.Data.Name) ||
+                    String.IsNullOrEmpty(guid)
+                )
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+
+                var role = await this._roleService.GetRoleByGuidAsync(guid);
+
+                if (role == null || String.IsNullOrEmpty(role.Guid))
+                {
+                    return NotFound();
+                }
+
+                if (
+                    await this._roleService.CheckIfNameIsValid(request.Data.Name) ||
+                    await this._roleService.CheckIfNameIsValid(request.Data.Name, guid)
+                )
+                {
+                    role = await this._roleService.UpdateRoleAsync(request.Data, role);
+
+                    var roleDto = _mapper?.Map<RoleDto>(role);
+
+                    return Success(String.Empty, roleDto);
+                }
+                else
+                {
+                    return BadRequest("Invalid name");
+                }
+
+            }
+            catch (Exception exception)
+            {
+                var message = "Something went wrong";
+                if (!String.IsNullOrEmpty(exception.Message))
+                {
+                    message += $". {exception.Message}";
+                }
+                return InternalServerError(message);
+            }
+
+        }
+
+        [JwtAuthorization()]
         [HttpDelete("{guid}")]
         [ProducesResponseType<GetRoleResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status404NotFound)]

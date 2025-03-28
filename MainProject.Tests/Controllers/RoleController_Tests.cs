@@ -54,6 +54,7 @@ public class RoleController_Tests
         }
     }
 
+    #region "GET"
 
     [TestMethod]
     public async Task GetRoleByGuidAsync_Should_Return_200_When_Successful()
@@ -219,6 +220,10 @@ public class RoleController_Tests
             Assert.Fail($"Response is null");
         }
     }
+
+    #endregion
+
+    #region "CREATE"
 
     [TestMethod]
     public async Task CreateRoleAsync_Should_Return_200_When_Successful()
@@ -508,7 +513,9 @@ public class RoleController_Tests
         }
     }
 
+    #endregion
 
+    #region "DELETE"
 
     [TestMethod]
     public async Task DeleteRoleByGuidAsync_Success()
@@ -664,4 +671,283 @@ public class RoleController_Tests
         }
     }
 
+    #endregion
+
+
+
+    #region "UPDATE"
+
+    [TestMethod]
+    public async Task UpdateRoleAsync_Should_Return_200_When_Successful()
+    {
+        if (_roleController == null)
+        {
+            Assert.Fail($"_roleController is null");
+        }
+
+        if (_roleServiceMock == null)
+        {
+            Assert.Fail($"_roleServiceMock is null");
+        }
+
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        CreateRoleRequest request = new CreateRoleRequest()
+        {
+            Data = new CreateRoleRequestData()
+            {
+                Name = "RoleTest",
+                IsNotEditable = true
+            }
+        };
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _roleServiceMock?.Setup(s => s.UpdateRoleAsync(It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>())).ReturnsAsync(role);
+
+        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+        if (response != null && response.Value != null)
+        {
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.IsTrue(result.Status == StatusCodes.Status200OK);
+                Assert.IsInstanceOfType(result.Data, typeof(RoleDto));
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response value is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateRoleAsync_RoleNotFound()
+    {
+        if (_roleController == null)
+        {
+            Assert.Fail($"_roleController is null");
+        }
+
+        DatabaseSqlServer.Role? role = null;
+
+        CreateRoleRequest request = new CreateRoleRequest()
+        {
+            Data = new CreateRoleRequestData()
+            {
+                Name = "RoleTest",
+                IsNotEditable = true
+            }
+        };
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+
+        NotFoundResult response = (NotFoundResult)(await _roleController.UpdateRoleAsync(request, Guid.NewGuid().ToString()));
+
+        if (response != null)
+        {
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status404NotFound);
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateRoleAsync_InvalidName()
+    {
+        if (_roleController == null)
+        {
+            Assert.Fail($"_roleController is null");
+        }
+
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        CreateRoleRequest request = new CreateRoleRequest()
+        {
+            Data = new CreateRoleRequestData()
+            {
+                Name = "RoleTest",
+                IsNotEditable = true
+            }
+        };
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
+
+        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+
+        if (response != null && response.Value != null)
+        {
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+                Assert.IsTrue(result.Message == "Invalid name");
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response value is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateRoleAsync_CreateRoleRequestDataNull()
+    {
+        if (_roleController == null)
+        {
+            Assert.Fail($"_roleController is null");
+        }
+
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        CreateRoleRequest request = new CreateRoleRequest()
+        {
+            Data = null
+        };
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _roleServiceMock?.Setup(s => s.UpdateRoleAsync(It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>())).ReturnsAsync(role);
+
+        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+
+        if (response != null && response.Value != null)
+        {
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+                Assert.IsTrue(result.Message == "Request is not well formed");
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response value is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateRoleAsync_ModelInvalid()
+    {
+        if (_roleController == null)
+        {
+            Assert.Fail($"_roleController is null");
+        }
+
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        CreateRoleRequest request = new CreateRoleRequest()
+        {
+            Data = new CreateRoleRequestData()
+            {
+                Name = "RoleTest",
+                IsNotEditable = true
+            }
+        };
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _roleServiceMock?.Setup(s => s.UpdateRoleAsync(It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>())).ReturnsAsync(role);
+        _roleController.ModelState.AddModelError("Data", "Invalid data");
+        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+
+        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+
+        if (response != null && response.Value != null)
+        {
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+                Assert.IsTrue(result.Message == "Request is not well formed");
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateRoleAsync_Exception()
+    {
+        if (_roleController == null)
+        {
+            Assert.Fail($"_roleController is null");
+        }
+
+        if (_roleServiceMock == null)
+        {
+            Assert.Fail($"_roleServiceMock is null");
+        }
+
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        CreateRoleRequest request = new CreateRoleRequest()
+        {
+            Data = new CreateRoleRequestData()
+            {
+                Name = "RoleTest",
+                IsNotEditable = true
+            }
+        };
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        _roleServiceMock?.Setup(s => s.UpdateRoleAsync(
+            It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>()
+        )).ThrowsAsync(new Exception("Unexpected error"));
+
+        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+
+        if (response != null && response.Value != null)
+        {
+            Assert.IsTrue(response.StatusCode == StatusCodes.Status500InternalServerError);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
+                Assert.IsTrue(result.Message == "Something went wrong. Unexpected error");
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
+    #endregion
 }
