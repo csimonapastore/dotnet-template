@@ -33,7 +33,7 @@ public class RoleController_Tests
     {
         IConfiguration configuration = TestUtils.CreateConfiguration();
         _roleServiceMock = new Mock<IRoleService>();
-        _roleController = new RoleController(configuration, _roleServiceMock?.Object);
+        _roleController = new RoleController(configuration, _roleServiceMock.Object);
     }
 
     [TestMethod]
