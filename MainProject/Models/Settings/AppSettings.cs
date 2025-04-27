@@ -9,6 +9,6 @@ public class AppSettings
     public DatabaseSettings? DatabaseSettings { get; set; }
     public JwtSettings? JwtSettings { get; set; }
     public EncryptionSettings? EncryptionSettings { get; set; }
-
+    public PermissionsSettings? PermissionsSettings { get; set; }
 #nullable disable
 }

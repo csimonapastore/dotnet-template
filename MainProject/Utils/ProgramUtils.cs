@@ -218,6 +218,7 @@ public static class ProgramUtils
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
+        builder.Services.AddScoped<IPermissionService, PermissionService>();
         builder.Services.AddScoped<IRoleService, RoleService>();
         builder.Services.AddScoped<IUserService, UserService>();
         Logger.Info("[ProgramUtils][AddScopes] Done scopes");
@@ -269,6 +270,27 @@ public static class ProgramUtils
             }
         }
 
+    }
+
+    public static void CreatePermissions(ref WebApplication app)
+    {
+        Logger.Info("[ProgramUtils][CreatePermissions] Adding permissions...");
+        using (var scope = app.Services.CreateScope())
+        {
+            var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>;
+            if (permissionService != null)
+            {
+                var isValidThread = Task.Run(() => permissionService!.Invoke()?.CreatePermissionsOnStartupAsync());
+                if (isValidThread.Result != null)
+                {
+                    Logger.Info("[ProgramUtils][CreatePermissions] Done permissions");
+                }
+                else
+                {
+                    Logger.Error("[ProgramUtils][CreatePermissions] Something went wrong");
+                }
+            }
+        }
     }
 
 }

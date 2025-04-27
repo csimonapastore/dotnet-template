@@ -4,6 +4,8 @@ using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Microsoft.EntityFrameworkCore;
+using BasicDotnetTemplate.MainProject.Models.Common;
+using BasicDotnetTemplate.MainProject.Utils;
 
 namespace BasicDotnetTemplate.MainProject.Services;
 
@@ -32,7 +34,7 @@ public interface IPermissionService
     Task<PermissionSystemModule?> GetPermissionSystemModuleByGuidAsync(string guid);
     Task<bool?> HandleEnabledPermissionSystemModuleAsync(PermissionSystemModule permission, bool enabled);
     Task<PermissionSystemModule?> CreatePermissionSystemModuleAsync(
-        PermissionSystem permissionSystem, 
+        PermissionSystem permissionSystem,
         PermissionModule permissionModule,
         bool enabled
     );
@@ -42,7 +44,7 @@ public interface IPermissionService
     Task<PermissionSystemModuleOperation?> GetPermissionSystemModuleOperationByGuidAsync(string guid);
     Task<bool?> HandleEnabledPermissionSystemModuleOperationAsync(PermissionSystemModuleOperation permission, bool enabled);
     Task<PermissionSystemModuleOperation?> CreatePermissionSystemModuleOperationAsync(
-        PermissionSystemModule permissionSystemModule, 
+        PermissionSystemModule permissionSystemModule,
         PermissionOperation permissionOperation,
         bool enabled
     );
@@ -52,11 +54,14 @@ public interface IPermissionService
     Task<RolePermissionSystemModuleOperation?> GetRolePermissionSystemModuleOperationByGuidAsync(string guid);
     Task<bool?> HandleEnabledRolePermissionSystemModuleOperationAsync(RolePermissionSystemModuleOperation permission, bool active);
     Task<RolePermissionSystemModuleOperation?> CreateRolePermissionSystemModuleOperationAsync(
-        Role role, 
+        Role role,
         PermissionSystemModuleOperation permissionSystemModuleOperation,
         bool enabled
     );
     Task<bool?> DeleteRolePermissionSystemModuleOperationAsync(RolePermissionSystemModuleOperation permission);
+
+    Task<List<string>?> CreatePermissionsOnStartupAsync();
+
 }
 
 public class PermissionService : BaseService, IPermissionService
@@ -201,8 +206,8 @@ public class PermissionService : BaseService, IPermissionService
     }
 
     private static RolePermissionSystemModuleOperation CreateRolePermissionSystemModuleOperationData(
-        Role role, 
-        PermissionSystemModuleOperation permissionModuleOperation, 
+        Role role,
+        PermissionSystemModuleOperation permissionModuleOperation,
         bool active
     )
     {
@@ -221,7 +226,7 @@ public class PermissionService : BaseService, IPermissionService
         return permission;
     }
 
-#region "PermissionSystem"
+    #region "PermissionSystem"
 
     public async Task<PermissionSystem?> GetPermissionSystemByGuidAsync(string guid)
     {
@@ -290,10 +295,10 @@ public class PermissionService : BaseService, IPermissionService
         return deleted;
     }
 
-#endregion
+    #endregion
 
 
-#region "PermissionModule"
+    #region "PermissionModule"
 
 
     public async Task<PermissionModule?> GetPermissionModuleByGuidAsync(string guid)
@@ -363,10 +368,10 @@ public class PermissionService : BaseService, IPermissionService
         return deleted;
     }
 
-#endregion
+    #endregion
 
 
-#region "PermissionOperation"
+    #region "PermissionOperation"
 
     public async Task<PermissionOperation?> GetPermissionOperationByGuidAsync(string guid)
     {
@@ -418,10 +423,10 @@ public class PermissionService : BaseService, IPermissionService
         return deleted;
     }
 
-#endregion
+    #endregion
 
 
-#region "PermissionSystemModule"
+    #region "PermissionSystemModule"
 
     public async Task<PermissionSystemModule?> GetPermissionSystemModuleByGuidAsync(string guid)
     {
@@ -429,7 +434,7 @@ public class PermissionService : BaseService, IPermissionService
     }
 
     public async Task<PermissionSystemModule?> CreatePermissionSystemModuleAsync(
-        PermissionSystem permissionSystem, 
+        PermissionSystem permissionSystem,
         PermissionModule permissionModule,
         bool enabled
     )
@@ -489,10 +494,10 @@ public class PermissionService : BaseService, IPermissionService
         return deleted;
     }
 
-#endregion
+    #endregion
 
 
-#region "PermissionSystemModuleOperation"
+    #region "PermissionSystemModuleOperation"
 
     public async Task<PermissionSystemModuleOperation?> GetPermissionSystemModuleOperationByGuidAsync(string guid)
     {
@@ -500,7 +505,7 @@ public class PermissionService : BaseService, IPermissionService
     }
 
     public async Task<PermissionSystemModuleOperation?> CreatePermissionSystemModuleOperationAsync(
-        PermissionSystemModule permissionSystemModule, 
+        PermissionSystemModule permissionSystemModule,
         PermissionOperation permissionOperation,
         bool enabled
     )
@@ -560,10 +565,10 @@ public class PermissionService : BaseService, IPermissionService
         return deleted;
     }
 
-#endregion
+    #endregion
 
 
-#region "RolePermissionSystemModuleOperation"
+    #region "RolePermissionSystemModuleOperation"
 
     public async Task<RolePermissionSystemModuleOperation?> GetRolePermissionSystemModuleOperationByGuidAsync(string guid)
     {
@@ -571,7 +576,7 @@ public class PermissionService : BaseService, IPermissionService
     }
 
     public async Task<RolePermissionSystemModuleOperation?> CreateRolePermissionSystemModuleOperationAsync(
-        Role role, 
+        Role role,
         PermissionSystemModuleOperation permissionSystemModuleOperation,
         bool enabled
     )
@@ -631,7 +636,24 @@ public class PermissionService : BaseService, IPermissionService
         return deleted;
     }
 
-#endregion
+    #endregion
 
+
+
+    public async Task<List<string>?> CreatePermissionsOnStartupAsync()
+    {
+        try
+        {
+            List<string>? newPermissions = null;
+            PermissionsFile? permissionsFile = FileUtils.ConvertFileToObject<PermissionsFile>(System.AppDomain.CurrentDomain.BaseDirectory + this._appSettings.PermissionsSettings.FilePath);
+            return newPermissions;
+        }
+        catch (Exception exception)
+        {
+            Logger.Error(exception, $"[PermissionService][CreatePermissionsOnStartupAsync]");
+            throw new CreateException($"An error occurred while adding permissions during startup", exception);
+        }
+
+    }
 }
 
