@@ -11,7 +11,7 @@ public interface IPermissionService
 {
     Task<PermissionSystem?> GetPermissionSystemByGuidAsync(string guid);
     Task<PermissionSystem?> GetPermissionSystemByNameAsync(string name);
-    Task<bool?> HandleEnabledPermissionSystem(PermissionSystem permission, bool enabled);
+    Task<bool?> HandleEnabledPermissionSystemAsync(PermissionSystem permission, bool enabled);
     Task<PermissionSystem?> CreatePermissionSystemAsync(string name, bool enabled);
     Task<bool?> DeletePermissionSystemAsync(PermissionSystem permission);
 
@@ -256,7 +256,7 @@ public class PermissionService : BaseService, IPermissionService
         return permission;
     }
 
-    public async Task<bool?> HandleEnabledPermissionSystem(PermissionSystem permission, bool enabled)
+    public async Task<bool?> HandleEnabledPermissionSystemAsync(PermissionSystem permission, bool enabled)
     {
         bool? updated = false;
 
