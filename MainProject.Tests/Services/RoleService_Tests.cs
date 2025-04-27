@@ -118,6 +118,7 @@ public class RoleService_Tests
                 catch (Exception exception)
                 {
                     Assert.IsInstanceOfType(exception, typeof(Exception));
+                    Assert.IsInstanceOfType(exception, typeof(CreateException));
                 }
             }
             else

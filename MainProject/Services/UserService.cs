@@ -78,7 +78,6 @@ public class UserService : BaseService, IUserService
         if (user != null)
         {
             var encryptedPassword = user.PasswordHash;
-            Console.WriteLine(encryptedPassword);
         }
 
         return user;

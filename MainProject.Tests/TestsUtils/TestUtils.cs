@@ -69,11 +69,16 @@ public static class TestUtils
         return "Server=127.0.0.1;Initial Catalog=MyFakeDatabase;User Id=MyFakeUser;Password='MyFakePassword';MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30";
     }
 
-    public static SqlServerContext CreateInMemorySqlContext()
+    public static DbContextOptions<SqlServerContext> CreateInMemorySqlContextOptions()
     {
-        var options = new DbContextOptionsBuilder<SqlServerContext>()
+        return new DbContextOptionsBuilder<SqlServerContext>()
             .UseSqlite("DataSource=:memory:") // Database in-memory
             .Options;
+    }
+
+    public static SqlServerContext CreateInMemorySqlContext()
+    {
+        var options = CreateInMemorySqlContextOptions();
 
         var context = new SqlServerContext(options);
         context.Database.OpenConnection();
@@ -108,10 +113,9 @@ public static class TestUtils
 
     public static UserService CreateUserServiceException()
     {
+        var sqlServerContext = new ExceptionSqlServerContext();
+        sqlServerContext.ThrowExceptionOnSave = true;
         IConfiguration configuration = CreateConfiguration();
-        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
-        optionsBuilder.UseSqlServer(GetFakeConnectionString());
-        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new UserService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
@@ -138,10 +142,9 @@ public static class TestUtils
 
     public static RoleService CreateRoleServiceException()
     {
+        var sqlServerContext = new ExceptionSqlServerContext();
+        sqlServerContext.ThrowExceptionOnSave = true;
         IConfiguration configuration = CreateConfiguration();
-        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
-        optionsBuilder.UseSqlServer(GetFakeConnectionString());
-        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new RoleService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
@@ -156,10 +159,9 @@ public static class TestUtils
 
     public static PermissionService CreatePermissionServiceException()
     {
+        var sqlServerContext = new ExceptionSqlServerContext();
+        sqlServerContext.ThrowExceptionOnSave = true;
         IConfiguration configuration = CreateConfiguration();
-        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
-        optionsBuilder.UseSqlServer(GetFakeConnectionString());
-        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new PermissionService(httpContextAccessor.Object, configuration, sqlServerContext);
     }

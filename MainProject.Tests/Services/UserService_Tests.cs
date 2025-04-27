@@ -2,6 +2,7 @@ using BasicDotnetTemplate.MainProject.Services;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Newtonsoft.Json;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 
 
 
@@ -152,6 +153,7 @@ public class UserService_Tests
                 catch (Exception exception)
                 {
                     Assert.IsInstanceOfType(exception, typeof(Exception));
+                    Assert.IsInstanceOfType(exception, typeof(CreateException));
                 }
             }
             else
