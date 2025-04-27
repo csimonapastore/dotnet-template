@@ -38,6 +38,15 @@ public class PermissionService_Tests
         Enabled = false
     };
 
+    private static PermissionSystemModuleOperation _permissionSystemModuleOperation = new PermissionSystemModuleOperation()
+    {
+        PermissionSystemModule = _permissionSystemModule,
+        PermissionSystemModuleId = 0,
+        PermissionOperation = _permissionOperation,
+        PermissionOperationId = 0,
+        Enabled = false
+    };
+
     [TestMethod]
     public void Inizialize()
     {
@@ -675,8 +684,143 @@ public class PermissionService_Tests
 #endregion
 
 
+#region "PermissionSystemModuleOperation"
+
+    [TestMethod]
+    public async Task GetPermissionSystemModuleOperationByGuidAsync_Null()
+    {
+        try
+        {
+
+            if (_permissionService != null)
+            {
+                var permission = await _permissionService.GetPermissionSystemModuleOperationByGuidAsync(Guid.NewGuid().ToString());
+                Assert.IsTrue(permission == null);
+            }
+            else
+            {
+                Assert.Fail($"PermissionService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task CreatePermissionSystemModuleOperationAsync_Success()
+    {
+        try
+        {
+            var permission = await _permissionService.CreatePermissionSystemModuleOperationAsync(_permissionSystemModule, _permissionOperation, true);
+            Assert.IsInstanceOfType(permission, typeof(PermissionSystemModuleOperation));
+            Assert.IsNotNull(permission);
+            Assert.IsTrue(permission.Enabled);
+            _permissionSystemModuleOperation = permission;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task CreatePermissionSystemModuleOperationAsync_Exception()
+    {
+        try
+        {
+            var exceptionPermissionService = TestUtils.CreatePermissionServiceException();
+
+            if (exceptionPermissionService != null)
+            {
+                try
+                {
+                    var user = await exceptionPermissionService.CreatePermissionSystemModuleOperationAsync(_permissionSystemModule, _permissionOperation, true);
+                    Assert.Fail($"Expected exception instead of response: {user?.Guid}");
+                }
+                catch (Exception exception)
+                {
+                    Assert.IsInstanceOfType(exception, typeof(Exception));
+                    Assert.IsInstanceOfType(exception, typeof(CreateException));
+                }
+            }
+            else
+            {
+                Assert.Fail($"PermissionService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task HandleEnabledPermissionSystemModuleOperationAsync()
+    {
+        try
+        {
+            var updated = await _permissionService.HandleEnabledPermissionSystemModuleOperationAsync(_permissionSystemModuleOperation, false);
+            Assert.IsTrue(updated);
+            Assert.IsTrue(!_permissionSystemModuleOperation.Enabled);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task GetPermissionSystemModuleOperationByGuidAsync_Success()
+    {
+        try
+        {
+
+            if (_permissionService != null)
+            {
+                var permission = await _permissionService.GetPermissionSystemModuleOperationByGuidAsync(_permissionSystemModuleOperation.Guid);
+                Assert.IsNotNull(permission);
+                Assert.IsInstanceOfType(permission, typeof(PermissionSystemModuleOperation));
+                Assert.IsTrue(permission.Enabled == _permissionSystemModuleOperation.Enabled);
+            }
+            else
+            {
+                Assert.Fail($"PermissionService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+#endregion
+
 
 #region "DeletePermissions"
+
+    [TestMethod]
+    public async Task DeletePermissionSystemModuleOperationAsync()
+    {
+        try
+        {
+            var deleted = await _permissionService.DeletePermissionSystemModuleOperationAsync(_permissionSystemModuleOperation);
+            Assert.IsTrue(deleted);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
     [TestMethod]
     public async Task DeletePermissionSystemModuleAsync()
