@@ -47,6 +47,19 @@ public class PermissionService_Tests
         Enabled = false
     };
 
+    private static RolePermissionSystemModuleOperation _rolePermissionSystemModuleOperation = new RolePermissionSystemModuleOperation()
+    {
+        PermissionSystemModuleOperation = _permissionSystemModuleOperation,
+        PermissionSystemModuleOperationId = 0,
+        Role = new Role()
+        {
+            Name = _name + "-ROLE",
+            IsNotEditable = false
+        },
+        RoleId = 0,
+        Active = false
+    };
+
     [TestMethod]
     public void Inizialize()
     {
@@ -619,8 +632,8 @@ public class PermissionService_Tests
             {
                 try
                 {
-                    var user = await exceptionPermissionService.CreatePermissionSystemModuleAsync(_permissionSystem, _permissionModule, true);
-                    Assert.Fail($"Expected exception instead of response: {user?.Guid}");
+                    var permission = await exceptionPermissionService.CreatePermissionSystemModuleAsync(_permissionSystem, _permissionModule, true);
+                    Assert.Fail($"Expected exception instead of response: {permission?.Guid}");
                 }
                 catch (Exception exception)
                 {
@@ -739,8 +752,8 @@ public class PermissionService_Tests
             {
                 try
                 {
-                    var user = await exceptionPermissionService.CreatePermissionSystemModuleOperationAsync(_permissionSystemModule, _permissionOperation, true);
-                    Assert.Fail($"Expected exception instead of response: {user?.Guid}");
+                    var permission = await exceptionPermissionService.CreatePermissionSystemModuleOperationAsync(_permissionSystemModule, _permissionOperation, true);
+                    Assert.Fail($"Expected exception instead of response: {permission?.Guid}");
                 }
                 catch (Exception exception)
                 {
@@ -804,7 +817,160 @@ public class PermissionService_Tests
 #endregion
 
 
+#region "RolePermissionSystemModuleOperation"
+
+    [TestMethod]
+    public async Task GetRolePermissionSystemModuleOperationByGuidAsync_Null()
+    {
+        try
+        {
+
+            if (_permissionService != null)
+            {
+                var permission = await _permissionService.GetRolePermissionSystemModuleOperationByGuidAsync(Guid.NewGuid().ToString());
+                Assert.IsTrue(permission == null);
+            }
+            else
+            {
+                Assert.Fail($"PermissionService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task CreateRolePermissionSystemModuleOperationAsync_Success()
+    {
+        try
+        {
+            var expectedUser = ModelsInit.CreateUser();
+            Role role = new()
+            {
+                Name = expectedUser.Role?.Name ?? String.Empty,
+                IsNotEditable = expectedUser.Role?.IsNotEditable ?? false,
+                Guid = expectedUser.Role?.Guid ?? String.Empty
+            };
+
+            var permission = await _permissionService.CreateRolePermissionSystemModuleOperationAsync(role, _permissionSystemModuleOperation, true);
+            Assert.IsInstanceOfType(permission, typeof(RolePermissionSystemModuleOperation));
+            Assert.IsNotNull(permission);
+            Assert.IsTrue(permission.Active);
+            _rolePermissionSystemModuleOperation = permission;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task CreateRolePermissionSystemModuleOperationAsync_Exception()
+    {
+        try
+        {
+            var exceptionPermissionService = TestUtils.CreatePermissionServiceException();
+
+            if (exceptionPermissionService != null)
+            {
+                try
+                {
+                    var expectedUser = ModelsInit.CreateUser();
+                    Role role = new()
+                    {
+                        Name = expectedUser.Role?.Name ?? String.Empty,
+                        IsNotEditable = expectedUser.Role?.IsNotEditable ?? false,
+                        Guid = expectedUser.Role?.Guid ?? String.Empty
+                    };
+            
+                    var permission = await exceptionPermissionService.CreateRolePermissionSystemModuleOperationAsync(role, _permissionSystemModuleOperation, true);
+                    Assert.Fail($"Expected exception instead of response: {permission?.Guid}");
+                }
+                catch (Exception exception)
+                {
+                    Assert.IsInstanceOfType(exception, typeof(Exception));
+                    Assert.IsInstanceOfType(exception, typeof(CreateException));
+                }
+            }
+            else
+            {
+                Assert.Fail($"PermissionService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task HandleEnabledRolePermissionSystemModuleOperationAsync()
+    {
+        try
+        {
+            var updated = await _permissionService.HandleEnabledRolePermissionSystemModuleOperationAsync(_rolePermissionSystemModuleOperation, false);
+            Assert.IsTrue(updated);
+            Assert.IsTrue(!_rolePermissionSystemModuleOperation.Active);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task GetRolePermissionSystemModuleOperationByGuidAsync_Success()
+    {
+        try
+        {
+
+            if (_permissionService != null)
+            {
+                var permission = await _permissionService.GetRolePermissionSystemModuleOperationByGuidAsync(_rolePermissionSystemModuleOperation.Guid);
+                Assert.IsNotNull(permission);
+                Assert.IsInstanceOfType(permission, typeof(RolePermissionSystemModuleOperation));
+                Assert.IsTrue(permission.Active == _rolePermissionSystemModuleOperation.Active);
+            }
+            else
+            {
+                Assert.Fail($"PermissionService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+#endregion
+
+
+
 #region "DeletePermissions"
+
+    [TestMethod]
+    public async Task DeleteRolePermissionSystemModuleOperationAsync()
+    {
+        try
+        {
+            var deleted = await _permissionService.DeleteRolePermissionSystemModuleOperationAsync(_rolePermissionSystemModuleOperation);
+            Assert.IsTrue(deleted);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
 
     [TestMethod]
     public async Task DeletePermissionSystemModuleOperationAsync()
