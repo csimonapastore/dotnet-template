@@ -145,6 +145,24 @@ public static class TestUtils
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new RoleService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
+
+    public static PermissionService CreatePermissionService()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        SqlServerContext sqlServerContext = CreateInMemorySqlContext();
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new PermissionService(httpContextAccessor.Object, configuration, sqlServerContext);
+    }
+
+    public static PermissionService CreatePermissionServiceException()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
+        optionsBuilder.UseSqlServer(GetFakeConnectionString());
+        SqlServerContext sqlServerContext = new SqlServerContext(optionsBuilder.Options);
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new PermissionService(httpContextAccessor.Object, configuration, sqlServerContext);
+    }
 }
 
 

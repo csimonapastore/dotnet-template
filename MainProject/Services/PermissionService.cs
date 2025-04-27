@@ -117,7 +117,7 @@ public class PermissionService : BaseService, IPermissionService
             .Where(x => !x.IsDeleted);
     }
 
-    private PermissionOperation CreatePermissionOperationData(string name)
+    private static PermissionOperation CreatePermissionOperationData(string name)
     {
         PermissionOperation permission = new()
         {
@@ -130,7 +130,7 @@ public class PermissionService : BaseService, IPermissionService
         return permission;
     }
 
-    private PermissionSystem CreatePermissionSystemData(string name, bool enabled)
+    private static PermissionSystem CreatePermissionSystemData(string name, bool enabled)
     {
         PermissionSystem permission = new()
         {
@@ -144,7 +144,7 @@ public class PermissionService : BaseService, IPermissionService
         return permission;
     }
 
-    private PermissionModule CreatePermissionModuleData(string name, bool enabled)
+    private static PermissionModule CreatePermissionModuleData(string name, bool enabled)
     {
         PermissionModule permission = new()
         {
@@ -158,7 +158,7 @@ public class PermissionService : BaseService, IPermissionService
         return permission;
     }
 
-    private PermissionSystemModule CreatePermissionSystemModuleData(
+    private static PermissionSystemModule CreatePermissionSystemModuleData(
         PermissionSystem permissionSystem,
         PermissionModule permissionModule,
         bool enabled
@@ -179,7 +179,7 @@ public class PermissionService : BaseService, IPermissionService
         return permission;
     }
 
-    private PermissionSystemModuleOperation CreatePermissionSystemModuleOperationData(
+    private static PermissionSystemModuleOperation CreatePermissionSystemModuleOperationData(
         PermissionSystemModule permissionSystemModule,
         PermissionOperation permissionOperation,
         bool enabled
@@ -200,7 +200,7 @@ public class PermissionService : BaseService, IPermissionService
         return permission;
     }
 
-    private RolePermissionSystemModuleOperation CreateRolePermissionSystemModuleOperationData(
+    private static RolePermissionSystemModuleOperation CreateRolePermissionSystemModuleOperationData(
         Role role, 
         PermissionSystemModuleOperation permissionModuleOperation, 
         bool active
