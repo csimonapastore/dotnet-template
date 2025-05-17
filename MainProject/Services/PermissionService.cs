@@ -1103,18 +1103,38 @@ public class PermissionService : BaseService, IPermissionService
                     var roles = allRoles.Where(x => operationInfo.Roles.Contains(x.Name)).ToList();
                     if (roles.Count > 0)
                     {
-                        foreach (var roleName in operationInfo.Roles)
-                        {
-                            (tmpRolePermissionSystemModuleOperationList, tmpPermissions) = this.HandleRolePermissionSystemModuleOperationOnStartup
-                            (
-                                roles, roleName, permissionSystemModuleOperation
-                            );
-                            newPermissions.AddRange(tmpPermissions);
-                            rolePermissionSystemModuleOperationList.AddRange(tmpRolePermissionSystemModuleOperationList);
-                        }
-
+                        (tmpRolePermissionSystemModuleOperationList, tmpPermissions) = this.HandleRolePermissionSystemModuleOperationOnStartup
+                        (
+                            roles, permissionSystemModuleOperation, operationInfo
+                        );
                     }
                 }
+            }
+        }
+
+        return (rolePermissionSystemModuleOperationList, newPermissions);
+    }
+
+    private (List<RolePermissionSystemModuleOperation>, List<string>) HandleRolePermissionSystemModuleOperationOnStartup
+    (
+        List<Role> roles, PermissionSystemModuleOperation permissionSystemModuleOperation, OperationInfo operationInfo
+    )
+    {
+        List<string> newPermissions = [];
+        List<string> tmpPermissions;
+        List<RolePermissionSystemModuleOperation> rolePermissionSystemModuleOperationList = [];
+        List<RolePermissionSystemModuleOperation> tmpRolePermissionSystemModuleOperationList;
+
+        if (operationInfo?.Roles != null)
+        {
+            foreach (var roleName in operationInfo.Roles)
+            {
+                (tmpRolePermissionSystemModuleOperationList, tmpPermissions) = this.HandleRolePermissionSystemModuleOperationOnStartup
+                (
+                    roles, roleName, permissionSystemModuleOperation
+                );
+                newPermissions.AddRange(tmpPermissions);
+                rolePermissionSystemModuleOperationList.AddRange(tmpRolePermissionSystemModuleOperationList);
             }
         }
 
