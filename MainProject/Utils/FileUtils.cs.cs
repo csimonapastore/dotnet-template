@@ -1,16 +1,5 @@
-using System;
-using System.IO;
 using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
 using NLog;
-using BasicDotnetTemplate.MainProject.Core.Database;
-using BasicDotnetTemplate.MainProject.Core.Middlewares;
-using BasicDotnetTemplate.MainProject.Models.Settings;
-using BasicDotnetTemplate.MainProject.Services;
-using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
-using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 
 
 
@@ -19,6 +8,10 @@ namespace BasicDotnetTemplate.MainProject.Utils;
 public static class FileUtils
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    private static readonly JsonSerializerOptions jsonSerializerOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
 
     public static T? ConvertFileToObject<T>(string? filePath = "")
     {
@@ -38,10 +31,7 @@ public static class FileUtils
         {
             string fileContent = File.ReadAllText(filePath);
 
-            return JsonSerializer.Deserialize<T>(fileContent, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true 
-            });
+            return JsonSerializer.Deserialize<T>(fileContent, jsonSerializerOptions);
         }
         catch (JsonException ex)
         {

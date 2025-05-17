@@ -4,7 +4,7 @@
             "System": "base",
             "RolePermissionModuleOperations": [
                 {
-                    "Module": "role",
+                    "Module": "roles",
                     "Operations": [
                         { "Operation": "create", "Roles": [] },
                         { "Operation": "read", "Roles": [] },
@@ -15,7 +15,7 @@
                     ]
                 },
                 {
-                    "Module": "user",
+                    "Module": "users",
                     "Operations": [
                         { "Operation": "create", "Roles": [] },
                         { "Operation": "read", "Roles": [] },

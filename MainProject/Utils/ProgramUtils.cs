@@ -277,13 +277,17 @@ public static class ProgramUtils
         Logger.Info("[ProgramUtils][CreatePermissions] Adding permissions...");
         using (var scope = app.Services.CreateScope())
         {
-            var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>;
+            Func<IPermissionService?> permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>;
             if (permissionService != null)
             {
                 var isValidThread = Task.Run(() => permissionService!.Invoke()?.CreatePermissionsOnStartupAsync());
                 if (isValidThread.Result != null)
                 {
-                    Logger.Info("[ProgramUtils][CreatePermissions] Done permissions");
+                    foreach (var result in isValidThread.Result)
+                    {
+                        var currentResult = String.IsNullOrEmpty(result) ? "No permission tracked" : result;
+                        Logger.Info($"[ProgramUtils][CreatePermissions] => {currentResult}");
+                    }
                 }
                 else
                 {

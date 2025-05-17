@@ -5,6 +5,7 @@ using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Microsoft.EntityFrameworkCore;
+using BasicDotnetTemplate.MainProject.Utils;
 
 namespace BasicDotnetTemplate.MainProject.Services;
 
@@ -22,22 +23,24 @@ public interface IRoleService
 public class RoleService : BaseService, IRoleService
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    private readonly CommonDbMethodsUtils _commonDbMethodsUtils;
+
     public RoleService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
         SqlServerContext sqlServerContext
     ) : base(httpContextAccessor, configuration, sqlServerContext)
-    { }
+    {
+        _commonDbMethodsUtils = new CommonDbMethodsUtils(sqlServerContext);
+    }
 
     private IQueryable<Role> GetRolesQueryable()
     {
-        return this._sqlServerContext.Roles.Where(x => !x.IsDeleted);
+        return _commonDbMethodsUtils.GetRolesQueryable();
     }
     private IQueryable<Role> GetRoleByNameQueryable(string name)
     {
-        return this.GetRolesQueryable().Where(x =>
-            x.Name.ToString() == name.ToString()
-        );
+        return _commonDbMethodsUtils.GetRoleByNameQueryable(name);
     }
 
 
