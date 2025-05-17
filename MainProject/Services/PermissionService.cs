@@ -653,7 +653,7 @@ public class PermissionService : BaseService, IPermissionService
 
     private static List<string?>? GetSystemNamesFromFile(PermissionsFile permissionsFile)
     {
-        return permissionsFile?.PermissionInfos?.Select(x => x.System)?.ToList();
+        return permissionsFile?.PermissionInfos?.Select(x => x.System).ToList();
     }
 
     private static List<string?>? GetModulesNamesFromFile(PermissionsFile permissionsFile)
@@ -1174,9 +1174,9 @@ public class PermissionService : BaseService, IPermissionService
                 {
                     // Get all PermissionSystemModuleOperations by System.Name
                     List<PermissionSystemModuleOperation> allPermissionSystemModuleOperationsBySystem = allPermissionSystemModuleOperations
-                        .Where(x => x.PermissionSystemModule.PermissionSystem.Name == permissionInfo.System)?.ToList() ?? [];
+                        .Where(x => x.PermissionSystemModule.PermissionSystem.Name == permissionInfo.System).ToList();
 
-                    if (allPermissionSystemModuleOperationsBySystem != null && allPermissionSystemModuleOperationsBySystem.Count > 0)
+                    if (allPermissionSystemModuleOperationsBySystem.Count > 0)
                     {
                         (tmpRolePermissionSystemModuleOperationList, tmpPermissions) = this.HandleRolePermissionSystemModuleOperationOnStartup
                         (
