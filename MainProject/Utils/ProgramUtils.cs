@@ -275,25 +275,20 @@ public static class ProgramUtils
     public static void CreatePermissions(ref WebApplication app)
     {
         Logger.Info("[ProgramUtils][CreatePermissions] Adding permissions...");
-        using (var scope = app.Services.CreateScope())
+        using var scope = app.Services.CreateScope();
+        Func<IPermissionService?> permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>;
+        var isValidThread = Task.Run(() => permissionService!.Invoke()?.CreatePermissionsOnStartupAsync());
+        if (isValidThread.Result != null)
         {
-            Func<IPermissionService?> permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>;
-            if (permissionService != null)
+            foreach (var result in isValidThread.Result)
             {
-                var isValidThread = Task.Run(() => permissionService!.Invoke()?.CreatePermissionsOnStartupAsync());
-                if (isValidThread.Result != null)
-                {
-                    foreach (var result in isValidThread.Result)
-                    {
-                        var currentResult = String.IsNullOrEmpty(result) ? "No permission tracked" : result;
-                        Logger.Info($"[ProgramUtils][CreatePermissions] => {currentResult}");
-                    }
-                }
-                else
-                {
-                    Logger.Error("[ProgramUtils][CreatePermissions] Something went wrong");
-                }
+                var currentResult = String.IsNullOrEmpty(result) ? "No permission tracked" : result;
+                Logger.Info($"[ProgramUtils][CreatePermissions] => {currentResult}");
             }
+        }
+        else
+        {
+            Logger.Error("[ProgramUtils][CreatePermissions] Something went wrong");
         }
     }
 
