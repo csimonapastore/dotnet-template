@@ -674,17 +674,6 @@ public class PermissionService : BaseService, IPermissionService
             .ToList();
     }
 
-    private static List<string?>? GetOperationsNamesFromFile(PermissionInfo permissionInfo)
-    {
-        return permissionInfo?.RolePermissionModuleOperations?
-            .Where(x => x != null)
-            .Where(x => x.Operations != null)
-            .SelectMany(y => y.Operations!)
-            .Select(z => z.Operation)
-            .Distinct()
-            .ToList();
-    }
-
     private (List<PermissionSystem>, List<string>) HandlePermissionSystemOnStartup(PermissionsFile permissionsFile)
     {
         List<string> newPermissions = [];
@@ -805,14 +794,14 @@ public class PermissionService : BaseService, IPermissionService
         List<Role> rolesList = [];
 
         List<string>? roles = permissionsFile.PermissionInfos?
-            .Where(x => x.RolePermissionModuleOperations != null)?
-            .SelectMany(x => x.RolePermissionModuleOperations!)?
-            .Where(x => x.Operations != null)?
-            .SelectMany(y => y.Operations!)?
-            .Where(z => z.Roles != null)?
-            .SelectMany(z => z.Roles!)?
-            .Where(z => z != null)?
-            .Distinct()?
+            .Where(x => x.RolePermissionModuleOperations != null)
+            .SelectMany(x => x.RolePermissionModuleOperations!)
+            .Where(x => x.Operations != null)
+            .SelectMany(y => y.Operations!)
+            .Where(z => z.Roles != null)
+            .SelectMany(z => z.Roles!)
+            .Where(z => z != null)
+            .Distinct()
             .ToList();
 
         if (roles != null && roles.Count > 0)
@@ -936,7 +925,7 @@ public class PermissionService : BaseService, IPermissionService
                     var modulesNames = GetModulesNamesFromPermissionInfo(permissionInfo);
                     if (modulesNames != null && modulesNames.Count > 0)
                     {
-                        List<PermissionModule> permissionModules = allPermissionModules.Where(x => modulesNames.Contains(x.Name)).ToList() ?? [];
+                        List<PermissionModule> permissionModules = allPermissionModules.Where(x => modulesNames.Contains(x.Name))?.ToList() ?? [];
                         (permissionSystemModuleList, newPermissions) = this.HandlePermissionSystemModuleOnStartup(permissionsFile, permissionSystems, permissionModules, permissionInfo);
                     }
                 }
@@ -1114,7 +1103,7 @@ public class PermissionService : BaseService, IPermissionService
                     .FirstOrDefault(x => x.PermissionOperation.Name == operationInfo.Operation);
                 if (permissionSystemModuleOperation != null && operationInfo.Roles != null && operationInfo.Roles.Count > 0)
                 {
-                    var roles = allRoles.Where(x => operationInfo.Roles.Contains(x.Name)).ToList();
+                    var roles = allRoles.Where(x => operationInfo.Roles.Contains(x.Name))?.ToList() ?? [];
                     if (roles != null && roles.Count > 0)
                     {
                         foreach (var roleName in operationInfo.Roles)
@@ -1188,7 +1177,7 @@ public class PermissionService : BaseService, IPermissionService
                 {
                     // Get all PermissionSystemModuleOperations by System.Name
                     List<PermissionSystemModuleOperation> allPermissionSystemModuleOperationsBySystem = allPermissionSystemModuleOperations
-                        .Where(x => x.PermissionSystemModule.PermissionSystem.Name == permissionInfo.System).ToList();
+                        .Where(x => x.PermissionSystemModule.PermissionSystem.Name == permissionInfo.System)?.ToList() ?? [];
 
                     if (allPermissionSystemModuleOperationsBySystem != null && allPermissionSystemModuleOperationsBySystem.Count > 0)
                     {
