@@ -1,0 +1,32 @@
+{
+    "PermissionInfos": [
+       {
+            "System": "base",
+            "RolePermissionModuleOperations": [
+                {
+                    "Module": "roles",
+                    "Operations": [
+                        { "Operation": "create", "Roles": [] },
+                        { "Operation": "read", "Roles": [] },
+                        { "Operation": "update", "Roles": [] },
+                        { "Operation": "delete", "Roles": [] },
+                        { "Operation": "list", "Roles": [] },
+                        { "Operation": "use", "Roles": [] }
+                    ]
+                },
+                {
+                    "Module": "users",
+                    "Operations": [
+                        { "Operation": "create", "Roles": [] },
+                        { "Operation": "read", "Roles": [] },
+                        { "Operation": "update", "Roles": [] },
+                        { "Operation": "delete", "Roles": [] },
+                        { "Operation": "list", "Roles": [] },
+                        { "Operation": "use", "Roles": [] }
+                    ]
+                }
+            ]
+       }
+        
+    ]
+}
