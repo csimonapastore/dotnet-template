@@ -29,6 +29,9 @@
 
   <ItemGroup>
     <Content Include="JsonData/**" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
-</ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+      <Content Include="Config/**" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
+  </ItemGroup>
 
 </Project>

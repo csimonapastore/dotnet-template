@@ -43,6 +43,37 @@ public class FileUtils_Tests
         }
     }
 
+    [TestMethod]
+    public void ConvertFileToObject()
+    {
+        try
+        {
+            PermissionsFile? permissionsFile = FileUtils.ConvertFileToObject<PermissionsFile>(System.AppDomain.CurrentDomain.BaseDirectory + "Config/permissions.json");
+            Assert.IsTrue(permissionsFile != null);
+        }
+        catch (Exception exception)
+        {
+            Assert.Fail($"An exception was thrown: {exception}");
+        }
+    }
+
+    [TestMethod]
+    public void ConvertFileToObject_InvalidOperationException()
+    {
+        try
+        {
+            PermissionsFile? permissionsFile = FileUtils.ConvertFileToObject<PermissionsFile>(System.AppDomain.CurrentDomain.BaseDirectory + "Config/invalid-permissions.json");
+            Assert.Fail($"Expected exception instead of response: {permissionsFile}");
+        }
+        catch (InvalidOperationException invalidOperationException)
+        {
+            Assert.IsInstanceOfType(invalidOperationException, typeof(InvalidOperationException));
+        }
+        catch (Exception exception)
+        {
+            Assert.Fail($"An exception was thrown: {exception}");
+        }
+    }
 
 }
 
