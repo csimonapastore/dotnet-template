@@ -1107,6 +1107,8 @@ public class PermissionService : BaseService, IPermissionService
                         (
                             roles, permissionSystemModuleOperation, operationInfo
                         );
+                        newPermissions.AddRange(tmpPermissions);
+                        rolePermissionSystemModuleOperationList.AddRange(tmpRolePermissionSystemModuleOperationList);
                     }
                 }
             }

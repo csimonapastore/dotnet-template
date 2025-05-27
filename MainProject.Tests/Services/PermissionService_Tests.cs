@@ -1103,6 +1103,10 @@ public class PermissionService_Tests
                 Assert.IsTrue(cleanedPermissions.Contains("base.roles.list"));
                 Assert.IsTrue(cleanedPermissions.Contains("base.roles.use"));
 
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.create for role Admin"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.update for role Admin"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.delete for role Admin"));
+
                 Assert.IsTrue(cleanedPermissions.Contains("base.users.create"));
                 Assert.IsTrue(cleanedPermissions.Contains("base.users.read"));
                 Assert.IsTrue(cleanedPermissions.Contains("base.users.update"));
