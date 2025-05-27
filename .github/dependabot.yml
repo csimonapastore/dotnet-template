@@ -6,7 +6,6 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 5
     target-branch: "sprints/7"
-    versioning-strategy: "follow-root-version"
 
   - package-ecosystem: "nuget"
     directory: "/MainProject.Tests"
@@ -14,4 +13,3 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 5
     target-branch: "sprints/7"
-    versioning-strategy: "follow-root-version"
