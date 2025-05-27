@@ -3,6 +3,7 @@ using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Newtonsoft.Json;
 using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 
 namespace BasicDotnetTemplate.MainProject.Tests;
@@ -82,7 +83,7 @@ public class PermissionService_Tests
         }
     }
 
-#region "PermissionSystem"
+    #region "PermissionSystem"
 
     [TestMethod]
     public async Task GetPermissionSystemByGuidAsync_Null()
@@ -250,10 +251,10 @@ public class PermissionService_Tests
         }
     }
 
-#endregion
-    
+    #endregion
 
-#region "PermissionModule"
+
+    #region "PermissionModule"
 
     [TestMethod]
     public async Task GetPermissionModuleByGuidAsync_Null()
@@ -423,10 +424,10 @@ public class PermissionService_Tests
         }
     }
 
-#endregion
+    #endregion
 
 
-#region "PermissionOperation"
+    #region "PermissionOperation"
 
     [TestMethod]
     public async Task GetPermissionOperationByGuidAsync_Null()
@@ -574,10 +575,10 @@ public class PermissionService_Tests
         }
     }
 
-#endregion
+    #endregion
 
 
-#region "PermissionSystemModule"
+    #region "PermissionSystemModule"
 
     [TestMethod]
     public async Task GetPermissionSystemModuleByGuidAsync_Null()
@@ -694,10 +695,10 @@ public class PermissionService_Tests
         }
     }
 
-#endregion
+    #endregion
 
 
-#region "PermissionSystemModuleOperation"
+    #region "PermissionSystemModuleOperation"
 
     [TestMethod]
     public async Task GetPermissionSystemModuleOperationByGuidAsync_Null()
@@ -814,10 +815,10 @@ public class PermissionService_Tests
         }
     }
 
-#endregion
+    #endregion
 
 
-#region "RolePermissionSystemModuleOperation"
+    #region "RolePermissionSystemModuleOperation"
 
     [TestMethod]
     public async Task GetRolePermissionSystemModuleOperationByGuidAsync_Null()
@@ -887,7 +888,7 @@ public class PermissionService_Tests
                         IsNotEditable = expectedUser.Role?.IsNotEditable ?? false,
                         Guid = expectedUser.Role?.Guid ?? String.Empty
                     };
-            
+
                     var permission = await exceptionPermissionService.CreateRolePermissionSystemModuleOperationAsync(role, _permissionSystemModuleOperation, true);
                     Assert.Fail($"Expected exception instead of response: {permission?.Guid}");
                 }
@@ -950,11 +951,11 @@ public class PermissionService_Tests
         }
     }
 
-#endregion
+    #endregion
 
 
 
-#region "DeletePermissions"
+    #region "DeletePermissions"
 
     [TestMethod]
     public async Task DeleteRolePermissionSystemModuleOperationAsync()
@@ -1052,8 +1053,78 @@ public class PermissionService_Tests
         }
     }
 
-#endregion
+    #endregion
 
+
+    #region "CreatePermissions"
+
+    [TestMethod]
+    public void CreatePermissionsOnStartupAsync_Success()
+    {
+        try
+        {
+
+            if (_permissionService != null)
+            {
+                List<string> permissions = _permissionService.CreatePermissionsOnStartupAsync();
+                Assert.IsFalse(permissions == null);
+                List<string> cleanedPermissions = new();
+
+                foreach (var permission in permissions)
+                {
+                    cleanedPermissions.Add(permission
+                        .Replace("Added new PermissionSystem => ", "")
+                        .Replace("Added new PermissionModule => ", "")
+                        .Replace("Added new PermissionOperation => ", "")
+                        .Replace("Added new PermissionSystemModule => ", "")
+                        .Replace("Added new PermissionSystemModuleOperation => ", "")
+                        .Replace("Added new RolePermissionSystemModuleOperation => ", "")
+                    );
+                }
+                Assert.IsTrue(cleanedPermissions.Contains("base"));
+
+                Assert.IsTrue(cleanedPermissions.Contains("roles"));
+                Assert.IsTrue(cleanedPermissions.Contains("users"));
+
+                Assert.IsTrue(cleanedPermissions.Contains("create"));
+                Assert.IsTrue(cleanedPermissions.Contains("read"));
+                Assert.IsTrue(cleanedPermissions.Contains("update"));
+                Assert.IsTrue(cleanedPermissions.Contains("delete"));
+                Assert.IsTrue(cleanedPermissions.Contains("list"));
+                Assert.IsTrue(cleanedPermissions.Contains("use"));
+
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.users"));
+
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.create"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.read"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.update"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.delete"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.list"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.roles.use"));
+
+                Assert.IsTrue(cleanedPermissions.Contains("base.users.create"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.users.read"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.users.update"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.users.delete"));
+                Assert.IsTrue(cleanedPermissions.Contains("base.users.list"));
+
+                Assert.IsFalse(cleanedPermissions.Contains("base.users.use"));
+
+            }
+            else
+            {
+                Assert.Fail($"PermissionService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    #endregion
 }
 
 

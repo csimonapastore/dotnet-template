@@ -21,8 +21,7 @@
                         { "Operation": "read", "Roles": [] },
                         { "Operation": "update", "Roles": [] },
                         { "Operation": "delete", "Roles": [] },
-                        { "Operation": "list", "Roles": [] },
-                        { "Operation": "use", "Roles": [] }
+                        { "Operation": "list", "Roles": [] }
                     ]
                 }
             ]
