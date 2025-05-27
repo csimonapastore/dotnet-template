@@ -45,6 +45,7 @@ internal static class Program
         WebApplication app = builder.Build();
         ProgramUtils.AddMiddlewares(ref app);
         ProgramUtils.CreateRoles(ref app);
+        ProgramUtils.CreatePermissions(ref app);
 
         Logger.Info("[Program][Initialize] End building");
         return app;

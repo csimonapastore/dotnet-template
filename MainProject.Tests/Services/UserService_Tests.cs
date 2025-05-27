@@ -2,6 +2,7 @@ using BasicDotnetTemplate.MainProject.Services;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Newtonsoft.Json;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 
 
 
@@ -115,6 +116,53 @@ public class UserService_Tests
         catch (Exception ex)
         {
             Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task CreateUserAsync_Exception()
+    {
+        try
+        {
+            var expectedUser = ModelsInit.CreateUser();
+
+            CreateUserRequestData data = new CreateUserRequestData()
+            {
+                FirstName = expectedUser.FirstName ?? String.Empty,
+                LastName = expectedUser.LastName ?? String.Empty,
+                Email = expectedUser.Email ?? String.Empty
+            };
+
+            Role role = new()
+            {
+                Name = expectedUser.Role?.Name ?? String.Empty,
+                IsNotEditable = expectedUser.Role?.IsNotEditable ?? false,
+                Guid = expectedUser.Role?.Guid ?? String.Empty
+            };
+
+            var exceptionUserService = TestUtils.CreateUserServiceException();
+
+            if (exceptionUserService != null)
+            {
+                try
+                {
+                    var user = await exceptionUserService.CreateUserAsync(data, role);
+                    Assert.Fail($"Expected exception instead of response: {user?.Guid}");
+                }
+                catch (Exception exception)
+                {
+                    Assert.IsInstanceOfType(exception, typeof(Exception));
+                    Assert.IsInstanceOfType(exception, typeof(CreateException));
+                }
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
             Assert.Fail($"An exception was thrown: {ex}");
         }
     }

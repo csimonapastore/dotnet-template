@@ -1,9 +1,11 @@
 
 using System.Collections;
 using BasicDotnetTemplate.MainProject.Core.Database;
+using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using Microsoft.EntityFrameworkCore;
+using BasicDotnetTemplate.MainProject.Utils;
 
 namespace BasicDotnetTemplate.MainProject.Services;
 
@@ -13,6 +15,7 @@ public interface IRoleService
     Task<Role?> GetRoleByGuidAsync(string guid);
     Task<bool> CheckIfNameIsValid(string name, string? guid = "");
     Task<Role?> CreateRoleAsync(CreateRoleRequestData data);
+    Task<Role?> UpdateRoleAsync(CreateRoleRequestData data, Role role);
     Task<Role?> GetRoleForUser(string? guid);
     Task<bool?> DeleteRoleAsync(Role role);
 }
@@ -20,22 +23,24 @@ public interface IRoleService
 public class RoleService : BaseService, IRoleService
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    private readonly CommonDbMethodsUtils _commonDbMethodsUtils;
+
     public RoleService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
         SqlServerContext sqlServerContext
     ) : base(httpContextAccessor, configuration, sqlServerContext)
-    { }
+    {
+        _commonDbMethodsUtils = new CommonDbMethodsUtils(sqlServerContext);
+    }
 
     private IQueryable<Role> GetRolesQueryable()
     {
-        return this._sqlServerContext.Roles.Where(x => !x.IsDeleted);
+        return _commonDbMethodsUtils.GetRolesQueryable();
     }
     private IQueryable<Role> GetRoleByNameQueryable(string name)
     {
-        return this.GetRolesQueryable().Where(x =>
-            x.Name.ToString() == name.ToString()
-        );
+        return _commonDbMethodsUtils.GetRoleByNameQueryable(name);
     }
 
 
@@ -107,7 +112,35 @@ public class RoleService : BaseService, IRoleService
         {
             await transaction.RollbackAsync();
             Logger.Error(exception, $"[RoleService][CreateRoleAsync]");
-            throw;
+            throw new CreateException($"An error occurred while saving the role for transaction ID {transaction.TransactionId}.", exception);
+        }
+
+        return role;
+    }
+
+    public async Task<Role?> UpdateRoleAsync(CreateRoleRequestData data, Role role)
+    {
+        if (role.IsNotEditable)
+            return role;
+
+        using var transaction = await _sqlServerContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            role.Name = data.Name;
+            role.IsNotEditable = data.IsNotEditable;
+            role.UpdateTime = DateTime.UtcNow;
+            role.UpdateUserId = this.GetCurrentUserId();
+
+            _sqlServerContext.Roles.Update(role);
+            await _sqlServerContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch (Exception exception)
+        {
+            Logger.Error(exception, $"[RoleService][UpdateRoleAsync] | {transaction.TransactionId}");
+            await transaction.RollbackAsync();
+            throw new UpdateException($"An error occurred while updating the role for transaction ID {transaction.TransactionId}.", exception);
         }
 
         return role;

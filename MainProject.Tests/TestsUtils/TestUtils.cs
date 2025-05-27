@@ -64,11 +64,21 @@ public static class TestUtils
         return _appSettings.DatabaseSettings?.SqlServerConnectionString ?? String.Empty;
     }
 
-    public static SqlServerContext CreateInMemorySqlContext()
+    public static string GetFakeConnectionString()
     {
-        var options = new DbContextOptionsBuilder<SqlServerContext>()
+        return "Server=127.0.0.1;Initial Catalog=MyFakeDatabase;User Id=MyFakeUser;Password='MyFakePassword';MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30";
+    }
+
+    public static DbContextOptions<SqlServerContext> CreateInMemorySqlContextOptions()
+    {
+        return new DbContextOptionsBuilder<SqlServerContext>()
             .UseSqlite("DataSource=:memory:") // Database in-memory
             .Options;
+    }
+
+    public static SqlServerContext CreateInMemorySqlContext()
+    {
+        var options = CreateInMemorySqlContextOptions();
 
         var context = new SqlServerContext(options);
         context.Database.OpenConnection();
@@ -79,8 +89,6 @@ public static class TestUtils
     public static BaseService CreateBaseService()
     {
         IConfiguration configuration = CreateConfiguration();
-        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
-        optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
         SqlServerContext sqlServerContext = CreateInMemorySqlContext();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new BaseService(httpContextAccessor.Object, configuration, sqlServerContext);
@@ -89,8 +97,6 @@ public static class TestUtils
     public static AuthService CreateAuthService()
     {
         IConfiguration configuration = CreateConfiguration();
-        var optionsBuilder = new DbContextOptionsBuilder<SqlServerContext>();
-        optionsBuilder.UseSqlServer(GetSqlConnectionString(configuration));
         SqlServerContext sqlServerContext = CreateInMemorySqlContext();
         var userServiceMock = new Mock<IUserService>();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -101,6 +107,15 @@ public static class TestUtils
     {
         IConfiguration configuration = CreateConfiguration();
         SqlServerContext sqlServerContext = CreateInMemorySqlContext();
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new UserService(httpContextAccessor.Object, configuration, sqlServerContext);
+    }
+
+    public static UserService CreateUserServiceException()
+    {
+        var sqlServerContext = new ExceptionSqlServerContext();
+        sqlServerContext.ThrowExceptionOnSave = true;
+        IConfiguration configuration = CreateConfiguration();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new UserService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
@@ -123,6 +138,32 @@ public static class TestUtils
         SqlServerContext sqlServerContext = CreateInMemorySqlContext();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         return new RoleService(httpContextAccessor.Object, configuration, sqlServerContext);
+    }
+
+    public static RoleService CreateRoleServiceException()
+    {
+        var sqlServerContext = new ExceptionSqlServerContext();
+        sqlServerContext.ThrowExceptionOnSave = true;
+        IConfiguration configuration = CreateConfiguration();
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new RoleService(httpContextAccessor.Object, configuration, sqlServerContext);
+    }
+
+    public static PermissionService CreatePermissionService()
+    {
+        IConfiguration configuration = CreateConfiguration();
+        SqlServerContext sqlServerContext = CreateInMemorySqlContext();
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new PermissionService(httpContextAccessor.Object, configuration, sqlServerContext);
+    }
+
+    public static PermissionService CreatePermissionServiceException()
+    {
+        var sqlServerContext = new ExceptionSqlServerContext();
+        sqlServerContext.ThrowExceptionOnSave = true;
+        IConfiguration configuration = CreateConfiguration();
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        return new PermissionService(httpContextAccessor.Object, configuration, sqlServerContext);
     }
 }
 
