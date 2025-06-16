@@ -33,7 +33,7 @@ public class PasswordUtils_Test
             Assert.IsTrue(errors.Contains(PasswordValidationEnum.MIN_NUMBER));
             Assert.IsTrue(errors.Contains(PasswordValidationEnum.MIN_SPECIAL));
             Assert.IsTrue(errors.Contains(PasswordValidationEnum.IDENTICAL_CHARS));
-            Assert.IsTrue(!errors.Contains(PasswordValidationEnum.MIN_LOWER));
+            Assert.IsFalse(errors.Contains(PasswordValidationEnum.MIN_LOWER));
         }
         catch (Exception exception)
         {

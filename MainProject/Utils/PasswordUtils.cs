@@ -9,6 +9,8 @@ using BasicDotnetTemplate.MainProject.Models.Settings;
 namespace BasicDotnetTemplate.MainProject.Utils;
 public partial class PasswordUtils
 {
+    protected PasswordUtils() { }
+
     private const int MIN_LENGTH = 8;
     private const int MIN_UPPER = 2;
     private const int MIN_LOWER = 2;
@@ -27,14 +29,13 @@ public partial class PasswordUtils
     [GeneratedRegex("[^a-zA-Z0-9]")]
     private static partial Regex RegexSpecial();
 
-    [GeneratedRegex(@"(\S)\1{2,}", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
-    private static partial Regex RegexIdenticalChars();
+    private static readonly Regex RegexIdenticalChars = new(@"(\S)\1{2,}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     public static List<string> ValidatePassword(string password)
     {
         List<string> errors = [];
 
-        if (password.Length < 8)
+        if (password.Length < MIN_LENGTH)
             errors.Add(PasswordValidationEnum.MIN_LENGTH);
 
         if (RegexUpper().Matches(password).Count < MIN_UPPER)
@@ -49,7 +50,7 @@ public partial class PasswordUtils
         if (RegexSpecial().Matches(password).Count < MIN_SPECIAL)
             errors.Add(PasswordValidationEnum.MIN_SPECIAL);
 
-        if (RegexIdenticalChars().IsMatch(password))
+        if (RegexIdenticalChars.IsMatch(password))
             errors.Add(PasswordValidationEnum.IDENTICAL_CHARS);
 
         return errors;
