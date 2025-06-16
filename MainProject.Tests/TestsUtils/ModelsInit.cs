@@ -13,8 +13,9 @@ public static class ModelsInit
             FirstName = "FirstName",
             LastName = "LastName",
             Email = "test-new@email.it",
-            PasswordHash = "PasswordHash",
+            PasswordPepper = "PasswordPepper",
             PasswordSalt = "PasswordSalt",
+            PasswordIterations = 0,
             Password = "Password",
             Role = CreateRole(),
             IsTestUser = true

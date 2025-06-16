@@ -13,7 +13,10 @@ public class User : Base
     [MaxLength(200)]
     public required string Email { get; set; }
     public required string PasswordSalt { get; set; }
-    public required string PasswordHash { get; set; }
+#nullable enable
+    public string? PasswordPepper { get; set; }
+#nullable disable
+    public required int PasswordIterations { get; set; }
     public required Role Role { get; set; }
     public required bool IsTestUser { get; set; }
 

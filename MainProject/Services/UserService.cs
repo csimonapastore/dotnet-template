@@ -4,6 +4,7 @@ using BasicDotnetTemplate.MainProject.Core.Database;
 using BasicDotnetTemplate.MainProject.Models.Api.Common.Exceptions;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
+using BasicDotnetTemplate.MainProject.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BasicDotnetTemplate.MainProject.Services;
@@ -21,12 +22,15 @@ public interface IUserService
 public class UserService : BaseService, IUserService
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    private readonly CryptUtils _cryptUtils;
     public UserService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
         SqlServerContext sqlServerContext
     ) : base(httpContextAccessor, configuration, sqlServerContext)
-    { }
+    {
+        this._cryptUtils = new(_appSettings);
+    }
 
     private IQueryable<User> GetUsersQueryable()
     {
@@ -51,8 +55,9 @@ public class UserService : BaseService, IUserService
             FirstName = data.FirstName,
             LastName = data.LastName,
             Email = data.Email,
-            PasswordSalt = "",
-            PasswordHash = "",
+            PasswordSalt = _appSettings.EncryptionSettings?.Salt ?? String.Empty,
+            PasswordPepper = CryptUtils.GeneratePepper(),
+            PasswordIterations = _appSettings.EncryptionSettings?.Iterations ?? 10,
             Password = "",
             Role = role,
             IsTestUser = false
@@ -77,7 +82,9 @@ public class UserService : BaseService, IUserService
         User? user = await this.GetUserByEmailQueryable(email).FirstOrDefaultAsync();
         if (user != null)
         {
-            var encryptedPassword = user.PasswordHash;
+            var valid = CryptUtils.VerifyPassword(user.Password, password, user.PasswordSalt, user.PasswordIterations, user.PasswordPepper);
+            if (!valid)
+                user = null;
         }
 
         return user;

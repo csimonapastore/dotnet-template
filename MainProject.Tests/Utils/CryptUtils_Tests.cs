@@ -102,11 +102,11 @@ public class CryptoUtils_Tests
     }
 
     [TestMethod]
-    public void GenerateSalt()
+    public void GeneratePepper()
     {
         try
         {
-            var salt = CryptUtils.GenerateSalt();
+            var salt = CryptUtils.GeneratePepper();
             Assert.IsTrue(!String.IsNullOrEmpty(salt));
         }
         catch (Exception ex)
@@ -122,14 +122,14 @@ public class CryptoUtils_Tests
         try
         {
             var password = "P4ssw0rd@1!";
-            var salt = CryptUtils.GenerateSalt();
-            Assert.IsTrue(!String.IsNullOrEmpty(salt));
+            var pepper = CryptUtils.GeneratePepper();
+            Assert.IsTrue(!String.IsNullOrEmpty(pepper));
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
             AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
-            CryptUtils cryptoUtils = new CryptUtils(appSettings);
-            var encryptedPassword = cryptoUtils.GeneratePassword(password, salt, 0);
-            Assert.IsTrue(password != encryptedPassword);
+            var salt = appSettings?.EncryptionSettings?.Salt ?? String.Empty;
+            var encryptedPassword = CryptUtils.GeneratePassword(password, salt, 0, pepper);
+            Assert.AreNotEqual(encryptedPassword, password);
         }
         catch (Exception ex)
         {
@@ -147,10 +147,7 @@ public class CryptoUtils_Tests
             var salt = "Afi7PQYgEL2sPbNyVzduvg==";
             var hashedPassword = "2lMeySZ9ciH1KtSg1Z7oSJRmJEjHMeDvdaNRcJcGutM=";
 
-            WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
-            AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
-            CryptUtils cryptoUtils = new CryptUtils(appSettings);
-            var verified = cryptoUtils.VerifyPassword(password, salt, 0, hashedPassword);
+            var verified = CryptUtils.VerifyPassword(hashedPassword, password, salt, 0);
             Assert.IsTrue(verified);
         }
         catch (Exception ex)
