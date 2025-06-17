@@ -206,7 +206,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                     return NotFound();
                 }
 
-                await this._roleService.DeleteRoleAsync(role);
+                await this._roleService.DeleteRoleAsync(role); 
 
                 return Success(String.Empty);
             }

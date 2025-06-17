@@ -128,7 +128,187 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
         }
 
+        [JwtAuthorization()]
+        [HttpPut("update/{guid}")]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequest request, string guid)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
 
+                if (request == null || request.Data == null ||
+                    String.IsNullOrEmpty(request.Data.FirstName) ||
+                    String.IsNullOrEmpty(request.Data.LastName)
+                )
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+                var user = await this._userService.GetUserByGuidAsync(guid);
+                if(user == null)
+                {
+                    return NotFound();
+                }
+
+                user = await this._userService.UpdateUserAsync(request.Data, user);
+
+                var userDto = _mapper?.Map<UserDto>(user);
+
+                return Success(String.Empty, userDto);
+                
+            }
+            catch (Exception exception)
+            {
+                var message = this._somethingWentWrong;
+                if (!String.IsNullOrEmpty(exception.Message))
+                {
+                    message += $". {exception.Message}";
+                }
+                return InternalServerError(message);
+            }
+
+        }       
+
+        [JwtAuthorization()]
+        [HttpPut("update/{guid}/password")]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateUserPasswordAsync(string guid, string newPassword)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+
+                if (String.IsNullOrEmpty(newPassword))
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+
+                var user = await this._userService.GetUserByGuidAsync(guid);
+                if(user == null)
+                {
+                    return NotFound();
+                }
+
+                user = await this._userService.UpdateUserPasswordAsync(user, newPassword);
+
+                var userDto = _mapper?.Map<UserDto>(user);
+
+                return Success(String.Empty, userDto);
+                
+            }
+            catch (Exception exception)
+            {
+                var message = this._somethingWentWrong;
+                if (!String.IsNullOrEmpty(exception.Message))
+                {
+                    message += $". {exception.Message}";
+                }
+                return InternalServerError(message);
+            }
+
+        } 
+
+        [JwtAuthorization()]
+        [HttpPut("update/{guid}/role")]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateUserRoleAsync(string guid, string roleGuid)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+
+                if (String.IsNullOrEmpty(roleGuid))
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+
+                var role = await this._roleService.GetRoleForUser(roleGuid);
+                if (role == null)
+                {
+                    return BadRequest("Role not found");
+                }
+
+                var user = await this._userService.GetUserByGuidAsync(guid);
+                if(user == null)
+                {
+                    return NotFound();
+                }
+
+                user = await this._userService.UpdateUserRoleAsync(user, role);
+
+                var userDto = _mapper?.Map<UserDto>(user);
+
+                return Success(String.Empty, userDto);
+                
+            }
+            catch (Exception exception)
+            {
+                var message = this._somethingWentWrong;
+                if (!String.IsNullOrEmpty(exception.Message))
+                {
+                    message += $". {exception.Message}";
+                }
+                return InternalServerError(message);
+            }
+
+        }      
+        
+        [JwtAuthorization()]
+        [HttpDelete("{guid}")]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteUserByGuidAsync(string guid)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+
+                if (String.IsNullOrEmpty(guid))
+                {
+                    return BadRequest(_requestNotWellFormed);
+                }
+                var user = await this._userService.GetUserByGuidAsync(guid);
+
+                if (user == null || String.IsNullOrEmpty(user.Guid))
+                {
+                    return NotFound();
+                }
+
+                await this._userService.DeleteUserAsync(user);
+
+                return Success(String.Empty);              
+            }
+            catch (Exception exception)
+            {
+                var message = this._somethingWentWrong;
+                if (!String.IsNullOrEmpty(exception.Message))
+                {
+                    message += $". {exception.Message}";
+                }
+                return InternalServerError(message);
+            }
+
+        }
 
     }
 }

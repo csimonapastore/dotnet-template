@@ -110,7 +110,7 @@ public class UserService_Tests
             if (_userService != null)
             {
                 var user = await _userService.GetUserByUsernameAndPassword(_user.Email, "WrongPassword");
-                Assert.IsTrue(user == null);
+                Assert.IsNull(user);
             }
             else
             {
@@ -133,7 +133,7 @@ public class UserService_Tests
             if (_userService != null)
             {
                 var user = await _userService.GetUserByUsernameAndPassword(_user.Email, password);
-                Assert.IsTrue(user != null);
+                Assert.IsNotNull(user);
             }
             else
             {
@@ -250,7 +250,7 @@ public class UserService_Tests
             {
                 var user = await _userService.GetUserByIdAsync(_user.Id);
                 Assert.IsNotNull(user);
-                Assert.IsTrue(user.Id == _user?.Id);
+                Assert.AreEqual(user.Id, _user?.Id);
             }
             else
             {
@@ -274,7 +274,7 @@ public class UserService_Tests
             {
                 var user = await _userService.GetUserByGuidAsync(_user.Guid ?? String.Empty);
                 Assert.IsNotNull(user);
-                Assert.IsTrue(user.Guid == _user?.Guid);
+                Assert.AreEqual(user.Guid, _user?.Guid);
             }
             else
             {
@@ -285,6 +285,186 @@ public class UserService_Tests
         {
             Console.WriteLine(ex.InnerException);
             Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserAsync_Success()
+    {
+        try
+        {
+            UpdateUserRequestData data = new UpdateUserRequestData()
+            {
+                FirstName = "ChangedUserFirstName",
+                LastName = "ChangedUserLastName"
+            };
+
+            if (_userService != null)
+            {
+                Assert.IsNotNull(_user);
+                var user = await _userService.UpdateUserAsync(data, _user!);
+                Assert.IsInstanceOfType(user, typeof(User));
+                Assert.IsNotNull(user);
+                Assert.AreEqual(data.FirstName, user.FirstName);
+                Assert.AreEqual(data.LastName, user.LastName);
+                _user = user;
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserAsync_Exception()
+    {
+        try
+        {
+            UpdateUserRequestData data = new UpdateUserRequestData()
+            {
+                FirstName = "ChangedUserFirstName",
+                LastName = "ChangedUserLastName"
+            };
+
+            var exceptionUserService = TestUtils.CreateUserServiceException();
+
+            if (exceptionUserService != null)
+            {
+                Assert.IsNotNull(_user);
+                var user = await exceptionUserService.UpdateUserAsync(data, _user!);
+                Assert.Fail($"Expected exception instead of response: {user?.Guid}");
+
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Assert.IsInstanceOfType(ex, typeof(Exception));
+        }
+    }
+
+
+    [TestMethod]
+    public async Task UpdateUserPasswordAsync_Success()
+    {
+        try
+        {
+            if (_userService != null)
+            {
+                Assert.IsNotNull(_user);
+                var oldPassword = _user.Password;
+                var user = await _userService.UpdateUserPasswordAsync(_user!, "this-is-a-new-password");
+                Assert.IsInstanceOfType(user, typeof(User));
+                Assert.IsNotNull(user);
+                Assert.IsTrue(user.Password != oldPassword);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserPasswordAsync_Exception()
+    {
+        try
+        {
+            var exceptionUserService = TestUtils.CreateUserServiceException();
+
+            if (exceptionUserService != null)
+            {
+                Assert.IsNotNull(_user);
+                var user = await exceptionUserService.UpdateUserPasswordAsync(_user!, "this-is-a-new-password");
+                Assert.Fail($"Expected exception instead of response: {user?.Guid}");
+
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Assert.IsInstanceOfType(ex, typeof(Exception));
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserRoleAsync_Success()
+    {
+        try
+        {
+            if (_userService != null)
+            {
+                Assert.IsNotNull(_user);
+                Role role = new()
+                {
+                    Name = "NewRole",
+                    IsNotEditable = false,
+                    Guid = Guid.NewGuid().ToString()
+                };
+
+                var oldRole = _user.Role;
+                var user = await _userService.UpdateUserRoleAsync(_user!, role);
+                Assert.IsInstanceOfType(user, typeof(User));
+                Assert.IsNotNull(user);
+                Assert.IsTrue(user.Role?.Id != oldRole?.Id);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserRoleAsync_Exception()
+    {
+        try
+        {
+            var exceptionUserService = TestUtils.CreateUserServiceException();
+
+            if (exceptionUserService != null)
+            {
+                Assert.IsNotNull(_user);
+                Role role = new()
+                {
+                    Name = "NewRole",
+                    IsNotEditable = false,
+                    Guid = Guid.NewGuid().ToString()
+                };
+                var user = await exceptionUserService.UpdateUserRoleAsync(_user!, role);
+                Assert.Fail($"Expected exception instead of response: {user?.Guid}");
+
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Assert.IsInstanceOfType(ex, typeof(Exception));
         }
     }
 
