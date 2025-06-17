@@ -7,10 +7,9 @@ using BasicDotnetTemplate.MainProject.Enum;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 
 namespace BasicDotnetTemplate.MainProject.Utils;
-public partial class PasswordUtils
-{
-    protected PasswordUtils() { }
 
+public static partial class PasswordUtils
+{
     private const int MIN_LENGTH = 8;
     private const int MIN_UPPER = 2;
     private const int MIN_LOWER = 2;

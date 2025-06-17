@@ -34,30 +34,7 @@ public class UserService_Tests
             Console.WriteLine(ex.InnerException);
             Assert.Fail($"An exception was thrown: {ex.Message}");
         }
-    }
-
-    [TestMethod]
-    public async Task GetUserByUsernameAndPassword_Null()
-    {
-        try
-        {
-            var testString = "test";
-            if (_userService != null)
-            {
-                var user = await _userService.GetUserByUsernameAndPassword(testString, testString);
-                Assert.IsTrue(user == null);
-            }
-            else
-            {
-                Assert.Fail($"UserService is null");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.InnerException);
-            Assert.Fail($"An exception was thrown: {ex}");
-        }
-    }
+    }    
 
     [TestMethod]
     public async Task CheckIfEmailIsValid_EmailNotExists()
@@ -93,7 +70,8 @@ public class UserService_Tests
             {
                 FirstName = expectedUser.FirstName ?? String.Empty,
                 LastName = expectedUser.LastName ?? String.Empty,
-                Email = expectedUser.Email ?? String.Empty
+                Email = expectedUser.Email ?? String.Empty,
+                Password = "Password"
             };
 
             Role role = new()
@@ -110,8 +88,58 @@ public class UserService_Tests
             Assert.IsTrue(expectedUser.LastName == user.LastName);
             Assert.IsTrue(expectedUser.Email == user.Email);
             Assert.IsTrue(expectedUser.Role?.Name == user.Role?.Name);
+            Assert.IsTrue(user.PasswordIterations == 10);
+            Assert.IsNotNull(expectedUser.PasswordSalt);
+            Assert.IsNotNull(expectedUser.PasswordPepper);
+            Assert.IsNotNull(expectedUser.Password);
             _user = user;
 
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task GetUserByUsernameAndPassword_Null()
+    {
+        try
+        {
+            var testString = "test";
+            if (_userService != null)
+            {
+                var user = await _userService.GetUserByUsernameAndPassword(testString, testString);
+                Assert.IsTrue(user == null);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Assert.Fail($"An exception was thrown: {ex}");
+        }
+    }
+
+    [TestMethod]
+    public async Task GetUserByUsernameAndPassword_Success()
+    {
+        try
+        {
+            var password = "Password";
+            if (_userService != null)
+            {
+                var user = await _userService.GetUserByUsernameAndPassword(_user.Email, password);
+                Assert.IsTrue(user != null);
+            }
+            else
+            {
+                Assert.Fail($"UserService is null");
+            }
         }
         catch (Exception ex)
         {

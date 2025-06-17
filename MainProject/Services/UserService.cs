@@ -43,6 +43,9 @@ public class UserService : BaseService, IUserService
 
     private User CreateUserData(CreateUserRequestData data, Role role)
     {
+        var salt = _appSettings.EncryptionSettings?.Salt ?? String.Empty;
+        var pepper = CryptUtils.GeneratePepper();
+        var iterations = _appSettings.EncryptionSettings?.Iterations ?? 10;
         User user = new()
         {
             CreationTime = DateTime.UtcNow,
@@ -52,10 +55,10 @@ public class UserService : BaseService, IUserService
             FirstName = data.FirstName,
             LastName = data.LastName,
             Email = data.Email,
-            PasswordSalt = _appSettings.EncryptionSettings?.Salt ?? String.Empty,
-            PasswordPepper = CryptUtils.GeneratePepper(),
-            PasswordIterations = _appSettings.EncryptionSettings?.Iterations ?? 10,
-            Password = "",
+            PasswordSalt = salt,
+            PasswordPepper = pepper,
+            PasswordIterations = iterations,
+            Password = CryptUtils.GeneratePassword(data.Password, salt, iterations, pepper),
             Role = role,
             IsTestUser = false
         };
