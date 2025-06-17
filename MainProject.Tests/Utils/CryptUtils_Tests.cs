@@ -107,7 +107,7 @@ public class CryptoUtils_Tests
         try
         {
             var salt = CryptUtils.GeneratePepper();
-            Assert.IsTrue(!String.IsNullOrEmpty(salt));
+            Assert.IsFalse(String.IsNullOrEmpty(salt));
         }
         catch (Exception ex)
         {
@@ -123,7 +123,7 @@ public class CryptoUtils_Tests
         {
             var password = "P4ssw0rd@1!";
             var pepper = CryptUtils.GeneratePepper();
-            Assert.IsTrue(!String.IsNullOrEmpty(pepper));
+            Assert.IsFalse(String.IsNullOrEmpty(pepper));
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(Array.Empty<string>());
             AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
