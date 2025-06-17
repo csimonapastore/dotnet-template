@@ -22,15 +22,12 @@ public interface IUserService
 public class UserService : BaseService, IUserService
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-    private readonly CryptUtils _cryptUtils;
     public UserService(
         IHttpContextAccessor httpContextAccessor,
         IConfiguration configuration,
         SqlServerContext sqlServerContext
     ) : base(httpContextAccessor, configuration, sqlServerContext)
-    {
-        this._cryptUtils = new(_appSettings);
-    }
+    { }
 
     private IQueryable<User> GetUsersQueryable()
     {

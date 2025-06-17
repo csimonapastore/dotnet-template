@@ -6,7 +6,7 @@ using BasicDotnetTemplate.MainProject.Models.Settings;
 namespace BasicDotnetTemplate.MainProject.Utils;
 public class CryptUtils(AppSettings appSettings)
 {
-    private readonly string _secret = appSettings.EncryptionSettings?.Secret ?? String.Empty;
+    private readonly string _saltKey = appSettings.EncryptionSettings?.SaltKey ?? String.Empty;
     private const int _M = 16;
     private const int _N = 32;
 
@@ -14,7 +14,7 @@ public class CryptUtils(AppSettings appSettings)
     {
         var decrypted = String.Empty;
 
-        if (String.IsNullOrEmpty(this._secret) || this._secret.Length < _M)
+        if (String.IsNullOrEmpty(this._saltKey) || this._saltKey.Length < _M)
         {
             throw new ArgumentException("Unable to proceed with decryption due to invalid settings");
         }
@@ -28,7 +28,7 @@ public class CryptUtils(AppSettings appSettings)
 
             using (var aes = Aes.Create())
             {
-                aes.Key = Encoding.UTF8.GetBytes(this._secret);
+                aes.Key = Encoding.UTF8.GetBytes(this._saltKey);
                 aes.IV = Encoding.UTF8.GetBytes(iv);
 
                 using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))

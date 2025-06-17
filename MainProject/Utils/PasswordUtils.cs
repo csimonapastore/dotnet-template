@@ -29,7 +29,11 @@ public partial class PasswordUtils
     [GeneratedRegex("[^a-zA-Z0-9]")]
     private static partial Regex RegexSpecial();
 
-    private static readonly Regex RegexIdenticalChars = new(@"(\S)\1{2,}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex RegexIdenticalChars = new(
+        @"(\S)\1{2,}", 
+        RegexOptions.IgnoreCase | RegexOptions.Compiled,
+        TimeSpan.FromMilliseconds(100)
+    );
 
     public static List<string> ValidatePassword(string password)
     {

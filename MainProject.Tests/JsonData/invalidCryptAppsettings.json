@@ -35,7 +35,7 @@
             "ExpiredAfterMinsOfInactivity": 15
         },
         "EncryptionSettings": {
-            "Secret": "AAAAA",
+            "SaltKey": "AAAAA",
             "Salt": "",
             "Iterations": 10
         }
