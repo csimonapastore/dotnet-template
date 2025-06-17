@@ -84,11 +84,11 @@ public class UserService_Tests
             var user = await _userService.CreateUserAsync(data, role);
             Assert.IsInstanceOfType(user, typeof(User));
             Assert.IsNotNull(user);
-            Assert.IsTrue(expectedUser.FirstName == user.FirstName);
-            Assert.IsTrue(expectedUser.LastName == user.LastName);
-            Assert.IsTrue(expectedUser.Email == user.Email);
-            Assert.IsTrue(expectedUser.Role?.Name == user.Role?.Name);
-            Assert.IsTrue(user.PasswordIterations == 10);
+            Assert.AreEqual(expectedUser.FirstName, user.FirstName);
+            Assert.AreEqual(expectedUser.LastName, user.LastName);
+            Assert.AreEqual(expectedUser.Email, user.Email);
+            Assert.AreEqual(expectedUser.Role?.Name, user.Role?.Name);
+            Assert.AreEqual(10, user.PasswordIterations);
             Assert.IsNotNull(expectedUser.PasswordSalt);
             Assert.IsNotNull(expectedUser.PasswordPepper);
             Assert.IsNotNull(expectedUser.Password);
@@ -107,10 +107,9 @@ public class UserService_Tests
     {
         try
         {
-            var testString = "test";
             if (_userService != null)
             {
-                var user = await _userService.GetUserByUsernameAndPassword(testString, testString);
+                var user = await _userService.GetUserByUsernameAndPassword(_user.Email, "WrongPassword");
                 Assert.IsTrue(user == null);
             }
             else
