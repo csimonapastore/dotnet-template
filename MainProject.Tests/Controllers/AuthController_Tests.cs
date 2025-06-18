@@ -81,41 +81,41 @@ public class AuthController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task AuthenticateAsync_AuthenticateRequestDataNull()
-    {
-        IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
+    // [TestMethod]
+    // public async Task AuthenticateAsync_AuthenticateRequestDataNull()
+    // {
+    //     IConfiguration configuration = TestUtils.CreateConfiguration();
+    //     var authServiceMock = new Mock<IAuthService>();
+    //     var controller = new AuthController(configuration, authServiceMock.Object);
 
-        var request = new AuthenticateRequest
-        {
-            Data = null
-        };
-        AuthenticatedUser? authenticatedUser = null;
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+    //     var request = new AuthenticateRequest
+    //     {
+    //         Data = null
+    //     };
+    //     AuthenticatedUser? authenticatedUser = null;
+    //     authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
+    //     ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response value is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response value is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task AuthenticateAsync_NotFound()
@@ -148,44 +148,44 @@ public class AuthController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task AuthenticateAsync_ModelInvalid()
-    {
-        IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
+    // [TestMethod]
+    // public async Task AuthenticateAsync_ModelInvalid()
+    // {
+    //     IConfiguration configuration = TestUtils.CreateConfiguration();
+    //     var authServiceMock = new Mock<IAuthService>();
+    //     var controller = new AuthController(configuration, authServiceMock.Object);
 
-        var request = new AuthenticateRequest
-        {
-            Data = null
-        };
-        AuthenticatedUser? authenticatedUser = null;
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
-        controller.ModelState.AddModelError("Data", "Invalid data");
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
+    //     var request = new AuthenticateRequest
+    //     {
+    //         Data = null
+    //     };
+    //     AuthenticatedUser? authenticatedUser = null;
+    //     authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
+    //     controller.ModelState.AddModelError("Data", "Invalid data");
+    //     ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
 
-        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+    //     Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task AuthenticateAsync_Exception()

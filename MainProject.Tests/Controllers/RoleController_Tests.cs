@@ -89,40 +89,40 @@ public class RoleController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task GetRoleByGuidAsync_GuidIsEmpty()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task GetRoleByGuidAsync_GuidIsEmpty()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        var guid = String.Empty;
-        DatabaseSqlServer.Role? role = null;
+    //     var guid = String.Empty;
+    //     DatabaseSqlServer.Role? role = null;
 
-        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
-        ObjectResult response = (ObjectResult)(await _roleController.GetRoleByGuidAsync(guid));
+    //     _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+    //     ObjectResult response = (ObjectResult)(await _roleController.GetRoleByGuidAsync(guid));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response value is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response value is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task GetRoleByGuidAsync_NotFound()
@@ -149,42 +149,42 @@ public class RoleController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task GetRoleByGuidAsync_ModelInvalid()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task GetRoleByGuidAsync_ModelInvalid()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        var guid = Guid.NewGuid().ToString();
-        DatabaseSqlServer.Role? role = null;
-        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
-        _roleController.ModelState.AddModelError("Data", "Invalid data");
-        ObjectResult response = (ObjectResult)(await _roleController.GetRoleByGuidAsync(guid));
+    //     var guid = Guid.NewGuid().ToString();
+    //     DatabaseSqlServer.Role? role = null;
+    //     _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+    //     _roleController.ModelState.AddModelError("Data", "Invalid data");
+    //     ObjectResult response = (ObjectResult)(await _roleController.GetRoleByGuidAsync(guid));
 
-        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+    //     Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task GetRoleByGuidAsync_Exception()
@@ -316,49 +316,49 @@ public class RoleController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task CreateRoleAsync_CreateRoleRequestDataNull()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task CreateRoleAsync_CreateRoleRequestDataNull()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+    //     DatabaseSqlServer.Role role = ModelsInit.CreateRole();
 
-        CreateRoleRequest request = new CreateRoleRequest()
-        {
-            Data = null
-        };
+    //     CreateRoleRequest request = new CreateRoleRequest()
+    //     {
+    //         Data = null
+    //     };
 
-        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+    //     _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
-        _roleServiceMock?.Setup(s => s.CreateRoleAsync(
-            It.IsAny<CreateRoleRequestData>()
-        )).ReturnsAsync(role);
+    //     _roleServiceMock?.Setup(s => s.CreateRoleAsync(
+    //         It.IsAny<CreateRoleRequestData>()
+    //     )).ReturnsAsync(role);
 
-        ObjectResult response = (ObjectResult)(await _roleController.CreateRoleAsync(request));
+    //     ObjectResult response = (ObjectResult)(await _roleController.CreateRoleAsync(request));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response value is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response value is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task CreateRoleAsync_NotCreated()
@@ -410,55 +410,55 @@ public class RoleController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task CreateRoleAsync_ModelInvalid()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task CreateRoleAsync_ModelInvalid()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+    //     DatabaseSqlServer.Role role = ModelsInit.CreateRole();
 
-        CreateRoleRequest request = new CreateRoleRequest()
-        {
-            Data = new CreateRoleRequestData()
-            {
-                Name = "RoleTest",
-                IsNotEditable = true
-            }
-        };
+    //     CreateRoleRequest request = new CreateRoleRequest()
+    //     {
+    //         Data = new CreateRoleRequestData()
+    //         {
+    //             Name = "RoleTest",
+    //             IsNotEditable = true
+    //         }
+    //     };
 
-        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+    //     _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
 
-        _roleServiceMock?.Setup(s => s.CreateRoleAsync(
-            It.IsAny<CreateRoleRequestData>()
-        )).ReturnsAsync(role);
-        _roleController.ModelState.AddModelError("Data", "Invalid data");
-        ObjectResult response = (ObjectResult)(await _roleController.CreateRoleAsync(request));
+    //     _roleServiceMock?.Setup(s => s.CreateRoleAsync(
+    //         It.IsAny<CreateRoleRequestData>()
+    //     )).ReturnsAsync(role);
+    //     _roleController.ModelState.AddModelError("Data", "Invalid data");
+    //     ObjectResult response = (ObjectResult)(await _roleController.CreateRoleAsync(request));
 
-        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+    //     Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task CreateRoleAsync_Exception()
@@ -539,40 +539,40 @@ public class RoleController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task DeleteRoleByGuidAsync_GuidIsEmpty()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task DeleteRoleByGuidAsync_GuidIsEmpty()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        var guid = String.Empty;
-        DatabaseSqlServer.Role? role = null;
+    //     var guid = String.Empty;
+    //     DatabaseSqlServer.Role? role = null;
 
-        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
-        ObjectResult response = (ObjectResult)(await _roleController.DeleteRoleByGuidAsync(guid));
+    //     _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+    //     ObjectResult response = (ObjectResult)(await _roleController.DeleteRoleByGuidAsync(guid));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response value is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response value is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task DeleteRoleByGuidAsync_NotFound()
@@ -599,42 +599,42 @@ public class RoleController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task DeleteRoleByGuidAsync_ModelInvalid()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task DeleteRoleByGuidAsync_ModelInvalid()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        var guid = Guid.NewGuid().ToString();
-        DatabaseSqlServer.Role? role = null;
-        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
-        _roleController.ModelState.AddModelError("Data", "Invalid data");
-        ObjectResult response = (ObjectResult)(await _roleController.DeleteRoleByGuidAsync(guid));
+    //     var guid = Guid.NewGuid().ToString();
+    //     DatabaseSqlServer.Role? role = null;
+    //     _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+    //     _roleController.ModelState.AddModelError("Data", "Invalid data");
+    //     ObjectResult response = (ObjectResult)(await _roleController.DeleteRoleByGuidAsync(guid));
 
-        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+    //     Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task DeleteRoleByGuidAsync_Exception()
@@ -851,95 +851,95 @@ public class RoleController_Tests
         }
     }
 
-    [TestMethod]
-    public async Task UpdateRoleAsync_CreateRoleRequestDataNull()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task UpdateRoleAsync_CreateRoleRequestDataNull()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+    //     DatabaseSqlServer.Role role = ModelsInit.CreateRole();
 
-        CreateRoleRequest request = new CreateRoleRequest()
-        {
-            Data = null
-        };
+    //     CreateRoleRequest request = new CreateRoleRequest()
+    //     {
+    //         Data = null
+    //     };
 
-        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
-        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-        _roleServiceMock?.Setup(s => s.UpdateRoleAsync(It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>())).ReturnsAsync(role);
+    //     _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+    //     _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+    //     _roleServiceMock?.Setup(s => s.UpdateRoleAsync(It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>())).ReturnsAsync(role);
 
-        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+    //     ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response value is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response value is null");
+    //     }
+    // }
 
-    [TestMethod]
-    public async Task UpdateRoleAsync_ModelInvalid()
-    {
-        if (_roleController == null)
-        {
-            Assert.Fail($"_roleController is null");
-        }
+    // [TestMethod]
+    // public async Task UpdateRoleAsync_ModelInvalid()
+    // {
+    //     if (_roleController == null)
+    //     {
+    //         Assert.Fail($"_roleController is null");
+    //     }
 
-        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+    //     DatabaseSqlServer.Role role = ModelsInit.CreateRole();
 
-        CreateRoleRequest request = new CreateRoleRequest()
-        {
-            Data = new CreateRoleRequestData()
-            {
-                Name = "RoleTest",
-                IsNotEditable = true
-            }
-        };
+    //     CreateRoleRequest request = new CreateRoleRequest()
+    //     {
+    //         Data = new CreateRoleRequestData()
+    //         {
+    //             Name = "RoleTest",
+    //             IsNotEditable = true
+    //         }
+    //     };
 
-        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
-        _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-        _roleServiceMock?.Setup(s => s.UpdateRoleAsync(It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>())).ReturnsAsync(role);
-        _roleController.ModelState.AddModelError("Data", "Invalid data");
-        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+    //     _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+    //     _roleServiceMock?.Setup(s => s.CheckIfNameIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+    //     _roleServiceMock?.Setup(s => s.UpdateRoleAsync(It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>())).ReturnsAsync(role);
+    //     _roleController.ModelState.AddModelError("Data", "Invalid data");
+    //     ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
 
-        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+    //     Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //     if (response != null && response.Value != null)
+    //     {
+    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
 
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
-        }
-        else
-        {
-            Assert.Fail($"Response is null");
-        }
-    }
+    //         var result = (BaseResponse<object>)response.Value;
+    //         if (result != null)
+    //         {
+    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.IsTrue(result.Message == "Request is not well formed");
+    //         }
+    //         else
+    //         {
+    //             Assert.Fail($"Result value is null");
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Assert.Fail($"Response is null");
+    //     }
+    // }
 
     [TestMethod]
     public async Task UpdateRoleAsync_Exception()

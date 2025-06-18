@@ -158,7 +158,8 @@ public class UserService_Tests
             {
                 FirstName = expectedUser.FirstName ?? String.Empty,
                 LastName = expectedUser.LastName ?? String.Empty,
-                Email = expectedUser.Email ?? String.Empty
+                Email = expectedUser.Email ?? String.Empty,
+                Password = expectedUser.Password ?? String.Empty
             };
 
             Role role = new()

@@ -7,6 +7,7 @@ using BasicDotnetTemplate.MainProject.Models.Api.Response;
 using BasicDotnetTemplate.MainProject.Models.Api.Response.User;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
 using BasicDotnetTemplate.MainProject.Models.Api.Common.User;
+using BasicDotnetTemplate.MainProject.Core.Filters;
 
 namespace BasicDotnetTemplate.MainProject.Controllers
 {
@@ -24,8 +25,10 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             this._userService = userService;
             this._roleService = roleService;
         }
+        
 
         [JwtAuthorization()]
+        [ModelStateValidationHandledByFilterAttribute]
         [HttpGet("get/{guid}")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status404NotFound)]
@@ -35,15 +38,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
-                if (String.IsNullOrEmpty(guid))
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
                 var user = await this._userService.GetUserByGuidAsync(guid);
 
                 if (user == null || String.IsNullOrEmpty(user.Guid))
@@ -67,30 +61,16 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
         }
 
-        [JwtAuthorization()]
+        // [JwtAuthorization()]
+        [ModelStateValidationHandledByFilterAttribute]
         [HttpPost("create")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequest request)
+        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequest request) //NOSONAR
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
-                if (request == null || request.Data == null ||
-                    String.IsNullOrEmpty(request.Data.FirstName) ||
-                    String.IsNullOrEmpty(request.Data.LastName) ||
-                    String.IsNullOrEmpty(request.Data.Email) ||
-                    String.IsNullOrEmpty(request.Data.Password)
-                )
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
                 if (await this._userService.CheckIfEmailIsValid(request.Data.Email))
                 {
                     var role = await this._roleService.GetRoleForUser(request.Data.RoleGuid);
@@ -129,26 +109,15 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         }
 
         [JwtAuthorization()]
+        [ModelStateValidationHandledByFilterAttribute]
         [HttpPut("update/{guid}")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequest request, string guid)
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequest request, string guid) //NOSONAR
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
-                if (request == null || request.Data == null ||
-                    String.IsNullOrEmpty(request.Data.FirstName) ||
-                    String.IsNullOrEmpty(request.Data.LastName)
-                )
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
                 var user = await this._userService.GetUserByGuidAsync(guid);
                 if(user == null)
                 {
@@ -175,6 +144,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         }       
 
         [JwtAuthorization()]
+        [ModelStateValidationHandledByFilterAttribute]
         [HttpPut("update/{guid}/password")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
@@ -183,16 +153,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
-                if (String.IsNullOrEmpty(newPassword))
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
                 var user = await this._userService.GetUserByGuidAsync(guid);
                 if(user == null)
                 {
@@ -219,6 +179,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         } 
 
         [JwtAuthorization()]
+        [ModelStateValidationHandledByFilterAttribute]
         [HttpPut("update/{guid}/role")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
@@ -227,16 +188,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
-                if (String.IsNullOrEmpty(roleGuid))
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
                 var role = await this._roleService.GetRoleForUser(roleGuid);
                 if (role == null)
                 {
@@ -269,6 +220,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         }      
         
         [JwtAuthorization()]
+        [ModelStateValidationHandledByFilterAttribute]
         [HttpDelete("{guid}")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status404NotFound)]
@@ -278,15 +230,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
-
-                if (String.IsNullOrEmpty(guid))
-                {
-                    return BadRequest(_requestNotWellFormed);
-                }
                 var user = await this._userService.GetUserByGuidAsync(guid);
 
                 if (user == null || String.IsNullOrEmpty(user.Guid))

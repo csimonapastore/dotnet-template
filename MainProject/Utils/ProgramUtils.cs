@@ -8,7 +8,7 @@ using BasicDotnetTemplate.MainProject.Models.Settings;
 using BasicDotnetTemplate.MainProject.Services;
 using BasicDotnetTemplate.MainProject.Models.Api.Data.Role;
 using BasicDotnetTemplate.MainProject.Models.Database.SqlServer;
-
+using BasicDotnetTemplate.MainProject.Core.Filters;
 
 
 namespace BasicDotnetTemplate.MainProject.Utils;
@@ -140,7 +140,10 @@ public static class ProgramUtils
 
         builder.Services.AddAuthentication();
         builder.Services.AddAuthorization();
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<ValidationActionFilter>(); 
+        });
         builder.Services.AddEndpointsApiExplorer();
 
         Logger.Info("[ProgramUtils][AddServices] Done services");
