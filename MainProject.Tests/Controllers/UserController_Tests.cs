@@ -80,7 +80,7 @@ public class UserController_Tests
         ObjectResult response = (ObjectResult)(await _userController.GetUserByGuidAsync(guid));
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK);
+            Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
@@ -115,7 +115,7 @@ public class UserController_Tests
 
     //     if (response != null && response.Value != null)
     //     {
-    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
 
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
@@ -151,7 +151,7 @@ public class UserController_Tests
 
         if (response != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status404NotFound);
+            Assert.AreEqual(StatusCodes.Status404NotFound, response.StatusCode);
         }
         else
         {
@@ -177,7 +177,7 @@ public class UserController_Tests
 
     //     if (response != null && response.Value != null)
     //     {
-    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
 
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
@@ -212,13 +212,13 @@ public class UserController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status500InternalServerError);
+            Assert.AreEqual(StatusCodes.Status500InternalServerError, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
                 Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
-                Assert.IsTrue(result.Message == "Something went wrong. Unexpected error");
+                Assert.AreEqual("Something went wrong. Unexpected error", result.Message );
             }
             else
             {
@@ -265,7 +265,7 @@ public class UserController_Tests
         ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK);
+            Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
@@ -311,7 +311,7 @@ public class UserController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+            Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
@@ -362,7 +362,7 @@ public class UserController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+            Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
@@ -407,7 +407,7 @@ public class UserController_Tests
 
     //     if (response != null && response.Value != null)
     //     {
-    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
 
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
@@ -462,7 +462,7 @@ public class UserController_Tests
         ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+            Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
@@ -515,7 +515,7 @@ public class UserController_Tests
 
     //     if (response != null && response.Value != null)
     //     {
-    //         Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
+    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
 
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
@@ -577,13 +577,13 @@ public class UserController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status500InternalServerError);
+            Assert.AreEqual(StatusCodes.Status500InternalServerError, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
                 Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
-                Assert.IsTrue(result.Message == "Something went wrong. Unexpected error");
+                Assert.AreEqual("Something went wrong. Unexpected error", result.Message );
             }
             else
             {

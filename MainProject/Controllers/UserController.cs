@@ -71,7 +71,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                if (await this._userService.CheckIfEmailIsValid(request.Data.Email))
+                if (await this._userService.CheckIfEmailIsValid(request!.Data!.Email))
                 {
                     var role = await this._roleService.GetRoleForUser(request.Data.RoleGuid);
                     if (role == null)
