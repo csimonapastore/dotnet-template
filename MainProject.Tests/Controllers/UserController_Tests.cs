@@ -99,41 +99,6 @@ public class UserController_Tests
         }
     }
 
-    // [TestMethod]
-    // public async Task GetUserByGuidAsync_GuidIsEmpty()
-    // {
-    //     if (_userController == null)
-    //     {
-    //         Assert.Fail($"_userController is null");
-    //     }
-
-    //     var guid = String.Empty;
-    //     DatabaseSqlServer.User? user = null;
-
-    //     _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
-    //     ObjectResult response = (ObjectResult)(await _userController.GetUserByGuidAsync(guid));
-
-    //     if (response != null && response.Value != null)
-    //     {
-    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
-
-    //         var result = (BaseResponse<object>)response.Value;
-    //         if (result != null)
-    //         {
-    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
-    //             Assert.IsTrue(result.Message == "Request is not well formed");
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"Result value is null");
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Assert.Fail($"Response value is null");
-    //     }
-    // }
-
     [TestMethod]
     public async Task GetUserByGuidAsync_NotFound()
     {
@@ -158,43 +123,6 @@ public class UserController_Tests
             Assert.Fail($"Response is null");
         }
     }
-
-    // [TestMethod]
-    // public async Task GetUserByGuidAsync_ModelInvalid()
-    // {
-    //     if (_userController == null)
-    //     {
-    //         Assert.Fail($"_userController is null");
-    //     }
-
-    //     var guid = Guid.NewGuid().ToString();
-    //     DatabaseSqlServer.User? user = null;
-    //     _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
-    //     _userController.ModelState.AddModelError("Data", "Invalid data");
-    //     ObjectResult response = (ObjectResult)(await _userController.GetUserByGuidAsync(guid));
-
-    //     Assert.IsInstanceOfType(response, typeof(ObjectResult));
-
-    //     if (response != null && response.Value != null)
-    //     {
-    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
-
-    //         var result = (BaseResponse<object>)response.Value;
-    //         if (result != null)
-    //         {
-    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
-    //             Assert.IsTrue(result.Message == "Request is not well formed");
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"Result value is null");
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Assert.Fail($"Response is null");
-    //     }
-    // }
 
     [TestMethod]
     public async Task GetUserByGuidAsync_Exception()
@@ -381,51 +309,6 @@ public class UserController_Tests
         }
     }
 
-    // [TestMethod]
-    // public async Task CreateUserAsync_CreateUserRequestDataNull()
-    // {
-    //     if (_userController == null)
-    //     {
-    //         Assert.Fail($"_userController is null");
-    //     }
-
-    //     DatabaseSqlServer.User user = ModelsInit.CreateUser();
-
-    //     CreateUserRequest request = new CreateUserRequest()
-    //     {
-    //         Data = null
-    //     };
-
-    //     _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-
-    //     _userServiceMock?.Setup(s => s.CreateUserAsync(
-    //         It.IsAny<CreateUserRequestData>(),
-    //         It.IsAny<Role>()
-    //     )).ReturnsAsync(user);
-
-    //     ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
-
-    //     if (response != null && response.Value != null)
-    //     {
-    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
-
-    //         var result = (BaseResponse<object>)response.Value;
-    //         if (result != null)
-    //         {
-    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
-    //             Assert.IsTrue(result.Message == "Request is not well formed");
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"Result value is null");
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Assert.Fail($"Response value is null");
-    //     }
-    // }
-
     [TestMethod]
     public async Task CreateUserAsync_NotCreated()
     {
@@ -481,59 +364,6 @@ public class UserController_Tests
         }
     }
 
-    // [TestMethod]
-    // public async Task CreateUserAsync_ModelInvalid()
-    // {
-    //     if (_userController == null)
-    //     {
-    //         Assert.Fail($"_userController is null");
-    //     }
-
-    //     DatabaseSqlServer.User user = ModelsInit.CreateUser();
-
-    //     CreateUserRequest request = new CreateUserRequest()
-    //     {
-    //         Data = new CreateUserRequestData()
-    //         {
-    //             FirstName = user.FirstName,
-    //             LastName = user.LastName,
-    //             Email = user.Email,
-    //             Password = user.Password
-    //         }
-    //     };
-
-    //     _userServiceMock?.Setup(s => s.CheckIfEmailIsValid(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-
-    //     _userServiceMock?.Setup(s => s.CreateUserAsync(
-    //         It.IsAny<CreateUserRequestData>(),
-    //         It.IsAny<Role>()
-    //     )).ReturnsAsync(user);
-    //     _userController.ModelState.AddModelError("Data", "Invalid data");
-    //     ObjectResult response = (ObjectResult)(await _userController.CreateUserAsync(request));
-
-    //     Assert.IsInstanceOfType(response, typeof(ObjectResult));
-
-    //     if (response != null && response.Value != null)
-    //     {
-    //         Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
-
-    //         var result = (BaseResponse<object>)response.Value;
-    //         if (result != null)
-    //         {
-    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
-    //             Console.WriteLine(JsonConvert.SerializeObject(result));
-    //             Assert.IsTrue(result.Message == "Request is not well formed");
-    //         }
-    //         else
-    //         {
-    //             Assert.Fail($"Result value is null");
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Assert.Fail($"Response is null");
-    //     }
-    // }
 
     [TestMethod]
     public async Task CreateUserAsync_Exception()
