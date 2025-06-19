@@ -317,7 +317,7 @@ public class UserController_Tests
             if (result != null)
             {
                 Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
-                Assert.IsTrue(result.Message == "Invalid email");
+                Assert.AreEqual("Invalid email", result.Message);
             }
             else
             {

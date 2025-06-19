@@ -32,7 +32,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                var data = await this._authService.AuthenticateAsync(request.Data);
+                var data = await this._authService.AuthenticateAsync(request!.Data);
 
                 if (data == null)
                 {

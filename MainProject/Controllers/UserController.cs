@@ -124,7 +124,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                     return NotFound();
                 }
 
-                user = await this._userService.UpdateUserAsync(request.Data, user);
+                user = await this._userService.UpdateUserAsync(request!.Data, user);
 
                 var userDto = _mapper?.Map<UserDto>(user);
 

@@ -838,7 +838,7 @@ public class RoleController_Tests
             if (result != null)
             {
                 Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
-                Assert.IsTrue(result.Message == "This role is not editable");
+                Assert.AreEqual("This role is not editable", result.Message);
             }
             else
             {
