@@ -19,7 +19,7 @@ public class AuthenticatedUser
         FirstName = user.FirstName;
         LastName = user.LastName;
         Email = user.Email;
-        Role = new UserRole();
+        Role = new UserRole(user.Role!);
     }
 }
 
