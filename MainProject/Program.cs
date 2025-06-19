@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 using System.Reflection;
 using BasicDotnetTemplate.MainProject.Utils;

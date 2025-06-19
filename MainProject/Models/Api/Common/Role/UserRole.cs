@@ -9,7 +9,7 @@ public class UserRole
     public string? Name { get; set; }
 #nullable disable
 
-    public UserRole() {}
+    public UserRole() { }
 
     public UserRole(DatabaseSqlServer.Role role)
     {

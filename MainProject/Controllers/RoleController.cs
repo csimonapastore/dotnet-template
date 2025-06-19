@@ -67,9 +67,9 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                if (await this._roleService.CheckIfNameIsValid(request.Data.Name))
+                if (await this._roleService.CheckIfNameIsValid(request!.Data!.Name))
                 {
-                    var role = await this._roleService.CreateRoleAsync(request.Data);
+                    var role = await this._roleService.CreateRoleAsync(request!.Data);
 
                     if (role == null || String.IsNullOrEmpty(role.Guid))
                     {
@@ -121,8 +121,8 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 }
 
                 if (
-                    await this._roleService.CheckIfNameIsValid(request.Data.Name) ||
-                    await this._roleService.CheckIfNameIsValid(request.Data.Name, guid)
+                    await this._roleService.CheckIfNameIsValid(request!.Data!.Name) ||
+                    await this._roleService.CheckIfNameIsValid(request!.Data!.Name, guid)
                 )
                 {
                     role = await this._roleService.UpdateRoleAsync(request.Data, role);
@@ -167,7 +167,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                     return NotFound();
                 }
 
-                await this._roleService.DeleteRoleAsync(role); 
+                await this._roleService.DeleteRoleAsync(role);
 
                 return Success(String.Empty);
             }

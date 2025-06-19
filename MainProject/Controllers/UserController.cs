@@ -25,7 +25,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             this._userService = userService;
             this._roleService = roleService;
         }
-        
+
 
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
@@ -73,13 +73,13 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             {
                 if (await this._userService.CheckIfEmailIsValid(request!.Data!.Email))
                 {
-                    var role = await this._roleService.GetRoleForUser(request.Data.RoleGuid);
+                    var role = await this._roleService.GetRoleForUser(request!.Data!.RoleGuid);
                     if (role == null)
                     {
                         return BadRequest("Role not found");
                     }
 
-                    var user = await this._userService.CreateUserAsync(request.Data, role);
+                    var user = await this._userService.CreateUserAsync(request!.Data, role);
 
                     if (user == null || String.IsNullOrEmpty(user.Guid))
                     {
@@ -119,7 +119,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             try
             {
                 var user = await this._userService.GetUserByGuidAsync(guid);
-                if(user == null)
+                if (user == null)
                 {
                     return NotFound();
                 }
@@ -129,7 +129,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 var userDto = _mapper?.Map<UserDto>(user);
 
                 return Success(String.Empty, userDto);
-                
+
             }
             catch (Exception exception)
             {
@@ -141,7 +141,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 return InternalServerError(message);
             }
 
-        }       
+        }
 
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
@@ -154,7 +154,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             try
             {
                 var user = await this._userService.GetUserByGuidAsync(guid);
-                if(user == null)
+                if (user == null)
                 {
                     return NotFound();
                 }
@@ -164,7 +164,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 var userDto = _mapper?.Map<UserDto>(user);
 
                 return Success(String.Empty, userDto);
-                
+
             }
             catch (Exception exception)
             {
@@ -176,7 +176,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 return InternalServerError(message);
             }
 
-        } 
+        }
 
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
@@ -195,7 +195,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 }
 
                 var user = await this._userService.GetUserByGuidAsync(guid);
-                if(user == null)
+                if (user == null)
                 {
                     return NotFound();
                 }
@@ -205,7 +205,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 var userDto = _mapper?.Map<UserDto>(user);
 
                 return Success(String.Empty, userDto);
-                
+
             }
             catch (Exception exception)
             {
@@ -217,8 +217,8 @@ namespace BasicDotnetTemplate.MainProject.Controllers
                 return InternalServerError(message);
             }
 
-        }      
-        
+        }
+
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
         [HttpDelete("{guid}")]
@@ -239,7 +239,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
 
                 await this._userService.DeleteUserAsync(user);
 
-                return Success(String.Empty);              
+                return Success(String.Empty);
             }
             catch (Exception exception)
             {

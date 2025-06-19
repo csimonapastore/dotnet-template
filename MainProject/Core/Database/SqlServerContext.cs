@@ -18,7 +18,7 @@ namespace BasicDotnetTemplate.MainProject.Core.Database
         public DbSet<PermissionOperation> PermissionOperations { get; set; }
         public DbSet<PermissionSystem> PermissionSystems { get; set; }
         public DbSet<PermissionSystemModule> PermissionSystemModules { get; set; }
-        public DbSet<PermissionSystemModuleOperation> PermissionSystemModuleOperations { get; set; }        
+        public DbSet<PermissionSystemModuleOperation> PermissionSystemModuleOperations { get; set; }
         public DbSet<RolePermissionSystemModuleOperation> RolePermissionSystemModuleOperations { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }

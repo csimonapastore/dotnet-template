@@ -85,7 +85,7 @@ public class UserController_Tests
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status200OK);
+                Assert.AreEqual(StatusCodes.Status200OK, result.Status);
                 Assert.IsInstanceOfType(result.Data, typeof(UserDto));
             }
             else
@@ -120,7 +120,7 @@ public class UserController_Tests
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
     //         {
-    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
     //             Assert.IsTrue(result.Message == "Request is not well formed");
     //         }
     //         else
@@ -182,7 +182,7 @@ public class UserController_Tests
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
     //         {
-    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
     //             Assert.IsTrue(result.Message == "Request is not well formed");
     //         }
     //         else
@@ -217,8 +217,8 @@ public class UserController_Tests
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
-                Assert.AreEqual("Something went wrong. Unexpected error", result.Message );
+                Assert.AreEqual(StatusCodes.Status500InternalServerError, result.Status);
+                Assert.AreEqual("Something went wrong. Unexpected error", result.Message);
             }
             else
             {
@@ -270,7 +270,7 @@ public class UserController_Tests
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status200OK);
+                Assert.AreEqual(StatusCodes.Status200OK, result.Status);
                 Assert.IsInstanceOfType(result.Data, typeof(UserDto));
             }
             else
@@ -316,7 +316,7 @@ public class UserController_Tests
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+                Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
                 Assert.IsTrue(result.Message == "Invalid email");
             }
             else
@@ -367,7 +367,7 @@ public class UserController_Tests
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+                Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
                 Assert.IsTrue(result.Message == "Role not found");
             }
             else
@@ -412,7 +412,7 @@ public class UserController_Tests
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
     //         {
-    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
     //             Assert.IsTrue(result.Message == "Request is not well formed");
     //         }
     //         else
@@ -467,8 +467,8 @@ public class UserController_Tests
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Not created");
+                Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
+                Assert.AreEqual("Not created", result.Message);
             }
             else
             {
@@ -520,7 +520,7 @@ public class UserController_Tests
     //         var result = (BaseResponse<object>)response.Value;
     //         if (result != null)
     //         {
-    //             Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
+    //             Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
     //             Console.WriteLine(JsonConvert.SerializeObject(result));
     //             Assert.IsTrue(result.Message == "Request is not well formed");
     //         }
@@ -582,8 +582,8 @@ public class UserController_Tests
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
-                Assert.AreEqual("Something went wrong. Unexpected error", result.Message );
+                Assert.AreEqual(StatusCodes.Status500InternalServerError, result.Status);
+                Assert.AreEqual("Something went wrong. Unexpected error", result.Message);
             }
             else
             {

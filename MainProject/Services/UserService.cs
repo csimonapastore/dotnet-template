@@ -191,7 +191,7 @@ public class UserService : BaseService, IUserService
 
             user.PasswordSalt = salt;
             user.PasswordPepper = pepper;
-            user.PasswordIterations  = iterations;
+            user.PasswordIterations = iterations;
             user.Password = CryptUtils.GeneratePassword(newPassword, salt, iterations, pepper);
             user.UpdateTime = DateTime.UtcNow;
             user.UpdateUserId = this.GetCurrentUserId();

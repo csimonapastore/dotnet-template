@@ -29,7 +29,7 @@ public static partial class PasswordUtils
     private static partial Regex RegexSpecial();
 
     private static readonly Regex RegexIdenticalChars = new(
-        @"(\S)\1{2,}", 
+        @"(\S)\1{2,}",
         RegexOptions.IgnoreCase | RegexOptions.Compiled,
         TimeSpan.FromMilliseconds(100)
     );

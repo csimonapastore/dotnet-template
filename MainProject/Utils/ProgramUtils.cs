@@ -142,7 +142,7 @@ public static class ProgramUtils
         builder.Services.AddAuthorization();
         builder.Services.AddControllers(options =>
         {
-            options.Filters.Add<ValidationActionFilter>(); 
+            options.Filters.Add<ValidationActionFilter>();
         });
         builder.Services.AddEndpointsApiExplorer();
 

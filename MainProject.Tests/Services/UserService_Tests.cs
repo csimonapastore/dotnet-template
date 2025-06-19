@@ -34,7 +34,7 @@ public class UserService_Tests
             Console.WriteLine(ex.InnerException);
             Assert.Fail($"An exception was thrown: {ex.Message}");
         }
-    }    
+    }
 
     [TestMethod]
     public async Task CheckIfEmailIsValid_EmailNotExists()
@@ -366,7 +366,7 @@ public class UserService_Tests
                 var user = await _userService.UpdateUserPasswordAsync(_user!, "this-is-a-new-password");
                 Assert.IsInstanceOfType(user, typeof(User));
                 Assert.IsNotNull(user);
-                Assert.IsTrue(user.Password != oldPassword);
+                Assert.AreNotEqual(user.Password, oldPassword);
             }
             else
             {
@@ -424,7 +424,7 @@ public class UserService_Tests
                 var user = await _userService.UpdateUserRoleAsync(_user!, role);
                 Assert.IsInstanceOfType(user, typeof(User));
                 Assert.IsNotNull(user);
-                Assert.IsTrue(user.Role?.Id != oldRole?.Id);
+                Assert.AreNotEqual(user.Role?.Id, oldRole?.Id);
             }
             else
             {

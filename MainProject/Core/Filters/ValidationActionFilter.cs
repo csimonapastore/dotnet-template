@@ -13,7 +13,7 @@ namespace BasicDotnetTemplate.MainProject.Core.Filters
             if (!context.ModelState.IsValid)
             {
                 context.Result = new BadRequestObjectResult(new { message = _requestNotWellFormedMessage, errors = context.ModelState });
-                return; 
+                return;
             }
 
             var requestBody = context.ActionArguments.Values.FirstOrDefault(arg => arg != null && !arg.GetType().IsPrimitive && !(arg is string));
