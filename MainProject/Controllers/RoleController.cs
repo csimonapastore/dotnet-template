@@ -47,12 +47,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
@@ -88,12 +83,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
@@ -101,7 +91,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
         [HttpPut("update/{guid}")]
-        [ProducesResponseType<GetRoleResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<GetRoleResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateRoleAsync([FromBody] CreateRoleRequest request, string guid) //NOSONAR
@@ -139,12 +129,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
@@ -173,12 +158,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }

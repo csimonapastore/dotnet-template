@@ -43,12 +43,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }

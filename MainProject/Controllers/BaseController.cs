@@ -66,9 +66,13 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             return StatusCode((int)HttpStatusCode.BadRequest, CreateResponse(HttpStatusCode.BadRequest, message, data));
         }
 
-        protected IActionResult InternalServerError(string message)
+        protected IActionResult InternalServerError(Exception exception)
         {
-            message = String.IsNullOrEmpty(message) ? "Internal server error" : message;
+            var message = this._somethingWentWrong;
+            if (!String.IsNullOrEmpty(exception.Message))
+            {
+                message += $". {exception.Message}";
+            }
             return StatusCode((int)HttpStatusCode.InternalServerError, CreateResponse(HttpStatusCode.InternalServerError, message, new object()));
         }
 

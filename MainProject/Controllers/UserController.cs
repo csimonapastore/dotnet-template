@@ -51,17 +51,12 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
 
-        // [JwtAuthorization()]
+        [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
         [HttpPost("create")]
         [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
@@ -98,12 +93,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
@@ -111,7 +101,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
         [HttpPut("update/{guid}")]
-        [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequest request, string guid) //NOSONAR
@@ -133,12 +123,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
@@ -146,7 +131,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
         [HttpPut("update/{guid}/password")]
-        [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateUserPasswordAsync(string guid, string newPassword)
@@ -168,12 +153,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
@@ -181,7 +161,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         [JwtAuthorization()]
         [ModelStateValidationHandledByFilterAttribute]
         [HttpPut("update/{guid}/role")]
-        [ProducesResponseType<GetUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<GetUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseResponse<object>>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateUserRoleAsync(string guid, string roleGuid)
@@ -209,12 +189,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
@@ -243,12 +218,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             }
             catch (Exception exception)
             {
-                var message = this._somethingWentWrong;
-                if (!String.IsNullOrEmpty(exception.Message))
-                {
-                    message += $". {exception.Message}";
-                }
-                return InternalServerError(message);
+                return InternalServerError(exception);
             }
 
         }
