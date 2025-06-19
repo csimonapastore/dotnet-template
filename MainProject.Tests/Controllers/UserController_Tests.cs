@@ -368,7 +368,7 @@ public class UserController_Tests
             if (result != null)
             {
                 Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
-                Assert.IsTrue(result.Message == "Role not found");
+                Assert.AreEqual("Role not found", result.Message);
             }
             else
             {
