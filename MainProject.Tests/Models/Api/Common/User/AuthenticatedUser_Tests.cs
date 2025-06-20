@@ -25,9 +25,9 @@ public class AuthenticatedUser_Tests
             DatabaseSqlServer.User user = ModelsInit.CreateUser();
             AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
 
-            Assert.IsTrue(authenticatedUser.FirstName == user.FirstName);
-            Assert.IsTrue(authenticatedUser.LastName == user.LastName);
-            Assert.IsTrue(authenticatedUser.Email == user.Email);
+            Assert.AreEqual(user.FirstName, authenticatedUser.FirstName);
+            Assert.AreEqual(user.LastName, authenticatedUser.LastName);
+            Assert.AreEqual(user.Email, authenticatedUser.Email);
             Assert.IsInstanceOfType(authenticatedUser.Role, typeof(UserRole));
         }
         catch (Exception ex)

@@ -61,12 +61,12 @@ public class AuthController_Tests
         ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK);
+            Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status200OK);
+                Assert.AreEqual(StatusCodes.Status200OK, result.Status);
                 Assert.IsInstanceOfType(result.Data, typeof(AuthenticatedUser));
             }
             else
@@ -74,42 +74,6 @@ public class AuthController_Tests
                 Assert.Fail($"Result value is null");
             }
 
-        }
-        else
-        {
-            Assert.Fail($"Response value is null");
-        }
-    }
-
-    [TestMethod]
-    public async Task AuthenticateAsync_AuthenticateRequestDataNull()
-    {
-        IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
-
-        var request = new AuthenticateRequest
-        {
-            Data = null
-        };
-        AuthenticatedUser? authenticatedUser = null;
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
-
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
-
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
         }
         else
         {
@@ -140,46 +104,7 @@ public class AuthController_Tests
 
         if (response != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status404NotFound);
-        }
-        else
-        {
-            Assert.Fail($"Response is null");
-        }
-    }
-
-    [TestMethod]
-    public async Task AuthenticateAsync_ModelInvalid()
-    {
-        IConfiguration configuration = TestUtils.CreateConfiguration();
-        var authServiceMock = new Mock<IAuthService>();
-        var controller = new AuthController(configuration, authServiceMock.Object);
-
-        var request = new AuthenticateRequest
-        {
-            Data = null
-        };
-        AuthenticatedUser? authenticatedUser = null;
-        authServiceMock.Setup(s => s.AuthenticateAsync(It.IsAny<AuthenticateRequestData>())).ReturnsAsync(authenticatedUser);
-        controller.ModelState.AddModelError("Data", "Invalid data");
-        ObjectResult response = (ObjectResult)(await controller.AuthenticateAsync(request));
-
-        Assert.IsInstanceOfType(response, typeof(ObjectResult));
-
-        if (response != null && response.Value != null)
-        {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status400BadRequest);
-
-            var result = (BaseResponse<object>)response.Value;
-            if (result != null)
-            {
-                Assert.IsTrue(result.Status == StatusCodes.Status400BadRequest);
-                Assert.IsTrue(result.Message == "Request is not well formed");
-            }
-            else
-            {
-                Assert.Fail($"Result value is null");
-            }
+            Assert.AreEqual(StatusCodes.Status404NotFound, response.StatusCode);
         }
         else
         {
@@ -207,13 +132,13 @@ public class AuthController_Tests
 
         if (response != null && response.Value != null)
         {
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status500InternalServerError);
+            Assert.AreEqual(StatusCodes.Status500InternalServerError, response.StatusCode);
 
             var result = (BaseResponse<object>)response.Value;
             if (result != null)
             {
-                Assert.IsTrue(result.Status == StatusCodes.Status500InternalServerError);
-                Assert.IsTrue(result.Message == "Something went wrong. Unexpected error");
+                Assert.AreEqual(StatusCodes.Status500InternalServerError, result.Status);
+                Assert.AreEqual("Something went wrong. Unexpected error", result.Message);
             }
             else
             {

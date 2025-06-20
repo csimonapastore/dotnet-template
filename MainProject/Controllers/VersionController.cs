@@ -11,9 +11,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         ) : base(configuration) { }
 
         [HttpGet("get")]
-        public IActionResult GetVersion()
-        {
-            return Success(String.Empty, _appSettings?.Settings?.Version);
-        }
+        public IActionResult GetVersion() => Success(String.Empty, _appSettings?.Settings?.Version);
     }
 }

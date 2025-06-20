@@ -12,7 +12,6 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         protected readonly IMapper? _mapper;
         protected readonly IConfiguration _configuration;
         protected readonly AppSettings _appSettings;
-        protected readonly string _requestNotWellFormed = "Request is not well formed";
         protected readonly string _somethingWentWrong = "Something went wrong";
 
         protected BaseController(
@@ -67,9 +66,13 @@ namespace BasicDotnetTemplate.MainProject.Controllers
             return StatusCode((int)HttpStatusCode.BadRequest, CreateResponse(HttpStatusCode.BadRequest, message, data));
         }
 
-        protected IActionResult InternalServerError(string message)
+        protected IActionResult InternalServerError(Exception exception)
         {
-            message = String.IsNullOrEmpty(message) ? "Internal server error" : message;
+            var message = this._somethingWentWrong;
+            if (!String.IsNullOrEmpty(exception.Message))
+            {
+                message += $". {exception.Message}";
+            }
             return StatusCode((int)HttpStatusCode.InternalServerError, CreateResponse(HttpStatusCode.InternalServerError, message, new object()));
         }
 

@@ -1,11 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BasicDotnetTemplate.MainProject.Models.Api.Data.Auth;
 
 public class AuthenticateRequestData
 {
-#nullable enable
-    public string? Email { get; set; }
-    public string? Password { get; set; }
-#nullable disable
+    [Required(ErrorMessage = "Email is required")]
+    public required string Email { get; set; }
+    [Required(ErrorMessage = "Password is required")]
+    public required string Password { get; set; }
 }
 
 

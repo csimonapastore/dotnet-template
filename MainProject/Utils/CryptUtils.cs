@@ -4,24 +4,17 @@ using System.Text;
 using BasicDotnetTemplate.MainProject.Models.Settings;
 
 namespace BasicDotnetTemplate.MainProject.Utils;
-public class CryptUtils
+public class CryptUtils(AppSettings appSettings)
 {
-    private readonly string _secretKey;
-    private readonly string _pepper;
+    private readonly string _saltKey = appSettings.EncryptionSettings?.SaltKey ?? String.Empty;
     private const int _M = 16;
     private const int _N = 32;
-
-    public CryptUtils(AppSettings appSettings)
-    {
-        _secretKey = appSettings.EncryptionSettings?.Salt ?? String.Empty;
-        _pepper = appSettings.EncryptionSettings?.Pepper ?? String.Empty;
-    }
 
     public string Decrypt(string encryptedData)
     {
         var decrypted = String.Empty;
 
-        if (String.IsNullOrEmpty(this._secretKey) || this._secretKey.Length < _M)
+        if (String.IsNullOrEmpty(this._saltKey) || this._saltKey.Length < _M)
         {
             throw new ArgumentException("Unable to proceed with decryption due to invalid settings");
         }
@@ -35,7 +28,7 @@ public class CryptUtils
 
             using (var aes = Aes.Create())
             {
-                aes.Key = Encoding.UTF8.GetBytes(this._secretKey);
+                aes.Key = Encoding.UTF8.GetBytes(this._saltKey);
                 aes.IV = Encoding.UTF8.GetBytes(iv);
 
                 using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
@@ -57,21 +50,21 @@ public class CryptUtils
         return decrypted;
     }
 
-    public static string GenerateSalt()
+    public static string GeneratePepper()
     {
         using var rng = RandomNumberGenerator.Create();
-        var byteSalt = new byte[16];
-        rng.GetBytes(byteSalt);
-        var salt = Convert.ToBase64String(byteSalt);
-        return salt;
+        var bytePepper = new byte[16];
+        rng.GetBytes(bytePepper);
+        var pepper = Convert.ToBase64String(bytePepper);
+        return pepper;
     }
 
-    public string GeneratePassword(string password, string salt, int iteration)
+    public static string GeneratePassword(string password, string salt, int iterations, string? pepper = "")
     {
         string hashedPassword = password;
-        for(var i = 0; i <= iteration; i++)
+        for (var i = 0; i <= iterations; i++)
         {
-            var passwordSaltPepper = $"{hashedPassword}{salt}{this._pepper}";
+            var passwordSaltPepper = $"{hashedPassword}{salt}{pepper}";
             var byteValue = Encoding.UTF8.GetBytes(passwordSaltPepper);
             var byteHash = SHA256.HashData(byteValue);
             hashedPassword = Convert.ToBase64String(byteHash);
@@ -80,9 +73,9 @@ public class CryptUtils
         return hashedPassword;
     }
 
-    public bool VerifyPassword(string password, string salt, int iteration, string userPassword)
+    public static bool VerifyPassword(string userPassword, string password, string salt, int iterations, string? pepper = "")
     {
-        string hashedPassword = this.GeneratePassword(password, salt, iteration);
+        string hashedPassword = GeneratePassword(password, salt, iterations, pepper);
         return hashedPassword.Equals(userPassword, StringComparison.OrdinalIgnoreCase);
     }
 

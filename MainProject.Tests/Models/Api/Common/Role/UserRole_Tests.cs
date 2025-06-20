@@ -23,9 +23,9 @@ public class UserRole_Tests
         try
         {
             DatabaseSqlServer.Role role = ModelsInit.CreateRole();
-            UserRole userRole = new UserRole(role);
+            UserRole userRole = new(role);
 
-            Assert.IsTrue(userRole.Name == role.Name);
+            Assert.AreEqual(role.Name, userRole.Name);
         }
         catch (Exception ex)
         {
