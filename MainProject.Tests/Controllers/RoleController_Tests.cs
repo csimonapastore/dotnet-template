@@ -435,8 +435,6 @@ public class RoleController_Tests
 
     #endregion
 
-
-
     #region "UPDATE"
 
     [TestMethod]
@@ -643,7 +641,7 @@ public class RoleController_Tests
             It.IsAny<CreateRoleRequestData>(), It.IsAny<Role>()
         )).ThrowsAsync(new Exception("Unexpected error"));
 
-        ObjectResult response = (ObjectResult)(await _roleController.UpdateRoleAsync(request, role.Guid));
+        ObjectResult response = (ObjectResult)await _roleController.UpdateRoleAsync(request, role.Guid);
         Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
         if (response != null && response.Value != null)
@@ -668,4 +666,5 @@ public class RoleController_Tests
     }
 
     #endregion
+
 }
