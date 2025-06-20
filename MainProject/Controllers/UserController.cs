@@ -168,7 +168,7 @@ namespace BasicDotnetTemplate.MainProject.Controllers
         {
             try
             {
-                var role = await this._roleService.GetRoleForUser(roleGuid);
+                var role = await this._roleService.GetRoleByGuidAsync(roleGuid);
                 if (role == null)
                 {
                     return BadRequest("Role not found");

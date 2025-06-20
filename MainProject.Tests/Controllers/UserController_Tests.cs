@@ -648,11 +648,257 @@ public class UserController_Tests
 
 
 
+    [TestMethod]
+    public async Task UpdateUserPasswordAsync_Should_Return_200_When_Successful()
+    {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
+
+        string newPassword = "This!s4T3stP4ssw0rd#";
+
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.UpdateUserPasswordAsync(It.IsAny<User>(), newPassword)).ReturnsAsync(user);
+
+        ObjectResult response = (ObjectResult)await _userController.UpdateUserPasswordAsync(user.Guid, newPassword);
+        if (response != null && response.Value != null)
+        {
+            Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.AreEqual(StatusCodes.Status200OK, result.Status);
+                Assert.IsInstanceOfType(result.Data, typeof(UserDto));
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response value is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserPasswordAsync_UserNotFound()
+    {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        DatabaseSqlServer.User? user = null;
+
+        string newPassword = "This!s4T3stP4ssw0rd#";
+
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+
+        NotFoundResult response = (NotFoundResult)await _userController.UpdateUserPasswordAsync(Guid.NewGuid().ToString(), newPassword);
+
+        if (response != null)
+        {
+            Assert.AreEqual(StatusCodes.Status404NotFound, response.StatusCode);
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserPasswordAsync_Exception()
+    {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
+
+        string newPassword = "This!s4T3stP4ssw0rd#";
+
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.UpdateUserPasswordAsync(
+            It.IsAny<User>(), It.IsAny<string>()
+        )).ThrowsAsync(new Exception("Unexpected error"));
+
+        ObjectResult response = (ObjectResult)await _userController.UpdateUserPasswordAsync(user.Guid, newPassword);
+        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+
+        if (response != null && response.Value != null)
+        {
+            Assert.AreEqual(StatusCodes.Status500InternalServerError, response.StatusCode);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.AreEqual(StatusCodes.Status500InternalServerError, result.Status);
+                Assert.AreEqual("Something went wrong. Unexpected error", result.Message);
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
 
 
 
+    [TestMethod]
+    public async Task UpdateUserRoleAsync_Should_Return_200_When_Successful()
+    {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
 
+        if(_roleServiceMock == null)
+        {
+            Assert.Fail($"_roleServiceMock is null");
+        }
 
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.UpdateUserRoleAsync(It.IsAny<User>(), It.IsAny<Role>())).ReturnsAsync(user);
+
+        ObjectResult response = (ObjectResult)await _userController.UpdateUserRoleAsync(user.Guid, role.Guid);
+
+        if (response != null && response.Value != null)
+        {
+            Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.AreEqual(StatusCodes.Status200OK, result.Status);
+                Assert.IsInstanceOfType(result.Data, typeof(UserDto));
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response value is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserPasswordAsync_RoleNotFound()
+    {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
+        DatabaseSqlServer.Role? role = null;
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        ObjectResult response = (ObjectResult)await _userController.UpdateUserRoleAsync(user.Guid, Guid.NewGuid().ToString());
+        if (response != null)
+        {
+            Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
+            Assert.IsNotNull(response.Value);
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.AreEqual(StatusCodes.Status400BadRequest, result.Status);
+                Assert.AreEqual("Role not found", result.Message);
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserRoleAsync_UserNotFound()
+    {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        DatabaseSqlServer.User? user = null;
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.UpdateUserRoleAsync(It.IsAny<User>(), It.IsAny<Role>())).ReturnsAsync(user);
+
+        NotFoundResult response = (NotFoundResult)await _userController.UpdateUserRoleAsync(Guid.NewGuid().ToString(), role.Guid);
+
+        if (response != null)
+        {
+            Assert.AreEqual(StatusCodes.Status404NotFound, response.StatusCode);
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
+
+    [TestMethod]
+    public async Task UpdateUserRoleAsync_Exception()
+    {
+        if (_userController == null)
+        {
+            Assert.Fail($"_userController is null");
+        }
+
+        DatabaseSqlServer.User user = ModelsInit.CreateUser();
+        DatabaseSqlServer.Role role = ModelsInit.CreateRole();
+
+        _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
+        _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
+        _userServiceMock?.Setup(s => s.UpdateUserPasswordAsync(
+            It.IsAny<User>(), It.IsAny<string>()
+        )).ThrowsAsync(new Exception("Unexpected error"));
+
+        ObjectResult response = (ObjectResult)await _userController.UpdateUserPasswordAsync(user.Guid, role.Guid);
+        Assert.IsInstanceOfType(response, typeof(ObjectResult));
+
+        if (response != null && response.Value != null)
+        {
+            Assert.AreEqual(StatusCodes.Status500InternalServerError, response.StatusCode);
+
+            var result = (BaseResponse<object>)response.Value;
+            if (result != null)
+            {
+                Assert.AreEqual(StatusCodes.Status500InternalServerError, result.Status);
+                Assert.AreEqual("Something went wrong. Unexpected error", result.Message);
+            }
+            else
+            {
+                Assert.Fail($"Result value is null");
+            }
+        }
+        else
+        {
+            Assert.Fail($"Response is null");
+        }
+    }
 
 
     #endregion

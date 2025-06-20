@@ -98,7 +98,6 @@ public class ValidationActionFilter_Tests
         Assert.IsNotNull(badRequestResult!.Value);
 
         ValidationError validationError = (ValidationError)badRequestResult.Value;
-        Console.WriteLine(JsonConvert.SerializeObject(validationError));
         Assert.AreEqual(_requestNotWellFormedMessage, validationError?.Message);
         Assert.IsNull(validationError?.Errors);
         Assert.IsTrue(modelState.IsValid);
