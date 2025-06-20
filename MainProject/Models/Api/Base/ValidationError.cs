@@ -4,6 +4,6 @@ namespace BasicDotnetTemplate.MainProject.Models.Api.Base;
 
 public class ValidationError
 {
-    public string Message { get; set; }
-    public Dictionary<string, List<string>> Errors { get; set; }
+    public string? Message { get; set; }
+    public Dictionary<string, List<string>>? Errors { get; set; }
 }

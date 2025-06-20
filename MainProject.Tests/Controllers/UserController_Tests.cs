@@ -572,7 +572,7 @@ public class UserController_Tests
             Assert.Fail($"_userController is null");
         }
 
-        DatabaseSqlServer.User user = null;
+        DatabaseSqlServer.User? user = null;
 
         UpdateUserRequest request = new UpdateUserRequest()
         {
@@ -872,11 +872,11 @@ public class UserController_Tests
 
         _roleServiceMock?.Setup(s => s.GetRoleByGuidAsync(It.IsAny<string>())).ReturnsAsync(role);
         _userServiceMock?.Setup(s => s.GetUserByGuidAsync(It.IsAny<string>())).ReturnsAsync(user);
-        _userServiceMock?.Setup(s => s.UpdateUserPasswordAsync(
-            It.IsAny<User>(), It.IsAny<string>()
+        _userServiceMock?.Setup(s => s.UpdateUserRoleAsync(
+            It.IsAny<User>(), It.IsAny<Role>()
         )).ThrowsAsync(new Exception("Unexpected error"));
 
-        ObjectResult response = (ObjectResult)await _userController.UpdateUserPasswordAsync(user.Guid, role.Guid);
+        ObjectResult response = (ObjectResult)await _userController.UpdateUserRoleAsync(user.Guid, role.Guid);
         Assert.IsInstanceOfType(response, typeof(ObjectResult));
 
         if (response != null && response.Value != null)
