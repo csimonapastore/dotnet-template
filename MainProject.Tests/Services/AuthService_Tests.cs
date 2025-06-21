@@ -62,7 +62,7 @@ public class AuthService_Tests
             if (authService != null)
             {
                 var authenticatedUser = await authService.AuthenticateAsync(request.Data);
-                Assert.IsTrue(authenticatedUser == null);
+                Assert.IsNull(authenticatedUser);
             }
             else
             {
@@ -93,7 +93,7 @@ public class AuthService_Tests
             if (authService != null)
             {
                 var authenticatedUser = await authService.AuthenticateAsync(request.Data);
-                Assert.IsTrue(authenticatedUser == null);
+                Assert.IsNull(authenticatedUser);
             }
             else
             {

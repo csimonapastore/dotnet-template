@@ -54,7 +54,7 @@ public class GetRoleResponse_Tests
         try
         {
             var getRoleResponse = new GetRoleResponse(201, null, null);
-            Assert.IsFalse(getRoleResponse.Status == StatusCodes.Status200OK);
+            Assert.AreNotEqual(StatusCodes.Status200OK, getRoleResponse.Status);
         }
         catch (Exception ex)
         {

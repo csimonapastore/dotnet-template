@@ -30,7 +30,7 @@ public class RootController_Test
             if (result != null)
             {
                 var data = (OkResult)result;
-                Assert.IsTrue(data.StatusCode == StatusCodes.Status200OK);
+                Assert.AreEqual(StatusCodes.Status200OK, data.StatusCode);
             }
             else
             {

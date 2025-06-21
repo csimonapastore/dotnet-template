@@ -39,7 +39,7 @@ public class AuthenticateResponse_Tests
         try
         {
             var authenticateResponse = new AuthenticateResponse(201, null, null);
-            Assert.IsFalse(authenticateResponse.Status == StatusCodes.Status200OK);
+            Assert.AreNotEqual(StatusCodes.Status200OK, authenticateResponse.Status);
         }
         catch (Exception ex)
         {

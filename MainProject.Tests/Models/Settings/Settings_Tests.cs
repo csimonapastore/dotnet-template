@@ -54,7 +54,7 @@ public class Settings_Tests
         try
         {
             var baseResponse = new BaseResponse<object>(201, null, null);
-            Assert.IsFalse(baseResponse.Status == StatusCodes.Status200OK);
+            Assert.AreNotEqual(StatusCodes.Status200OK, baseResponse.Status);
         }
         catch (Exception ex)
         {

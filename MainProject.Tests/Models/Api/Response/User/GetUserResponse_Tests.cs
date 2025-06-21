@@ -54,7 +54,7 @@ public class GetUserResponse_Tests
         try
         {
             var getUserResponse = new GetUserResponse(201, null, null);
-            Assert.IsFalse(getUserResponse.Status == StatusCodes.Status200OK);
+            Assert.AreNotEqual(StatusCodes.Status200OK, getUserResponse.Status);
         }
         catch (Exception ex)
         {

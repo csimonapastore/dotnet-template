@@ -53,7 +53,7 @@ public class JwtService_Tests
             if (jwtService != null)
             {
                 var jwt = jwtService.GenerateToken(testString);
-                Assert.IsTrue(jwt != null);
+                Assert.IsNotNull(jwt);
                 Assert.IsInstanceOfType(jwt, typeof(string));
             }
             else

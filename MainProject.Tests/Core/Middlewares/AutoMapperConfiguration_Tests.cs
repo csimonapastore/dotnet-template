@@ -40,10 +40,10 @@ public class AutoMapperConfiguration_Tests
             DatabaseSqlServer.User user = ModelsInit.CreateUser();
             UserDto? data = _mapper?.Map<UserDto>(user);
 
-            Assert.IsTrue(data?.Guid == user.Guid);
-            Assert.IsTrue(data?.FirstName == user.FirstName);
-            Assert.IsTrue(data?.LastName == user.LastName);
-            Assert.IsTrue(data?.Email == user.Email);
+            Assert.AreEqual(user.Guid, data?.Guid);
+            Assert.AreEqual(user.FirstName, data?.FirstName);
+            Assert.AreEqual(user.LastName, data?.LastName);
+            Assert.AreEqual(user.Email, data?.Email);
         }
         catch (Exception ex)
         {

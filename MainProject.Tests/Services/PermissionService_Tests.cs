@@ -94,7 +94,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionSystemByGuidAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -117,7 +117,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionSystemByNameAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -139,7 +139,7 @@ public class PermissionService_Tests
             var permission = await _permissionService.CreatePermissionSystemAsync(_permissionSystem.Name, true);
             Assert.IsInstanceOfType(permission, typeof(PermissionSystem));
             Assert.IsNotNull(permission);
-            Assert.IsTrue(permission.Name == _permissionSystem.Name);
+            Assert.AreEqual(_permissionSystem.Name, permission.Name);
             Assert.IsTrue(permission.Enabled);
             _permissionSystem = permission;
 
@@ -210,7 +210,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionSystemByGuidAsync(_permissionSystem.Guid);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionSystem));
-                Assert.IsTrue(permission.Name == _permissionSystem.Name);
+                Assert.AreEqual(_permissionSystem.Name, permission.Name);
                 Assert.IsTrue(permission.Enabled == _permissionSystem.Enabled);
             }
             else
@@ -236,7 +236,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionSystemByNameAsync(_permissionSystem.Name);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionSystem));
-                Assert.IsTrue(permission.Guid == _permissionSystem.Guid);
+                Assert.AreEqual(_permissionSystem.Guid, permission.Guid);
                 Assert.IsTrue(permission.Enabled == _permissionSystem.Enabled);
             }
             else
@@ -265,7 +265,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionModuleByGuidAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -288,7 +288,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionModuleByNameAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -310,7 +310,7 @@ public class PermissionService_Tests
             var permission = await _permissionService.CreatePermissionModuleAsync(_permissionModule.Name, true);
             Assert.IsInstanceOfType(permission, typeof(PermissionModule));
             Assert.IsNotNull(permission);
-            Assert.IsTrue(permission.Name == _permissionModule.Name);
+            Assert.AreEqual(_permissionModule.Name, permission.Name);
             Assert.IsTrue(permission.Enabled);
             _permissionModule = permission;
 
@@ -383,7 +383,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionModuleByGuidAsync(_permissionModule.Guid);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionModule));
-                Assert.IsTrue(permission.Name == _permissionModule.Name);
+                Assert.AreEqual(_permissionModule.Name, permission.Name);
                 Assert.IsTrue(permission.Enabled == _permissionModule.Enabled);
             }
             else
@@ -409,7 +409,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionModuleByNameAsync(_permissionModule.Name);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionModule));
-                Assert.IsTrue(permission.Guid == _permissionModule.Guid);
+                Assert.AreEqual(_permissionModule.Guid, permission.Guid);
                 Assert.IsTrue(permission.Enabled == _permissionModule.Enabled);
             }
             else
@@ -438,7 +438,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionOperationByGuidAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -461,7 +461,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionOperationByNameAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -483,7 +483,7 @@ public class PermissionService_Tests
             var permission = await _permissionService.CreatePermissionOperationAsync(_permissionOperation.Name);
             Assert.IsInstanceOfType(permission, typeof(PermissionOperation));
             Assert.IsNotNull(permission);
-            Assert.IsTrue(permission.Name == _permissionOperation.Name);
+            Assert.AreEqual(_permissionOperation.Name, permission.Name);
             _permissionOperation = permission;
 
         }
@@ -536,7 +536,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionOperationByGuidAsync(_permissionOperation.Guid);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionOperation));
-                Assert.IsTrue(permission.Name == _permissionOperation.Name);
+                Assert.AreEqual(_permissionOperation.Name, permission.Name);
             }
             else
             {
@@ -561,7 +561,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionOperationByNameAsync(_permissionOperation.Name);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionOperation));
-                Assert.IsTrue(permission.Guid == _permissionOperation.Guid);
+                Assert.AreEqual(_permissionOperation.Guid, permission.Guid);
             }
             else
             {
@@ -589,7 +589,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionSystemModuleByGuidAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -709,7 +709,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetPermissionSystemModuleOperationByGuidAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
@@ -829,7 +829,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 var permission = await _permissionService.GetRolePermissionSystemModuleOperationByGuidAsync(Guid.NewGuid().ToString());
-                Assert.IsTrue(permission == null);
+                Assert.IsNull(permission);
             }
             else
             {
