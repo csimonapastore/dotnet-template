@@ -79,8 +79,8 @@ public class RoleService_Tests
                 var role = await _roleService.CreateRoleAsync(data);
                 Assert.IsInstanceOfType(role, typeof(Role));
                 Assert.IsNotNull(role);
-                Assert.IsTrue(_expectedRole?.Name == role.Name);
-                Assert.IsTrue(_expectedRole?.IsNotEditable == role.IsNotEditable);
+                Assert.AreEqual(_expectedRole?.Name, role.Name);
+                Assert.AreEqual(_expectedRole?.IsNotEditable, role.IsNotEditable);
                 _role = role;
             }
             else
@@ -188,7 +188,7 @@ public class RoleService_Tests
             {
                 var role = await _roleService.GetRoleByIdAsync(_role?.Id ?? 0);
                 Assert.IsNotNull(role);
-                Assert.IsTrue(role.Id == _role?.Id);
+                Assert.AreEqual(_role?.Id, _role?.Id);
             }
             else
             {
@@ -211,7 +211,7 @@ public class RoleService_Tests
             {
                 var role = await _roleService.GetRoleByGuidAsync(_role?.Guid ?? String.Empty);
                 Assert.IsNotNull(role);
-                Assert.IsTrue(role.Guid == _role?.Guid);
+                Assert.AreEqual(_role?.Guid, role.Guid);
             }
             else
             {
@@ -234,7 +234,7 @@ public class RoleService_Tests
             {
                 var role = await _roleService.GetRoleForUser(_role?.Guid);
                 Assert.IsNotNull(role);
-                Assert.IsTrue(role.Guid == _role?.Guid);
+                Assert.AreEqual(_role?.Guid, role.Guid);
             }
             else
             {
@@ -263,8 +263,8 @@ public class RoleService_Tests
                 var roleCreated = await _roleService.CreateRoleAsync(data);
                 var role = await _roleService.GetRoleForUser(String.Empty);
                 Assert.IsNotNull(role);
-                Assert.IsTrue(roleCreated?.Guid == role?.Guid);
-                Assert.IsTrue(role?.Name == "Default");
+                Assert.AreEqual(role?.Guid, roleCreated?.Guid);
+                Assert.AreEqual("Default", role?.Name);
             }
             else
             {
@@ -317,8 +317,8 @@ public class RoleService_Tests
                 var role = await _roleService.UpdateRoleAsync(data, _role!);
                 Assert.IsInstanceOfType(role, typeof(Role));
                 Assert.IsNotNull(role);
-                Assert.IsTrue(data.Name == role.Name);
-                Assert.IsTrue(data.IsNotEditable == role.IsNotEditable);
+                Assert.AreEqual(data.Name, role.Name);
+                Assert.AreEqual(data.IsNotEditable, role.IsNotEditable);
                 _role = role;
             }
             else
@@ -359,8 +359,8 @@ public class RoleService_Tests
                 var roleUpdatedRole = await _roleService.UpdateRoleAsync(updateRoleData, role!);
                 Assert.IsInstanceOfType(roleUpdatedRole, typeof(Role));
                 Assert.IsNotNull(roleUpdatedRole);
-                Assert.IsTrue(roleUpdatedRole.Name == createRoleData.Name);
-                Assert.IsTrue(roleUpdatedRole.IsNotEditable == createRoleData.IsNotEditable);
+                Assert.AreEqual(createRoleData.Name, roleUpdatedRole.Name);
+                Assert.AreEqual(createRoleData.IsNotEditable, roleUpdatedRole.IsNotEditable);
             }
             else
             {

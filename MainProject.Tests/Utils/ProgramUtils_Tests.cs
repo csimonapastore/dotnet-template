@@ -92,7 +92,7 @@ public class ProgramUtils_Tests
 
             AppSettings appSettings = new AppSettings();
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
-            Assert.IsTrue(realOpenApiInfo != null);
+            Assert.IsNotNull(realOpenApiInfo);
         }
         catch (Exception ex)
         {
@@ -118,10 +118,10 @@ public class ProgramUtils_Tests
                 OpenApiSettings = null
             };
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
-            Assert.IsTrue(realOpenApiInfo != null);
-            Assert.IsTrue(realOpenApiInfo.Title == appSettings.Settings.Name);
-            Assert.IsTrue(realOpenApiInfo.Description == appSettings.Settings.Description);
-            Assert.IsTrue(realOpenApiInfo.Version == appSettings.Settings.Version);
+            Assert.IsNotNull(realOpenApiInfo);
+            Assert.AreEqual(appSettings.Settings.Name, realOpenApiInfo.Title);
+            Assert.AreEqual(appSettings.Settings.Description, realOpenApiInfo.Description);
+            Assert.AreEqual(appSettings.Settings.Version, realOpenApiInfo.Version);
         }
         catch (Exception ex)
         {
@@ -151,11 +151,11 @@ public class ProgramUtils_Tests
                 }
             };
             OpenApiInfo realOpenApiInfo = ProgramUtils.CreateOpenApiInfo(appSettings);
-            Assert.IsTrue(realOpenApiInfo != null);
-            Assert.IsTrue(realOpenApiInfo.Title == appSettings.Settings.Name);
-            Assert.IsTrue(realOpenApiInfo.Description == appSettings.Settings.Description);
-            Assert.IsTrue(realOpenApiInfo.Version == appSettings.Settings.Version);
-            Assert.IsTrue(realOpenApiInfo.TermsOfService == null);
+            Assert.IsNotNull(realOpenApiInfo);
+            Assert.AreEqual(appSettings.Settings.Name, realOpenApiInfo.Title);
+            Assert.AreEqual(appSettings.Settings.Description, realOpenApiInfo.Description);
+            Assert.AreEqual(appSettings.Settings.Version, realOpenApiInfo.Version);
+            Assert.IsNull(realOpenApiInfo.TermsOfService);
         }
         catch (Exception ex)
         {

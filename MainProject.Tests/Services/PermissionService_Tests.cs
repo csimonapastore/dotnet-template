@@ -189,7 +189,7 @@ public class PermissionService_Tests
         {
             var updated = await _permissionService.HandleEnabledPermissionSystemAsync(_permissionSystem, false);
             Assert.IsTrue(updated);
-            Assert.IsTrue(!_permissionSystem.Enabled);
+            Assert.IsFalse(_permissionSystem.Enabled);
 
         }
         catch (Exception ex)
@@ -211,7 +211,7 @@ public class PermissionService_Tests
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionSystem));
                 Assert.AreEqual(_permissionSystem.Name, permission.Name);
-                Assert.IsTrue(permission.Enabled == _permissionSystem.Enabled);
+                Assert.AreEqual( _permissionSystem.Enabled, permission.Enabled);
             }
             else
             {
@@ -237,7 +237,7 @@ public class PermissionService_Tests
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionSystem));
                 Assert.AreEqual(_permissionSystem.Guid, permission.Guid);
-                Assert.IsTrue(permission.Enabled == _permissionSystem.Enabled);
+                Assert.AreEqual( _permissionSystem.Enabled, permission.Enabled);
             }
             else
             {
@@ -362,7 +362,7 @@ public class PermissionService_Tests
         {
             var updated = await _permissionService.HandleEnabledPermissionModuleAsync(_permissionModule, false);
             Assert.IsTrue(updated);
-            Assert.IsTrue(!_permissionModule.Enabled);
+            Assert.IsFalse(_permissionModule.Enabled);
 
         }
         catch (Exception ex)
@@ -384,7 +384,7 @@ public class PermissionService_Tests
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionModule));
                 Assert.AreEqual(_permissionModule.Name, permission.Name);
-                Assert.IsTrue(permission.Enabled == _permissionModule.Enabled);
+                Assert.AreEqual( _permissionModule.Enabled, permission.Enabled);
             }
             else
             {
@@ -410,7 +410,7 @@ public class PermissionService_Tests
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionModule));
                 Assert.AreEqual(_permissionModule.Guid, permission.Guid);
-                Assert.IsTrue(permission.Enabled == _permissionModule.Enabled);
+                Assert.AreEqual( _permissionModule.Enabled, permission.Enabled);
             }
             else
             {
@@ -660,7 +660,7 @@ public class PermissionService_Tests
         {
             var updated = await _permissionService.HandleEnabledPermissionSystemModuleAsync(_permissionSystemModule, false);
             Assert.IsTrue(updated);
-            Assert.IsTrue(!_permissionSystemModule.Enabled);
+            Assert.IsFalse(_permissionSystemModule.Enabled);
 
         }
         catch (Exception ex)
@@ -681,7 +681,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionSystemModuleByGuidAsync(_permissionSystemModule.Guid);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionSystemModule));
-                Assert.IsTrue(permission.Enabled == _permissionSystemModule.Enabled);
+                Assert.AreEqual( _permissionSystemModule.Enabled, permission.Enabled);
             }
             else
             {
@@ -780,7 +780,7 @@ public class PermissionService_Tests
         {
             var updated = await _permissionService.HandleEnabledPermissionSystemModuleOperationAsync(_permissionSystemModuleOperation, false);
             Assert.IsTrue(updated);
-            Assert.IsTrue(!_permissionSystemModuleOperation.Enabled);
+            Assert.IsFalse(_permissionSystemModuleOperation.Enabled);
 
         }
         catch (Exception ex)
@@ -801,7 +801,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetPermissionSystemModuleOperationByGuidAsync(_permissionSystemModuleOperation.Guid);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(PermissionSystemModuleOperation));
-                Assert.IsTrue(permission.Enabled == _permissionSystemModuleOperation.Enabled);
+                Assert.AreEqual(_permissionSystemModuleOperation.Enabled, permission.Enabled);
             }
             else
             {
@@ -916,7 +916,7 @@ public class PermissionService_Tests
         {
             var updated = await _permissionService.HandleEnabledRolePermissionSystemModuleOperationAsync(_rolePermissionSystemModuleOperation, false);
             Assert.IsTrue(updated);
-            Assert.IsTrue(!_rolePermissionSystemModuleOperation.Active);
+            Assert.IsFalse(_rolePermissionSystemModuleOperation.Active);
 
         }
         catch (Exception ex)
@@ -937,7 +937,7 @@ public class PermissionService_Tests
                 var permission = await _permissionService.GetRolePermissionSystemModuleOperationByGuidAsync(_rolePermissionSystemModuleOperation.Guid);
                 Assert.IsNotNull(permission);
                 Assert.IsInstanceOfType(permission, typeof(RolePermissionSystemModuleOperation));
-                Assert.IsTrue(permission.Active == _rolePermissionSystemModuleOperation.Active);
+                Assert.AreEqual( _rolePermissionSystemModuleOperation.Active, permission.Active);
             }
             else
             {

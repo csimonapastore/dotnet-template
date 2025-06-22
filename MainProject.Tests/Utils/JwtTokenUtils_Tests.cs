@@ -22,7 +22,7 @@ public class JwtTokenUtils_Tests
             AppSettings appSettings = ProgramUtils.AddConfiguration(ref builder, System.AppDomain.CurrentDomain.BaseDirectory + "/JsonData");
             JwtTokenUtils jwtUtils = new JwtTokenUtils(appSettings);
             var jwt = jwtUtils.GenerateToken(_guid);
-            Assert.IsTrue(!String.IsNullOrEmpty(jwt));
+            Assert.IsFalse(String.IsNullOrEmpty(jwt));
         }
         catch (Exception ex)
         {
@@ -41,7 +41,7 @@ public class JwtTokenUtils_Tests
             JwtTokenUtils jwtUtils = new JwtTokenUtils(appSettings);
             var jwt = jwtUtils.GenerateToken(_guid);
             var guid = jwtUtils.ValidateToken($"Bearer {jwt}");
-            Assert.IsTrue(_guid == guid);
+            Assert.AreEqual(_guid, guid);
         }
         catch (Exception ex)
         {
