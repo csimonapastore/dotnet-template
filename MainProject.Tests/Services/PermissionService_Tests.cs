@@ -1067,7 +1067,7 @@ public class PermissionService_Tests
             if (_permissionService != null)
             {
                 List<string> permissions = _permissionService.CreatePermissionsOnStartupAsync();
-                Assert.IsFalse(permissions == null);
+                Assert.IsNotNull(permissions);
                 List<string> cleanedPermissions = new();
 
                 foreach (var permission in permissions)

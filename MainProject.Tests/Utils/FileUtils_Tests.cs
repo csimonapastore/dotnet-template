@@ -49,7 +49,7 @@ public class FileUtils_Tests
         try
         {
             PermissionsFile? permissionsFile = FileUtils.ConvertFileToObject<PermissionsFile>(System.AppDomain.CurrentDomain.BaseDirectory + "Config/permissions.json");
-            Assert.IsTrue(permissionsFile != null);
+            Assert.IsNotNull(permissionsFile);
         }
         catch (Exception exception)
         {
